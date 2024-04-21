@@ -101,12 +101,9 @@ export default class Utils {
         return formattedStr;
     }
 
-    static standardizedTrackData(str) {
-        return str
-            .split(",")
+    static standardizedTrackArrData(str) {
+        return str.split(",")
             .filter((subStr) => subStr)
-            .map((subStr) => subStr.trim())
-            .sort()
-            .join(",");
+            .map((subStr) => subStr.trim());
     }
 }

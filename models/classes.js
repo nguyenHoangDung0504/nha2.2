@@ -37,4 +37,10 @@ class SearchResult {
 
 }
 
-export { Track, Cv, Tag, Series, SearchResult };
+class OtherLink {
+    constructor(note, url) {
+        Object.assign(this, { note, url });
+    }
+}
+
+export { Track, Cv, Tag, Series, SearchResult, OtherLink };

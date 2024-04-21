@@ -12,6 +12,10 @@ export class Database {
     static addTrackToDatabase(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink = "") {
         [cvs, tags, series, images, audios, otherLink] = [cvs, tags, series, images, audios, otherLink].map(member => Utils.standardizedTrackArrData(member));
         [cvs, tags, series] = [cvs, tags, series].map(member => member.sort());
+        otherLink = otherLink.split(',').map(noteNLink => {
+            const [note, link] = noteNLink.split(':').map(item => item.trim());
+            return new OtherLink(note, link);
+        })
 
         const track = new Track(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink);
         Database.listTrackNewest.push(track);

@@ -1,0 +1,112 @@
+export default class Utils {
+    static getStartAndEndIndex(page, itemPerPage, totalItems) {
+        const start = (page - 1) * itemPerPage;
+        const end = Math.min(start + itemPerPage - 1, totalItems);
+
+        return { start, end };
+    }
+
+    // Only works 100% accurately when the 'pagePerGroup' value is an odd number
+    static getGroupOfPagination(currentPage, pagePerGroup, limitPage) {
+        pagePerGroup = pagePerGroup > limitPage ? limitPage : pagePerGroup;
+
+        // Special case 1
+        if (pagePerGroup === 2) {
+            if (currentPage === 1) {
+                return [1, 2];
+            } else if (currentPage === limitPage) {
+                return [limitPage - 1, limitPage];
+            }
+        }
+
+        // Special case 2
+        if (currentPage === 1) {
+            const endPage = Math.min(limitPage, currentPage + pagePerGroup - 1);
+            return Array.from({ length: endPage }, (_, i) => i + 1);
+        } else if (currentPage === limitPage) {
+            const startPage = Math.max(1, currentPage - pagePerGroup + 1);
+            return Array.from({ length: pagePerGroup }, (_, i) => startPage + i);
+        }
+
+        // General cases
+        const halfGroupSize = Math.floor(pagePerGroup / 2);
+        let startPage = currentPage - halfGroupSize;
+        let endPage = currentPage + halfGroupSize;
+
+        // Check and adjust start page and end page if they exceed the limit
+        if (startPage < 1) {
+            const adjustment = 1 - startPage;
+            startPage += adjustment;
+            endPage += adjustment;
+        }
+        if (endPage > limitPage) {
+            const adjustment = endPage - limitPage;
+            endPage -= adjustment;
+            startPage -= adjustment;
+            if (startPage < 1) {
+                startPage = 1;
+            }
+        }
+
+        return Array.from({ length: pagePerGroup }, (_, i) => startPage + i);
+    }
+
+    static addQueryToUrl(key, value) {
+        let currentLink = window.location.href;
+        let url = new URL(currentLink);
+        let queryParams = url.searchParams;
+
+        if (queryParams.has(key)) {
+            queryParams.set(key, value);
+        } else {
+            queryParams.append(key, value);
+        }
+
+        return url.toString();
+    }
+
+    static shuffleArray(array) {
+        let currentIndex = array.length;
+        let temporaryValue, randomIndex;
+
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
+
+    static highlight(text, highlightValue) {
+        let regexp = new RegExp(highlightValue, "i");
+        return text.toString().replace(regexp, `<span class="highlight">$&</span>`);
+    }
+
+    static removeHighlight(text) {
+        let regex = /<span class="highlight">([\s\S]*?)<\/span>/gi;
+        return text.toString().replace(regex, "$1");
+    }
+
+    static convertToTitleCase(str) {
+        let formattedStr = str.replace(/([A-Z])/g, " $1");
+
+        formattedStr = formattedStr.replace(/([a-z])([A-Z])/g, "$1 $2");
+        formattedStr = formattedStr.replace(/\b\w/g, (match) =>
+            match.toUpperCase()
+        );
+
+        return formattedStr;
+    }
+
+    static standardizedTrackData(str) {
+        return str
+            .split(",")
+            .filter((subStr) => subStr)
+            .map((subStr) => subStr.trim())
+            .sort()
+            .join(",");
+    }
+}

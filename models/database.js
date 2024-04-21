@@ -50,6 +50,11 @@ export class Database {
         function byName(a, b) {
             return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
         }
-        console.log(`Added: ${Database.listCode.length} Track`);
+
+        console.log(`Added: ${Database.listCode.length} Tracks`);
+        console.log(Database);
+        [Database.listTrack, Database.listCv, Database.listTag, Database.listSeries].forEach(list => {
+            console.log(`Complete Build`, list);
+        });
     }
 }

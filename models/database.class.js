@@ -35,9 +35,9 @@ export class Database {
                     let indexOfItem = listToAddItem.findIndex(itemToFind => itemToFind.name == item);
 
                     if (indexOfItem == -1) {
-                        listToAddItem.push(new classToCreate[index](item, 1))
+                        listToAddItem.push(new classToCreate[index](item, 1));
                     } else {
-                        listToAddItem[indexOfItem].count++
+                        listToAddItem[indexOfItem].quantity++;
                     }
                 }
             });
@@ -46,6 +46,7 @@ export class Database {
 
     // Call when completed add data
     static buildData() {
+        Database.sortListTrackByRjCode();
         Database.displayListCv = Database.listCv.sort(Utils.byName);
         Database.displayListTag = Database.listTag.sort(Utils.byName);
         Database.displayListSeries = Database.listSeries.sort(Utils.byName);
@@ -53,46 +54,46 @@ export class Database {
         console.timeEnd('Build Database Time');
         console.log(`Added: ${Database.listCode.length} Tracks`);
         const listNames = ['List Track', 'List Cv', 'List Tag', 'List Series'];
-        [Database.listTrack, Database.listCv, Database.listTag, Database.listSeries].forEach((list, index) => {
+        [Database.displayListTrack, Database.displayListCv, Database.displayListTag, Database.displayListSeries].forEach((list, index) => {
             console.log(`Complete Build ${listNames[index]}:`, list);
         });
         Database.testingFunctions();
     }
 
     // Sort functions
-    static sortListTrackByRjCode(inc = false) {
+    static sortListTrackByRjCode(desc = false) {
         Database.displayListTrack = [...Database.listTrack].sort((a, b) => {
             return Number(b.rjCode.replace('RJ', '').replaceAll('?', '')) - Number(a.rjCode.replace('RJ', '').replaceAll('?', ''))
         });
-        if (inc)
+        if (desc)
             Database.displayListTrack.reverse();
     }
 
-    static sortListTrackByCode(inc = false) {
+    static sortListTrackByCode(desc = false) {
         Database.displayListTrack = [...Database.listTrack].sort((a, b) => a.code - b.code);
-        if (inc)
+        if (desc)
             Database.displayListTrack.reverse();
     }
 
-    static sortListTrackByUploadOrder(inc = false) {
+    static sortListTrackByUploadOrder(desc = false) {
         Database.displayListTrack = [...Database.listTrack];
-        if (inc)
+        if (desc)
             Database.displayListTrack.reverse();
     }
 
-    static sortListCategoryByName(listName, inc = false) {
+    static sortListCategoryByName(listName, desc = false) {
         switch (listName.toLowerCase()) {
             case 'cv':
                 Database.displayListCv = [...Database.listCv].sort(Utils.byName);
-                if (!inc) Database.displayListCv.reverse();
+                if (!desc) Database.displayListCv.reverse();
                 break;
             case 'tag':
                 Database.displayListTag = [...Database.listTag].sort(Utils.byName);
-                if (!inc) Database.displayListTag.reverse();
+                if (!desc) Database.displayListTag.reverse();
                 break;
             case 'series':
                 Database.displayListSeries = [...Database.listSeries].sort(Utils.byName);
-                if (!inc) Database.displayListSeries.reverse();
+                if (!desc) Database.displayListSeries.reverse();
                 break;
 
             default:
@@ -100,19 +101,19 @@ export class Database {
         }
     }
 
-    static sortListCategoryByQuantity(listName, inc = false) {
+    static sortListCategoryByQuantity(listName, desc = false) {
         switch (listName.toLowerCase()) {
             case 'cv':
                 Database.displayListCv = [...Database.listCv].sort(Utils.byQuantity);
-                if (inc) Database.displayListCv.reverse();
+                if (desc) Database.displayListCv.reverse();
                 break;
             case 'tag':
                 Database.displayListTag = [...Database.listTag].sort(Utils.byQuantity);
-                if (inc) Database.displayListTag.reverse();
+                if (desc) Database.displayListTag.reverse();
                 break;
             case 'series':
                 Database.displayListSeries = [...Database.listSeries].sort(Utils.byQuantity);
-                if (inc) Database.displayListSeries.reverse();
+                if (desc) Database.displayListSeries.reverse();
                 break;
 
             default:
@@ -239,8 +240,8 @@ export class Database {
             }
             return a.value.toString().localeCompare(b.value.toString());
         });
-
-        return results;
+        
+        return results; 
     };
 
     static getTracksByKeyword(keyword) {
@@ -317,7 +318,7 @@ export class Database {
         let rs = '';
 
         Database.listTrack.forEach(track => {
-            if (track.code === identify || track.rjCode === identify) {
+            if (track.code.toString() === identify || track.rjCode.toLowerCase() === identify.toLowerCase()) {
                 rs = track;
             }
         });
@@ -363,8 +364,9 @@ export class Database {
     }
 
     static testingFunctions() {
+        console.log('\n\n\n\n\n');
         console.time('Database functions testing time');
-        console.log('Testing functions-------------------------------------------------------------------------------------------------------');
+        console.log('Testing functions-----------------------------------------------------------------------');
         console.log( Database.getCategory('cv', '') );
         console.log( Database.getCategory('tag', '') );
         console.log( Database.getCategory('series', '') );
@@ -373,11 +375,11 @@ export class Database {
         console.log( Database.getTracksByCategory('cv', 'narumi aisaka') );
         console.log( Database.getTracksByCategory('tag', 'elf') );
         console.log( Database.getTracksByCategory('series', 'ドスケベjKシリーズ') );
-        console.log( Database.getTracksByIdentify('70855') );
+        console.log( Database.getTracksByIdentify('107613') );
         console.log( Database.getTracksByIdentify('Rj377038') );
         console.log( Database.getRandomTracks(10) );
         console.log( Database.getRandomTracks(20) );
-        console.log('End testing functions--------------------------------------------------------------------------------------------------');
+        console.log('End testing functions------------------------------------------------------------------');
         console.timeEnd('Database functions testing time');  
     }
 }

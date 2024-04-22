@@ -56,6 +56,7 @@ export class Database {
         [Database.listTrack, Database.listCv, Database.listTag, Database.listSeries].forEach((list, index) => {
             console.log(`Complete Build ${listNames[index]}:`, list);
         });
+        Database.testingFunctions();
     }
 
     // Sort functions
@@ -339,7 +340,7 @@ export class Database {
             const remainingIndexes = Array.from(
                 Array(!shuffledIndexes ? listTrack.length : listTrack.length - shuffledIndexes.length).keys()
             );
-            window.utils.shuffleArray(remainingIndexes);
+            Utils.shuffleArray(remainingIndexes);
             if (!shuffledIndexes) {
                 shuffledIndexes = remainingIndexes;
             } else {
@@ -360,21 +361,23 @@ export class Database {
 
         return randomTracks;
     }
-}
 
-console.time('Database functions testing time');
-console.log('Testing functions-------------------------------------------------------------------------------------------------------');
-console.log( Database.getCategory('cv', '') );
-console.log( Database.getCategory('tag', '') );
-console.log( Database.getCategory('series', '') );
-console.log( Database.getSearchSuggestions('na') );
-console.log( Database.getTracksByKeyword('saka') );
-console.log( Database.getTracksByCategory('cv', 'narumi aisaka') );
-console.log( Database.getTracksByCategory('tag', 'elf') );
-console.log( Database.getTracksByCategory('series', 'ドスケベjKシリーズ') );
-console.log( Database.getTracksByIdentify('70855') );
-console.log( Database.getTracksByIdentify('Rj377038') );
-console.log( Database.getRandomTracks(10) );
-console.log( Database.getRandomTracks(20) );
-console.log('End testing functions--------------------------------------------------------------------------------------------------');
-console.timeEnd('Database functions testing time');
+    static testingFunctions() {
+        console.time('Database functions testing time');
+        console.log('Testing functions-------------------------------------------------------------------------------------------------------');
+        console.log( Database.getCategory('cv', '') );
+        console.log( Database.getCategory('tag', '') );
+        console.log( Database.getCategory('series', '') );
+        console.log( Database.getSearchSuggestions('na') );
+        console.log( Database.getTracksByKeyword('saka') );
+        console.log( Database.getTracksByCategory('cv', 'narumi aisaka') );
+        console.log( Database.getTracksByCategory('tag', 'elf') );
+        console.log( Database.getTracksByCategory('series', 'ドスケベjKシリーズ') );
+        console.log( Database.getTracksByIdentify('70855') );
+        console.log( Database.getTracksByIdentify('Rj377038') );
+        console.log( Database.getRandomTracks(10) );
+        console.log( Database.getRandomTracks(20) );
+        console.log('End testing functions--------------------------------------------------------------------------------------------------');
+        console.timeEnd('Database functions testing time');  
+    }
+}

@@ -1,5 +1,5 @@
-import Utils from "../utils/utils.class";
-import { Track, Cv, Tag, Series, SearchResult, OtherLink } from "./classes";
+import Utils from "../utils/utils.class.js";
+import { Track, Cv, Tag, Series, SearchResult, OtherLink } from "../models/classes.js";
 
 export class Database {
     static listTrack = [];
@@ -66,18 +66,18 @@ export class Database {
         });
     }
 
-    static getReverseListTrack() {
-        return [...Database.listTrack].reverse();
+    static sortListTrackByUploadOrder(newest = true) {
+        Database.sortedListTrack = [...Database.listTrack].reverse();
     }
 
     static getReverseSortedListTrack() {
         return [...Database.sortedListTrack].reverse();
     }
 
-    static getStartAndEndIndex(page, itemPerPage, totalItems) {
+    static getTrackDataOfPage(page, trackPerPage, totaltotalTracks) {
         const start = (page - 1) * itemPerPage;
         const end = Math.min(start + itemPerPage - 1, totalItems);
 
-        return { start, end };
+        return Database.sortedListSeries.slice(start, end + 1);
     }
 }

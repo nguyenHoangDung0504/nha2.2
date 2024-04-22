@@ -1,4 +1,4 @@
-import { Database } from "./database";
+import { Database } from "../models/database.class.js";
 
 (()=>{
     let t0i0a = '';

@@ -1,3 +1,5 @@
+import Utils from "../utils/utils.class.js";
+
 class Track {
     constructor(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink) {
         Object.assign(this, { code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink });
@@ -7,11 +9,6 @@ class Track {
 class Category {
     constructor(name, quantity) {
         Object.assign(this, { name, quantity });
-    }
-
-    withView(view) {
-        this.view = view;
-        return this;
     }
 }
 
@@ -34,7 +31,10 @@ class Series extends Category{
 }
 
 class SearchResult {
-
+    constructor(type, value, keyword, code) {
+        Object.assign(this, { type, value, keyword, code });
+        this.displayType = Utils.convertToTitleCase(this.type);
+    }
 }
 
 class OtherLink {

@@ -99,4 +99,8 @@ export default class Utils {
             .filter((subStr) => subStr)
             .map((subStr) => subStr.trim());
     }
+
+    //Sort functions
+    static byName = (a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    static byQuantity = (a, b) => a.quantity - b.quantity;
 }

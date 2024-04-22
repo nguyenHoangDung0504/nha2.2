@@ -1,16 +1,17 @@
 import Utils from "../utils/utils.class.js";
 import { Track, Cv, Tag, Series, SearchResult, OtherLink } from "../models/classes.js";
 
+console.time('Build Database Time');
 export class Database {
     static listTrack = [];
     static listCode = [];
     static listCv = [];
     static listTag = [];
     static listSeries = [];
-    static sortedListTrack = [];
-    static sortedListCv = [];
-    static sortedListTag = [];
-    static sortedListSeries = [];
+    static displayListTrack = [];
+    static displayListCv = [];
+    static displayListTag = [];
+    static displayListSeries = [];
 
     static addTrackToDatabase(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink = "") {
         [cvs, tags, series, images, audios] = [cvs, tags, series, images, audios].map(member => Utils.standardizedTrackArrData(member));
@@ -45,38 +46,38 @@ export class Database {
 
     // Call when completed add data
     static buildData() {
-        Database.listCv.sort(byName);
-        Database.listTag.sort(byName);
-        Database.listSeries.sort(byName);
+        Database.displayListCv = Database.listCv.sort(byName);
+        Database.displayListTag = Database.listTag.sort(byName);
+        Database.displayListSeries = Database.listSeries.sort(byName);
 
         function byName(a, b) {
             return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
         }
 
+        console.timeEnd('Build Database Time');
         console.log(`Added: ${Database.listCode.length} Tracks`);
-        [Database.listTrack, Database.listCv, Database.listTag, Database.listSeries].forEach(list => {
-            console.log(`Complete Build`, list);
+        const listNames = ['List Track', 'List Cv', 'List Tag', 'List Series'];
+        [Database.listTrack, Database.listCv, Database.listTag, Database.listSeries].forEach((list, index) => {
+            console.log(`Complete Build ${listNames[index]}:`, list);
         });
     }
 
     static sortListTrackByRjCode() {
-        Database.sortedListTrack = [...Database.listTrack].sort((a, b)=>{
+        Database.displayListTrack = [...Database.listTrack].sort((a, b)=>{
             return Number(b.rjCode.replace('RJ', '').replaceAll('?','')) - Number(a.rjCode.replace('RJ', '').replaceAll('?','')) 
         });
     }
 
     static sortListTrackByUploadOrder(newest = true) {
-        Database.sortedListTrack = [...Database.listTrack].reverse();
+        Database.displayListTrack = newest ? [...Database.listTrack].reverse() : [...Database.listTrack];
     }
 
-    static getReverseSortedListTrack() {
-        return [...Database.sortedListTrack].reverse();
-    }
+    
 
-    static getTrackDataOfPage(page, trackPerPage, totaltotalTracks) {
-        const start = (page - 1) * itemPerPage;
-        const end = Math.min(start + itemPerPage - 1, totalItems);
+    static getTrackDataOfPage(page, trackPerPage) {
+        const start = (page - 1) * trackPerPage;
+        const end = Math.min(start + trackPerPage - 1, Database.listCode.length);
 
-        return Database.sortedListSeries.slice(start, end + 1);
+        return Database.displayListSeries.slice(start, end + 1);
     }
 }

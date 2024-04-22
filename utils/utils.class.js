@@ -1,11 +1,4 @@
 export default class Utils {
-    static getStartAndEndIndex(page, itemPerPage, totalItems) {
-        const start = (page - 1) * itemPerPage;
-        const end = Math.min(start + itemPerPage - 1, totalItems);
-
-        return { start, end };
-    }
-
     // Only works 100% accurately when the 'pagePerGroup' value is an odd number
     static getGroupOfPagination(currentPage, pagePerGroup, limitPage) {
         pagePerGroup = pagePerGroup > limitPage ? limitPage : pagePerGroup;

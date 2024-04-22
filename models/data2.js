@@ -125,8 +125,8 @@ import { Database } from "./database.class";
 
 })();
 
-Database.buildData();
-
 function addTrack(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink) {
     Database.addTrackToDatabase(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink);
 }
+
+Database.buildData();

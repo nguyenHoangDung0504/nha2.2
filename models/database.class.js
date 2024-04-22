@@ -13,9 +13,10 @@ export class Database {
     static sortedListSeries = [];
 
     static addTrackToDatabase(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink = "") {
-        [cvs, tags, series, images, audios, otherLink] = [cvs, tags, series, images, audios, otherLink].map(member => Utils.standardizedTrackArrData(member));
+        [cvs, tags, series, images, audios] = [cvs, tags, series, images, audios].map(member => Utils.standardizedTrackArrData(member));
         [cvs, tags, series] = [cvs, tags, series].map(member => member.sort());
-        otherLink = otherLink.split(',').map(noteNLink => {
+        otherLink = otherLink.split(',').filter(subStr => subStr).map(noteNLink => {
+            noteNLink = noteNLink.trim();
             const [note, link] = noteNLink.split(':').map(item => item.trim());
             return new OtherLink(note, link);
         })
@@ -26,22 +27,20 @@ export class Database {
         
         const listOfListToAddItem = [Database.listCv, Database.listTag, Database.listSeries];
         const classToCreate = [Cv, Tag, Series];
-        [cvs, tags, series].forEach(member => {
-            member.forEach(callBack);
+        [cvs, tags, series].forEach((member, index) => {
+            member.forEach(item => {
+                const listToAddItem = listOfListToAddItem[index];
+                if(item) {
+                    let indexOfItem = listToAddItem.findIndex(itemToFind => itemToFind.name == item);
+    
+                    if(indexOfItem == -1) {
+                        listToAddItem.push(new classToCreate[index](item, 1))
+                    } else {
+                        listToAddItem[indexOfItem].count++
+                    }                
+                }
+            });
         });
-
-        function callBack(item, index) {
-            const listToAddItem = listOfListToAddItem[index];
-            if(item) {
-                let indexOfItem = listToAddItem.findIndex(itemToFind => itemToFind.name == item);
-
-                if(indexOfItem == -1) {
-                    listToAddItem.push(new classToCreate[index](item, 1))
-                } else {
-                    listToAddItem[indexOfItem].count++
-                }                
-            }
-        }
     }
 
     // Call when completed add data

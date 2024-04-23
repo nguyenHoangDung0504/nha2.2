@@ -43,7 +43,6 @@ export default class Utils {
 
         return Array.from({ length: pagePerGroup }, (_, i) => startPage + i);
     }
-
     static addQueryToUrl(key, value) {
         let currentLink = window.location.href;
         let url = new URL(currentLink);
@@ -57,7 +56,6 @@ export default class Utils {
 
         return url.toString();
     }
-
     static shuffleArray(array) {
         let currentIndex = array.length;
         let temporaryValue, randomIndex;
@@ -72,17 +70,14 @@ export default class Utils {
 
         return array;
     }
-
     static highlight(text, highlightValue) {
         let regexp = new RegExp(highlightValue, "i");
         return text.toString().replace(regexp, `<span class="highlight">$&</span>`);
     }
-
     static removeHighlight(text) {
         let regex = /<span class="highlight">([\s\S]*?)<\/span>/gi;
         return text.toString().replace(regex, "$1");
     }
-
     static convertToTitleCase(str) {
         let formattedStr = str.replace(/([A-Z])/g, " $1");
 
@@ -93,7 +88,6 @@ export default class Utils {
 
         return formattedStr;
     }
-
     static standardizedTrackArrData(str) {
         return str.split(",")
             .filter((subStr) => subStr)

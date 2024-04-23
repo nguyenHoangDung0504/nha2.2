@@ -32,14 +32,13 @@ export class Database {
         [cvs, tags, series].forEach((member, index) => {
             member.forEach(item => {
                 const listToAddItem = listOfListToAddItem[index];
-                if (item) {
-                    let indexOfItem = listToAddItem.findIndex(itemToFind => itemToFind.name == item);
+                if (!item) return;
+                let indexOfItem = listToAddItem.findIndex(itemToFind => itemToFind.name == item);
 
-                    if (indexOfItem == -1) {
-                        listToAddItem.push(new classToCreate[index](item, 1));
-                    } else {
-                        listToAddItem[indexOfItem].quantity++;
-                    }
+                if (indexOfItem == -1) {
+                    listToAddItem.push(new classToCreate[index](item, 1));
+                } else {
+                    listToAddItem[indexOfItem].quantity++;
                 }
             });
         });
@@ -69,19 +68,16 @@ export class Database {
         if (desc)
             Database.displayListTrack.reverse();
     }
-
     static sortListTrackByCode(desc = false) {
         Database.displayListTrack = [...Database.listTrack].sort((a, b) => a.code - b.code);
         if (desc)
             Database.displayListTrack.reverse();
     }
-
     static sortListTrackByUploadOrder(desc = false) {
         Database.displayListTrack = [...Database.listTrack];
         if (desc)
             Database.displayListTrack.reverse();
     }
-
     static sortListCategoryByName(listName, desc = false) {
         switch (listName.toLowerCase()) {
             case 'cv':
@@ -101,7 +97,6 @@ export class Database {
                 break;
         }
     }
-
     static sortListCategoryByQuantity(listName, desc = false) {
         switch (listName.toLowerCase()) {
             case 'cv':
@@ -144,7 +139,6 @@ export class Database {
 
         return returnValue;
     }
-
     static getCategory(type, keyword) {
         const lowerCaseKeyword = keyword.toLowerCase();
         let arrayToSearch;
@@ -169,7 +163,6 @@ export class Database {
 
         return returnValue;
     }
-
     static getSearchSuggestions(keyword) {
         const lowerCaseKeyword = keyword.toString().toLowerCase();
         const results = [];
@@ -244,7 +237,6 @@ export class Database {
         
         return results; 
     };
-
     static getTracksByKeyword(keyword) {
         const listTrack = Database.displayListTrack;
         const lowerCaseKeyword = keyword.toString().toLowerCase();
@@ -299,7 +291,6 @@ export class Database {
 
         return results.map((index) => listTrack[index]);
     };
-
     static getTracksByCategory(categoryType, keyword) {
         const listTrack = Database.displayListTrack;
         const lowerCaseKeyword = keyword.toLowerCase();
@@ -314,7 +305,6 @@ export class Database {
 
         return tracks;
     }
-
     static getTracksByIdentify(identify) {
         let rs = '';
 
@@ -326,14 +316,12 @@ export class Database {
 
         return rs;
     }
-
     static getTracksDataOfPage(page, trackPerPage) {
         const start = (page - 1) * trackPerPage;
         const end = Math.min(start + trackPerPage - 1, Database.listCode.length);
 
         return Database.displayListSeries.slice(start, end + 1);
     }
-
     static getRandomTracks(n) {
         const listTrack = Database.listTrack;
         let shuffledIndexes = JSON.parse(localStorage.getItem('shuffledIndexes'));
@@ -363,7 +351,6 @@ export class Database {
 
         return randomTracks;
     }
-
     static testingFunctions() {
         console.log('\n\n\n\n\n');
         console.time('Database functions testing time');
@@ -381,6 +368,6 @@ export class Database {
         console.log( Database.getRandomTracks(10) );
         console.log( Database.getRandomTracks(20) );
         console.log('End testing functions------------------------------------------------------------------');
-        console.timeEnd('Database functions testing time');  
+        console.timeEnd('Database functions testing time');
     }
 }

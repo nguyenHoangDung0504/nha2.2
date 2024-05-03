@@ -1,5 +1,6 @@
 console.time('Build Database Time');
 class Database {
+    static log = true;
     static listTrack = [];
     static listCode = [];
     static listCv = [];
@@ -39,22 +40,6 @@ class Database {
                 }
             });
         });
-    }
-
-    // Call when completed add data
-    static buildData() {
-        Database.sortListTrackByRjCode();
-        Database.displayListCv = Database.listCv.sort(Utils.byName);
-        Database.displayListTag = Database.listTag.sort(Utils.byName);
-        Database.displayListSeries = Database.listSeries.sort(Utils.byName);
-
-        console.timeEnd('Build Database Time');
-        console.log(`Added: ${Database.listCode.length} Tracks`);
-        const listNames = ['List Track', 'List Cv', 'List Tag', 'List Series'];
-        [Database.displayListTrack, Database.displayListCv, Database.displayListTag, Database.displayListSeries].forEach((list, index) => {
-            console.log(`Complete Build ${listNames[index]}:`, list);
-        });
-        Database.testingFunctions();
     }
 
     // Sort functions
@@ -348,22 +333,40 @@ class Database {
 
         return randomTracks;
     }
+
+    // Call when completed add data
+    static buildData() {
+        Database.sortListTrackByRjCode();
+        Database.displayListCv = Database.listCv.sort(Utils.byName);
+        Database.displayListTag = Database.listTag.sort(Utils.byName);
+        Database.displayListSeries = Database.listSeries.sort(Utils.byName);
+
+        console.timeEnd('Build Database Time');
+        console.log(`Added: ${Database.listCode.length} Tracks`);
+        const listNames = ['List Track', 'List Cv', 'List Tag', 'List Series'];
+        [Database.displayListTrack, Database.displayListCv, Database.displayListTag, Database.displayListSeries].forEach((list, index) => {
+            if(!log) return;
+            console.log(`Complete Build ${listNames[index]}:`, list);
+        });
+        Database.testingFunctions();
+    }
     static testingFunctions() {
+        if(!log) return;
         console.log('\n\n\n\n\n');
         console.time('Database functions testing time');
         console.log('Testing functions-----------------------------------------------------------------------');
-        console.log( Database.getCategory('cv', '') );
-        console.log( Database.getCategory('tag', '') );
-        console.log( Database.getCategory('series', '') );
-        console.log( Database.getSearchSuggestions('na') );
-        console.log( Database.getTracksByKeyword('saka') );
-        console.log( Database.getTracksByCategory('cv', 'narumi aisaka') );
-        console.log( Database.getTracksByCategory('tag', 'elf') );
-        console.log( Database.getTracksByCategory('series', 'ドスケベjKシリーズ') );
-        console.log( Database.getTracksByIdentify('107613') );
-        console.log( Database.getTracksByIdentify('Rj377038') );
-        console.log( Database.getRandomTracks(10) );
-        console.log( Database.getRandomTracks(20) );
+        console.log( 'Get category "cv" with keyword "" (Get all CVs):', Database.getCategory('cv', '') );
+        console.log( 'Get category "tag" with keyword "" (Get all Tags):', Database.getCategory('tag', '') );
+        console.log( 'Get category "series" with keyword "" (Get all Series):', Database.getCategory('series', '') );
+        console.log( 'Get search suggestions with keyword "Na"', Database.getSearchSuggestions('Na') );
+        console.log( 'Get all tracks by keyword "saka"', Database.getTracksByKeyword('saka') );
+        console.log( 'Get tracks by category "cv" with keyword "narumi aisaka"', Database.getTracksByCategory('cv', 'narumi aisaka') );
+        console.log( 'Get tracks by category "tag" with keyword "elf"', Database.getTracksByCategory('tag', 'elf') );
+        console.log( 'Get tracks by category "series" with keyword "ドスケベjKシリーズ"', Database.getTracksByCategory('series', 'ドスケベjKシリーズ') );
+        console.log( 'Get tracks by identify with code "107613"', Database.getTracksByIdentify('107613') );
+        console.log( 'Get tracks by identify with RJcode "Rj377038"', Database.getTracksByIdentify('Rj377038') );
+        console.log( 'Get random 10 tracks', Database.getRandomTracks(10) );
+        console.log( 'Get random 20 tracks', Database.getRandomTracks(20) );
         console.log('End testing functions------------------------------------------------------------------');
         console.timeEnd('Database functions testing time');
     }

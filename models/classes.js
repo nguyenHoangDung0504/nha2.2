@@ -1,5 +1,3 @@
-import Utils from "../utils/utils.class.js";
-
 class Track {
     constructor(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink) {
         Object.assign(this, { code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink });
@@ -36,5 +34,3 @@ class OtherLink {
         Object.assign(this, { note, url });
     }
 }
-
-export { Track, Cv, Tag, Series, SearchResult, OtherLink };

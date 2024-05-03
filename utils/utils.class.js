@@ -1,4 +1,4 @@
-export default class Utils {
+class Utils {
     // Only works 100% accurately when the 'pagePerGroup' value is an odd number
     static getGroupOfPagination(currentPage, pagePerGroup, limitPage) {
         pagePerGroup = pagePerGroup > limitPage ? limitPage : pagePerGroup;

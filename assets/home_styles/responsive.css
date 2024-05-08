@@ -327,6 +327,27 @@
         --number-col: 2;
         grid-template-columns: calc(var(--screen-width) * 0) calc(var(--screen-width) * 1) calc(var(--screen-width) * 0);
     }
+
+    /* NEW MODAL */
+    .border-spin-special-box {
+        width: 99%;
+        height: 99%;
+    }
+
+    .modal-header {
+        height: 6%;
+    }
+
+    .modal-body {
+        height: calc(94% - 10px);
+    }
+
+    .modal-body.rank-list {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        grid-template-rows: repeat(3, min-content);
+        overflow-y: auto;
+    }
+    /* END NEW MODAL */
 }
 
 
@@ -938,4 +959,8 @@
         --number-col: 4;
         grid-template-columns: calc(var(--screen-width) * 0.02) calc(var(--screen-width) * 0.96) calc(var(--screen-width) * 0.02);
     }
+
+    /* NEW MODAL */
+
+    /* END NEW MODAL */
 }

@@ -947,6 +947,420 @@ body.openModel>.model-container {
 
 /*END FOOTER*/
 
+/* NEW MODAL */
+/* Border Spin Special Box */
+/* Sử dụng như một div bình thường */
+.border-spin-special-box.pink-blue {
+    --border-spin-special-box-main-color: deeppink;
+    --border-spin-special-box-nor-color: #00bfff;
+}
+
+.border-spin-special-box.pink-gold {
+    --border-spin-special-box-main-color: deeppink;
+    --border-spin-special-box-nor-color: gold;
+}
+
+.border-spin-special-box.pink-white {
+    --border-spin-special-box-main-color: deeppink;
+    --border-spin-special-box-nor-color: white;
+}
+
+.border-spin-special-box.white-black {
+    --border-spin-special-box-main-color: white;
+    --border-spin-special-box-nor-color: black;
+}
+
+.border-spin-special-box {
+    --box-border-radius: 10px;
+    --box-margin: 4px;
+    position: relative;
+    width: 97%;
+    height: 98%;
+    min-width: 200px;
+    min-height: 100px;
+    padding: var(--box-margin);
+    border-radius: var(--box-border-radius);
+    filter: drop-shadow(0 0 2px var(--border-spin-special-box-nor-color)) drop-shadow(0 0 4px var(--border-spin-special-box-main-color));
+}
+
+.border-spin-special-box.animate {
+    background: repeating-conic-gradient(from var(--a),
+            transparent 0%,
+            transparent 12.5%,
+            var(--border-spin-special-box-nor-color) 20%,
+            /* gold 22.5%,
+                gold 27.5%, */
+            var(--border-spin-special-box-main-color) 40%,
+            var(--border-spin-special-box-main-color) 40%,
+            transparent 50%,
+            transparent 50%,
+            transparent 62.5%,
+            var(--border-spin-special-box-nor-color) 70%,
+            /* gold 72.5%,
+                gold 77.5%, */
+            var(--border-spin-special-box-main-color) 90%,
+            var(--border-spin-special-box-main-color) 90%,
+            transparent 100%);
+    animation: rolate 5s linear infinite;
+    filter: drop-shadow(0 0 2px var(--border-spin-special-box-main-color));
+    fill-opacity: 0.2;
+}
+
+@property --a {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes rolate {
+    0% {
+        --a: 0deg;
+    }
+
+    100% {
+        --a: 360deg;
+    }
+}
+
+/* X Special Button */
+/* Đây là một nút, nếu đặt trong một khối cha, khối đó phải có height hoặc width cố định và aspect ratio 1*/
+.x-special-button.pink-blue {
+    --x-special-button-main-color: deeppink;
+    --x-special-button-nor-color: #00bfff;
+}
+
+.x-special-button.pink-gold {
+    --x-special-button-main-color: deeppink;
+    --x-special-button-nor-color: gold;
+}
+
+.x-special-button.pink-white {
+    --x-special-button-main-color: deeppink;
+    --x-special-button-nor-color: white;
+}
+
+.x-special-button.white-black {
+    --x-special-button-main-color: white;
+    --x-special-button-nor-color: black;
+}
+
+.x-special-button {
+    position: relative;
+    height: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 0 2px var(--x-special-button-main-color));
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.x-special-button::before {
+    content: "";
+    width: 100%;
+    aspect-ratio: 1;
+    position: absolute;
+    clip-path: polygon(50% 25%, 100% 50%, 50% 75%, 0 50%);
+    background-color: var(--x-special-button-nor-color);
+    transform: scale(1.5) rotate(45deg);
+    z-index: 1;
+}
+
+.x-special-button::after {
+    content: "";
+    width: 100%;
+    aspect-ratio: 1;
+    position: absolute;
+    clip-path: polygon(50% 0%, 65% 50%, 50% 100%, 35% 50%);
+    background-color: var(--x-special-button-main-color);
+    transform: scale(1.5) rotate(45deg) scaleY(1.25);
+    z-index: 2;
+}
+
+.x-special-button.border .x-sub-special-border {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid var(--x-special-button-main-color);
+    pointer-events: none;
+    transition: 0.1s;
+}
+
+.x-special-button.border .x-sub-special-big-border {
+    width: 90%;
+    height: 90%;
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--x-special-button-nor-color);
+    transform: scale(1.3);
+    pointer-events: none;
+    transition: 0.15s;
+}
+
+.x-special-button.border .x-sub-special-big-border-hidden {
+    width: 90%;
+    height: 90%;
+    opacity: 0;
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--x-special-button-nor-color);
+    pointer-events: none;
+    transition: 0.2s;
+}
+
+.x-special-button.border.animate:active .x-sub-special-border {
+    transform: scale(1.3);
+    border: 4px solid var(--x-special-button-main-color);
+}
+
+.x-special-button.border.animate:active .x-sub-special-big-border {
+    transform: scale(1.5);
+    border: 3px solid var(--x-special-button-nor-color);
+    ;
+}
+
+.x-special-button.border.animate:active .x-sub-special-big-border-hidden {
+    transform: scale(1.75);
+    opacity: 1;
+    border: 1px solid var(--x-special-button-nor-color);
+    ;
+    box-shadow: 0 0 5px var(--x-special-button-nor-color);
+    ;
+}
+
+.x-special-button .x-sub-special-button {
+    position: relative;
+    background-color: var(--x-special-button-main-color);
+    clip-path: polygon(50% 0%, 70% 50%, 50% 100%, 30% 50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    aspect-ratio: 1;
+    cursor: pointer;
+    transform: scaleX(0.5) rotate(-40deg) scaleY(1.5);
+    z-index: 2;
+}
+
+/* Modal style */
+.modal-container.open {
+    position: fixed;
+    opacity: 1;
+    pointer-events: all;
+}
+
+.close-btn {
+    height: 100%;
+    aspect-ratio: 1;
+}
+
+.modal-container {
+    opacity: 0;
+    pointer-events: none;
+    transition: .4s;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100dvh;
+    cursor: pointer;
+}
+
+.modal-content {
+    width: 100%;
+    height: 100%;
+    background-color: #222;
+    border-radius: calc(var(--box-border-radius) - var(--box-margin));
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+    gap: 10px;
+    grid-template-rows: 1fr 10fr;
+}
+
+.modal-header {
+    width: 100%;
+    height: 9%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    font-weight: 600;
+    font-size: 1.2rem;
+    padding: 5px 20px;
+    background-color: black;
+    border-bottom: 3px solid var(--border-spin-special-box-main-color);
+}
+
+.modal-body {
+    height: calc(91% - 10px);
+}
+
+.modal-body.rank-list {
+    padding: 10px;
+    background-color: black;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.rank-list .rank-list-grid-item {
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.rank-list .rank-list-grid-item::-webkit-scrollbar {width: 6px;}
+.rank-list .rank-list-grid-item::-webkit-scrollbar-track {border-radius: 10px; border: .5px solid var(--category-color);}
+.rank-list .rank-list-grid-item::-webkit-scrollbar-thumb {border-radius: 10px; background-color: var(--category-color);}
+
+.rank-list-grid-item.cv {
+    --before-content: "❤";
+    --category-color: deeppink;
+}
+
+.rank-list-grid-item.tag {
+    --before-content: "♦";
+    --category-color: gold;
+}
+
+.rank-list-grid-item.series {
+    --before-content: "►";
+    --category-color: #00bfff;
+}
+
+.rank-list-grid-item .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--category-color);
+    margin: 5px;
+    padding: 10px;
+    border-left: 10px solid var(--category-color);
+    border-right: 0px solid var(--category-color);
+    border-block: 0px solid var(--category-color);
+    padding-left: 10px;
+    text-transform: uppercase;
+}
+
+.rank-list-grid-item .title i.fas {
+    display: block;
+    transition: .3s;
+    transform: rotate(-90deg);
+}
+
+.rank-list-grid-item .title:is(.active) {
+    border-right-width: 5px;
+    border-left-width: 45px;
+    /* border-block-width: 1px; */
+}
+
+.rank-list-grid-item .title:is(.active) i.fas {
+    transform: rotate(0deg);
+}
+
+/* List item */
+.accordion-header {
+    position: sticky;
+    top: 0;
+    cursor: pointer;
+    transition: .3s;
+    background-color: black;
+}
+
+.sub-rank-list {
+    padding: 10px 10px 10px 0;
+    width: 100%;
+    height: fit-content;
+}
+
+.sub-rank-list a.item {
+    transition: .3s;
+    display: block;
+    padding: 10px 20px;
+    color: var(--category-color);
+    cursor: pointer;
+    font-weight: 500;
+    border-radius: 5px;
+    font-size: 1.04rem;
+}
+
+.sub-rank-list a.item:hover {
+    /* margin-bottom: 5px; */
+    /* transform: translateX(20px); */
+    /* width: calc(100% - 20px); */
+    box-shadow: 1px 0px 14px var(--category-color);
+    background-color: #111;
+}
+
+.sub-rank-list a.item::before {
+    content: var(--before-content);
+    margin: 2px;
+    margin-right: 8px;
+    font-size: .85rem;
+}
+
+.sub-rank-list a.item::after {
+    content: " (" attr(quantity) ")";
+    margin: 2px;
+    margin-right: 8px;
+}
+
+.accordion-content {
+    display: flex;
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background-color: #222;
+    margin-left: 10px;
+    border-left: 2px solid var(--category-color);
+    border-bottom: 2px solid var(--category-color);
+}
+
+.search {
+    outline: none;
+    border: none;
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px;
+    background-color: #111;
+    color: white;
+}
+
+.select-box {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.select-box label {
+    font-size: 1.04rem;
+    padding: 10px 20px;
+    font-size: 1.04rem;
+    color: white;
+}
+
+.select-box select {
+    padding: 10px;
+    outline: none;
+    border: none;
+    flex: 1;
+    background-color: #111;
+    color: white;
+    cursor: pointer;
+}
+
+.select-box option {
+    padding: 10px;
+    cursor: pointer;
+}
+/* END NEW MODAL */
+
 @media screen and (max-width: 780px) {
     :is(.text-container, #track-info) .cv:before {
         content: "";

@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+    <link rel="stylesheet" href="assets/home_styles/main.css">
+    <link rel="stylesheet" href="assets/home_styles/responsive.css">
+    <!-- <link rel="stylesheet" href="assets/home_styles/main.min.css">
+    <link rel="stylesheet" href="assets/home_styles/responsive.min.css"> -->
     <!-- <link rel="icon" type="image/x-icon"
         href="https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/icon-edited.webp?v=1704340956129" /> -->
     <title>Document</title>
@@ -14,11 +18,259 @@
     <script src="models/app-classes.js"></script>
     <script src="models/Database.class.js"></script>
     <script src="controller/Config.class.js"></script>
-    <script src="controller/home/App.class.js"></script>
 </head>
 
 <body>
+    <div class="modal-container open">
+        <div class="border-spin-special-box animate pink-blue">
+            <div class="modal-content">
+                <div class="modal-header">
+                    CATEGORIES - NHD ASMR
+                    &ensp;
+                    <div class="close-btn">
+                        <div class="x-special-button border animate pink-blue">
+                            <div class="x-sub-special-button"></div>
+                            <div class="x-sub-special-border"></div>
+                            <div class="x-sub-special-big-border"></div>
+                            <div class="x-sub-special-big-border-hidden"></div>
+                        </div>
+                    </div>
 
+                </div>
+
+                <div class="modal-body rank-list">
+
+                    <div class="accordion-item rank-list-grid-item cv">
+                        <h3 class="accordion-header title">Cvs<i class="fas fa-chevron-down"></i></h3>
+                        <div class="sub-rank-list accordion-content" id="rank-list-of-cv">
+
+                            <input class="search" type="text" placeholder="search">
+                            <div class="select-box">
+                                <label for="sort-cv">Sort by: </label>
+                                <select id="sort-cv">
+                                    <option value="name">Name</option>
+                                    <option value="quantity">Quantity</option>
+                                    <!--Thêm các tùy chọn khác nếu cần-->
+                                </select>
+                            </div>
+
+                            <div class="links">
+                                <a class="item" quantity="10">Item 1</a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="accordion-item rank-list-grid-item tag">
+                        <h3 class="accordion-header title">Tags<i class="fas fa-chevron-down"></i></h3>
+                        <div class="sub-rank-list accordion-content" id="rank-list-of-tag">
+
+                            <input class="search" type="text" placeholder="search">
+                            <div class="select-box">
+                                <label for="sort-tag">Sort by: </label>
+                                <select id="sort-tag">
+                                    <option value="name">Name</option>
+                                    <option value="quantity">Quantity</option>
+                                    <!--Thêm các tùy chọn khác nếu cần-->
+                                </select>
+                            </div>
+
+                            <div class="links">
+                                <a class="item" quantity="10">Item 1</a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="accordion-item rank-list-grid-item series">
+                        <h3 class="accordion-header title">Series<i class="fas fa-chevron-down"></i></h3>
+                        <div class="sub-rank-list accordion-content" id="rank-list-of-series">
+
+                            <input class="search" type="text" placeholder="search">
+                            <div class="select-box">
+                                <label for="sort-series">Sort by: </label>
+                                <select id="sort-series">
+                                    <option value="name">Name</option>
+                                    <option value="quantity">Quantity</option>
+                                    <!--Thêm các tùy chọn khác nếu cần-->
+                                </select>
+                            </div>
+
+                            <div class="links">
+                                <a class="item" quantity="10">Item 1</a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="button-div">
+            <h1 class="button-open">&#9776;</h1>
+        </div>
+        <div class="title-div">
+            <a href="..">
+                <h1 class="title"><img
+                        src="https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/icon-edited.webp?v=1704340956129">
+                    NHD ASMR</h1>
+            </a>
+        </div>
+        <div class="search-div">
+            <div class="search-div2">
+                <input type="text" class="search-input" id="input" placeholder="Search here..." value="">
+                <div class="search-icon">
+                    <h1><i class="fas fa-search"></i></h1>
+                </div>
+            </div>
+            <div class="result-box"></div>
+        </div>
+    </div>
+
+    <div class="menu">
+        <a class="title">
+            <h1>NHD ASMR - Menu</h1>
+        </a>
+        <a class="menu-item close-menu-button" href="javascript:void(0)">Close Menu</a>
+        <a class="menu-item direct-items">
+            Directions:
+            <div class="item back-item" title="Back"><i class="fa fa-arrow-left" aria-hidden="true"></i></div>
+            <div class="item reload-item" title="Reload"><i class="fa fa-refresh" aria-hidden="true"></i></div>
+            <div class="item forward-item" title="Forward"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
+        </a>
+        <a href="javascript:void(0);" class="menu-item">Advance Search 🔎</a>
+        <a class="menu-item open-category-modal-btn">Categories</a>
+        <a class="menu-item open-model-btn">Gacha Machine</a>
+        <a target="_blank" href="https://nhdasmr-v.glitch.me/" class="menu-item">Another versions</a>
+    </div>
+
+    <!-- HOME VIEW -->
+    <p class="message">[message content]</p>
+    <div class="content">
+        <div class="hidden-data-container">[hidden data]</div>
+
+        <div class="grid-container">
+
+            <div data-added-action="true" data-code="114641" class="grid-item" id="link_to_114641">
+                <div class="image-container"><a href="/watch?code=114641"><img loading="lazy"
+                            src="https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/114641-0.jpg?v=1714555722950"
+                            alt="thumbnail of 114641"></a></div>
+                <div class="flex-container"><a href="/watch?code=114641">
+                        <div class="text-container">
+                            <p class="multiline-ellipsis"><b><i>RJ01185774</i></b> - <span>When I was reincarnated in
+                                    another world, I was raped by the older sister of a big-breasted gravure idol who
+                                    hates me ~ Creampie sex that won’t end until she get pregnant ~</span></p>
+                        </div>
+                    </a>
+                    <div class="text-container">
+                        <p class="singleline-ellipsis"><br><b>CV</b>: <a title="CV: 星野天" class="cv"
+                                href="..?cv=星野天">星野天</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div data-added-action="true" data-code="114571" class="grid-item" id="link_to_114571">
+                <div class="image-container"><a href="/watch?code=114571"><img loading="lazy"
+                            src="https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/114571-0.jpg?v=1714557096487"
+                            alt="thumbnail of 114571"></a></div>
+                <div class="flex-container"><a href="/watch?code=114571">
+                        <div class="text-container">
+                            <p class="multiline-ellipsis"><b><i>RJ01173424</i></b> - <span>She may seem unfriendly, but
+                                    she is considerate and a super beautiful wife who gently supports me! ~Business Wife
+                                    System~</span></p>
+                        </div>
+                    </a>
+                    <div class="text-container">
+                        <p class="singleline-ellipsis"><br><b>CV</b>: <a title="CV: Mio Namimi" class="cv"
+                                href="..?cv=Mio Namimi">Mio Namimi</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div data-added-action="true" data-code="114264" class="grid-item" id="link_to_114264">
+                <div class="image-container"><a href="/watch?code=114264"><img loading="lazy"
+                            src="https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/114264-0.jpg?v=1714557810626"
+                            alt="thumbnail of 114264"></a></div>
+                <div class="flex-container"><a href="/watch?code=114264">
+                        <div class="text-container">
+                            <p class="multiline-ellipsis"><b><i>RJ01178141</i></b> - <span>Diary of making a lewd
+                                    interspecies child between me, a human, and a JK with huge breasts from another
+                                    world♪</span></p>
+                        </div>
+                    </a>
+                    <div class="text-container">
+                        <p class="singleline-ellipsis"><br><b>CV</b>: <a title="CV: Yuka Hinata" class="cv"
+                                href="..?cv=Yuka Hinata">Yuka Hinata</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div data-added-action="true" data-code="114242" class="grid-item" id="link_to_114242">
+                <div class="image-container"><a href="/watch?code=114242"><img loading="lazy"
+                            src="https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/114242-0.jpg?v=1714558720174"
+                            alt="thumbnail of 114242"></a></div>
+                <div class="flex-container"><a href="/watch?code=114242">
+                        <div class="text-container">
+                            <p class="multiline-ellipsis"><b><i>RJ01172764</i></b> - <span>The story of how I became the
+                                    role model for the moody erotic manga artist JK-chan</span></p>
+                        </div>
+                    </a>
+                    <div class="text-container">
+                        <p class="singleline-ellipsis"><br><b>CV</b>: <a title="CV: Tsubame Yuzuki" class="cv"
+                                href="..?cv=Tsubame Yuzuki">Tsubame Yuzuki</a></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div></div>
+    </div>
+    
+    <div class="pagination">
+        <div class="pagination-body">
+            <a class="block" href="https://nhdasmr-v2-1.glitch.me/?page=1" id="first-link">&lt;&lt;</a>
+            <a class="active" href="https://nhdasmr-v2-1.glitch.me/?page=1">1</a>
+            <a class="" href="https://nhdasmr-v2-1.glitch.me/?page=2">2</a>
+            <a class="" href="https://nhdasmr-v2-1.glitch.me/?page=3">3</a>
+            <a class="" href="https://nhdasmr-v2-1.glitch.me/?page=4">4</a>
+            <a class="" href="https://nhdasmr-v2-1.glitch.me/?page=5">5</a>
+            <a class="" href="https://nhdasmr-v2-1.glitch.me/?page=6">6</a>
+            <a class="" href="https://nhdasmr-v2-1.glitch.me/?page=7">7</a>
+            <a class="[class]" href="https://nhdasmr-v2-1.glitch.me/?page=12" id="last-link">&gt;&gt;</a>
+        </div>
+    </div>
+
+    <!-- HOME VIEW -->
+    <div class="footer">
+        <h1 class="title">NHD Hentai - ASMR Hentai</h1>
+        <div class="footer-content">
+            <div class="grid-item">
+                <h2>Source ASMR Websites</h2> <a target="_blank" href="https://www.dlsite.com/maniax/asmr"><span
+                        style="color: #00BFFF;">►</span> DLsite</a><a target="_blank"
+                    href="https://japaneseasmr.com/"><span style="color: #00BFFF;">►</span> Japanese ASMR</a><a
+                    target="_blank" href="https://www.asmr.one/works"><span style="color: #00BFFF;">►</span> ASMR
+                    ONE</a><a target="_blank" href="https://nightfawn.com/listen-public/"><span
+                        style="color: #00BFFF;">►</span> Nightfawn ASMR</a><a target="_blank"
+                    href="https://www.jasmr.net/"><span style="color: #00BFFF;">►</span> JASMR</a>
+            </div>
+            <div class="grid-item">
+                <h2>Many Type Of Hentai Website</h2> <a target="_blank" href="https://hentaianimezone.com/"><span
+                        style="color: #00BFFF;">►</span> HentaiAnimeZone</a>
+            </div>
+            <div class="grid-item">
+                <h2>Manga Hentai Websites</h2> <a target="_blank" href="https://imhentai.xxx/"><span
+                        style="color: #00BFFF;">►</span> IMHentai</a><a target="_blank"
+                    href="https://hentaifox.com/"><span style="color: #00BFFF;">►</span> HentaiFox</a>
+            </div>
+        </div>
+        <p class="c">© 2023 NHD Hentai - ASMR Hentai. All rights reserved.</p>
+    </div>
+
+    <script src="controller/home/App.class.js"></script>
 </body>
 
 </html>

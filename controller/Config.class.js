@@ -24,13 +24,6 @@ class Config {
 
             Config.openMenu();
         }
-    // Modal Configs
-        static openModal(modalId) {
-            document.body.querySelector(`.modal#${modalId}`).classList.add('open');
-        }
-        static closeModal(modalId) {
-            document.body.querySelector(`.modal#${modalId}`).classList.remove('open');
-        }
     // Result box Configs
         static hideResultBox() {
             setTimeout(() => {

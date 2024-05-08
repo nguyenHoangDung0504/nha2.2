@@ -1157,6 +1157,8 @@ body.openModel>.model-container {
 }
 
 .modal-container {
+    position: fixed;
+    inset: 0;
     opacity: 0;
     pointer-events: none;
     transition: .4s;

@@ -1331,6 +1331,12 @@ body.openModel>.model-container {
     margin: 10px;
     background-color: #111;
     color: white;
+    font-size: 1rem;
+}
+
+input[type="text"].search::selection {
+    background-color: white;
+    color: black;
 }
 
 .select-box {

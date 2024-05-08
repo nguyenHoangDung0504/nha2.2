@@ -1,9 +1,6 @@
 'use strict';
 
 class App {
-    static Database = Database;
-
-
     static buildApp() {
         console.time('Home - Build app time');
 
@@ -33,7 +30,7 @@ class App {
         accordions.forEach(function (accordion) {
             accordion.addEventListener('click', function () {
                 this.classList.toggle('active');
-                var panel = this.nextElementSibling;
+                let panel = this.nextElementSibling;
                 if (panel.style.maxHeight) {
                     panel.style.maxHeight = null;
                 } else {
@@ -42,7 +39,17 @@ class App {
             });
         });
 
-
+        const [listCvCtn, listTagCtn, listSeriesCtn] = [rankListCvCtn, rankListTagCtn, rankListSeriesCtn].map(ctn => ctn.querySelector('.links'));
+        [listCvCtn, listTagCtn, listSeriesCtn].forEach(ctn => ctn.innerHTML = '');
+        Database.listCv.forEach(({ name, quantity }) => {
+            listCvCtn.innerHTML += `<a href="../?cv=${encodeURIComponent(name)}" class="item" quantity="${quantity}">${Utils.convertToTitleCase(name)}</a>`;
+        });
+        Database.listTag.forEach(({ name, quantity }) => {
+            listTagCtn.innerHTML += `<a href="../?tag=${encodeURIComponent(name)}" class="item" quantity="${quantity}">${Utils.convertToTitleCase(name)}</a>`;
+        });
+        Database.listSeries.forEach(({ name, quantity }) => {
+            listSeriesCtn.innerHTML += `<a href="../?series=${encodeURIComponent(name)}" class="item" quantity="${quantity}">${Utils.convertToTitleCase(name)}</a>`;
+        });
 
         App.startSendAppStatus();
         console.timeEnd('Home - Build app time');

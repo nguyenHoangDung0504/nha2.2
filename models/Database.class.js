@@ -1,3 +1,5 @@
+'use strict';
+
 console.time('Build Database Time');
 class Database {
     static log = true;
@@ -42,7 +44,7 @@ class Database {
         });
     }
 
-    // Sort functions
+    // Sort tracks functions
     static sortListTrackByRjCode(desc = false) {
         Database.displayListTrack = [...Database.listTrack].sort((a, b) => {
             return Number(b.rjCode.replace('RJ', '').replaceAll('?', '')) - Number(a.rjCode.replace('RJ', '').replaceAll('?', ''))
@@ -60,6 +62,8 @@ class Database {
         if (desc)
             Database.displayListTrack.reverse();
     }
+
+    //Sort categories functions
     static sortListCategoryByName(listName, desc = false) {
         switch (listName.toLowerCase()) {
             case 'cv':
@@ -298,7 +302,7 @@ class Database {
 
         return rs;
     }
-    static getTracksDataOfPage(page, trackPerPage) {
+    static getTrackDataOfPage(page, trackPerPage) {
         const start = (page - 1) * trackPerPage;
         const end = Math.min(start + trackPerPage - 1, Database.listCode.length);
 
@@ -345,13 +349,13 @@ class Database {
         console.log(`Added: ${Database.listCode.length} Tracks`);
         const listNames = ['List Track', 'List Cv', 'List Tag', 'List Series'];
         [Database.displayListTrack, Database.displayListCv, Database.displayListTag, Database.displayListSeries].forEach((list, index) => {
-            if(!log) return;
+            if(!Database.log) return;
             console.log(`Complete Build ${listNames[index]}:`, list);
         });
         Database.testingFunctions();
     }
     static testingFunctions() {
-        if(!log) return;
+        if(!Database.log) return;
         console.log('\n\n\n\n\n');
         console.time('Database functions testing time');
         console.log('Testing functions-----------------------------------------------------------------------');

@@ -47,6 +47,8 @@ class Utils {
         let currentLink = window.location.href;
         let url = new URL(currentLink);
         let queryParams = url.searchParams;
+        
+        value = encodeURIComponent(value);
 
         if (queryParams.has(key)) {
             queryParams.set(key, value);
@@ -93,8 +95,19 @@ class Utils {
             .filter((subStr) => subStr)
             .map((subStr) => subStr.trim());
     }
-
+    // Apply cache for functions
+    static memoize(func) {
+        const cache = {};
+        return function(...args) {
+            const key = JSON.stringify(args);
+            if (!(key in cache)) {
+                cache[key] = func.apply(this, args);
+            }
+            return cache[key];
+        };
+    }
+    
     //Sort functions
-    static byName = (a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-    static byQuantity = (a, b) => a.quantity - b.quantity;
+        static byName = (a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+        static byQuantity = (a, b) => a.quantity - b.quantity;
 }

@@ -1,3 +1,5 @@
+'use strict';
+
 class Track {
     constructor(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink) {
         Object.assign(this, { code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink });

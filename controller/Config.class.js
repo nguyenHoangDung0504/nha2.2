@@ -1,11 +1,6 @@
 'use strict';
 
 class Config {
-    static APP_NAME = 'NHD ASMR'
-    static APP_ICON_URL = 'https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/icon-edited.webp?v=1704340956129'
-    static BASE_MESSAGE = 'NHD Hentai - ASMR Hentai Tracks'
-    static MENU_TITLE = Config.APP_NAME + ' - Menu'
-
     static deviceIsMobile() {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }

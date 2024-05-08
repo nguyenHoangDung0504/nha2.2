@@ -1,5 +1,4 @@
 class Utils {
-    // Only works 100% accurately when the 'pagePerGroup' value is an odd number
     static getGroupOfPagination(currentPage, pagePerGroup, limitPage) {
         pagePerGroup = pagePerGroup > limitPage ? limitPage : pagePerGroup;
 
@@ -42,7 +41,7 @@ class Utils {
         }
 
         return Array.from({ length: pagePerGroup }, (_, i) => startPage + i);
-    }
+    }// Only works 100% accurately when the 'pagePerGroup' value is an odd number
     static addQueryToUrl(key, value) {
         let currentLink = window.location.href;
         let url = new URL(currentLink);
@@ -95,7 +94,6 @@ class Utils {
             .filter((subStr) => subStr)
             .map((subStr) => subStr.trim());
     }
-    // Apply cache for functions
     static memoize(func) {
         const cache = {};
         return function(...args) {
@@ -105,8 +103,8 @@ class Utils {
             }
             return cache[key];
         };
-    }
-    
+    }// Apply cache for functions
+
     //Sort functions
         static byName = (a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase());
         static byQuantity = (a, b) => a.quantity - b.quantity;

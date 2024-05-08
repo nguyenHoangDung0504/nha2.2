@@ -17,7 +17,7 @@ class Config {
                 document.body.classList.remove('openMenu');
         }
         static toggleMenu() {
-            if (Config.menuIsOpen) {
+            if (Config.menuIsOpen()) {
                 Config.closeMenu();
                 return
             }

@@ -1162,7 +1162,7 @@ body.openModel>.model-container {
     opacity: 0;
     pointer-events: none;
     transition: .4s;
-    z-index: 100;
+    z-index: 100000;
     background-color: rgba(0, 0, 0, 0.7);
     display: grid;
     place-items: center;
@@ -1219,17 +1219,17 @@ body.openModel>.model-container {
 .rank-list .rank-list-grid-item::-webkit-scrollbar-track {border-radius: 10px; border: .5px solid var(--category-color);}
 .rank-list .rank-list-grid-item::-webkit-scrollbar-thumb {border-radius: 10px; background-color: var(--category-color);}
 
-.rank-list-grid-item.cv {
+.rank-list-grid-item.cv-b {
     --before-content: "❤";
     --category-color: deeppink;
 }
 
-.rank-list-grid-item.tag {
+.rank-list-grid-item.tag-b {
     --before-content: "♦";
     --category-color: gold;
 }
 
-.rank-list-grid-item.series {
+.rank-list-grid-item.series-b {
     --before-content: "►";
     --category-color: #00bfff;
 }

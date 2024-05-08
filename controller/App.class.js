@@ -9,7 +9,7 @@ class App {
             rankListCvCtn, rankListTagCtn, rankListSeriesCtn
         ] = [
             '.open-category-modal-btn', '#categories-modal', '#open-menu-btn',
-            '.rank-list-grid-item.cv', '.rank-list-grid-item.tag', '.rank-list-grid-item.series'
+            '.rank-list-grid-item.cv-b', '.rank-list-grid-item.tag-b', '.rank-list-grid-item.series-b'
         ].map(selector => {
             return document.querySelector(selector);
         });
@@ -41,18 +41,28 @@ class App {
 
         const [listCvCtn, listTagCtn, listSeriesCtn] = [rankListCvCtn, rankListTagCtn, rankListSeriesCtn].map(ctn => ctn.querySelector('.links'));
         [listCvCtn, listTagCtn, listSeriesCtn].forEach(ctn => ctn.innerHTML = '');
+        const listLength = [Database.listCv, Database.listTag, Database.listSeries].map(list => list.length);
+        [rankListCvCtn, rankListTagCtn, rankListSeriesCtn].forEach((ctn, index) => ctn.querySelector('.title').textContent += ` (${listLength[index]})`);
         Database.listCv.forEach(({ name, quantity }) => {
-            listCvCtn.innerHTML += `<a href="../?cv=${encodeURIComponent(name)}" class="item" quantity="${quantity}">${Utils.convertToTitleCase(name)}</a>`;
+            listCvCtn.innerHTML += `<a href="../?cv=${encodeURIComponent(name)}" class="item" quantity="${quantity}">${name}</a>`;
         });
         Database.listTag.forEach(({ name, quantity }) => {
-            listTagCtn.innerHTML += `<a href="../?tag=${encodeURIComponent(name)}" class="item" quantity="${quantity}">${Utils.convertToTitleCase(name)}</a>`;
+            listTagCtn.innerHTML += `<a href="../?tag=${encodeURIComponent(name)}" class="item" quantity="${quantity}">${name}</a>`;
         });
         Database.listSeries.forEach(({ name, quantity }) => {
-            listSeriesCtn.innerHTML += `<a href="../?series=${encodeURIComponent(name)}" class="item" quantity="${quantity}">${Utils.convertToTitleCase(name)}</a>`;
+            listSeriesCtn.innerHTML += `<a href="../?series=${encodeURIComponent(name)}" class="item" quantity="${quantity}">${name}</a>`;
         });
 
         App.startSendAppStatus();
         console.timeEnd('Home - Build app time');
+    }
+
+    static buildHeader() {
+
+    }
+
+    static buildMenu() {
+
     }
 
     static startSendAppStatus() {

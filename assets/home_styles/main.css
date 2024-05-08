@@ -1316,7 +1316,7 @@ body.openModel>.model-container {
     flex-direction: column;
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease;
+    transition: .5s;
     background-color: #222;
     margin-left: 10px;
     border-left: 2px solid var(--category-color);

@@ -1,3 +1,5 @@
+'use strict';
+
 class Utils {
     static getGroupOfPagination(currentPage, pagePerGroup, limitPage) {
         pagePerGroup = pagePerGroup > limitPage ? limitPage : pagePerGroup;
@@ -92,7 +94,12 @@ class Utils {
     static standardizedTrackArrData(str) {
         return str.split(",")
             .filter((subStr) => subStr)
-            .map((subStr) => subStr.trim());
+            .map((subStr) => 
+                subStr.trim()
+                .replaceAll("”", '"')
+                .replaceAll("“", '"')
+                .replaceAll('’', "'")
+            );
     }
     static memoize(func) {
         const cache = {};

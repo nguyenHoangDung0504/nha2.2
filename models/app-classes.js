@@ -31,6 +31,16 @@ class SearchResult {
         Object.assign(this, { type, value, keyword, code });
         this.displayType = Utils.convertToTitleCase(this.type);
     }
+
+    getView() {
+        let value = Utils.highlight(this.value, this.keyword);
+        let href = ``;
+        if (this.type == 'cv' || this.type == 'tag' || this.type == 'series')
+            href = `..?${this.type}=${this.value}`
+        else
+            href = `../watch?code=${this.code}`;
+        return `<a href="${href}">🔎 <strong>${this.displayType}</strong>: <span class="cnt">${value}</span></a>`;
+    }
 }
 class OtherLink {
     constructor(note, url) {

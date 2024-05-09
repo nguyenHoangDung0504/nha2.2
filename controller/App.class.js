@@ -31,7 +31,87 @@ class App {
 
     // For search box
     static buildHeaderAction() {
-        // Search action
+        const mainSearchInput = document.querySelector('#main-search-input') ?? (App.warnSelectorNotFound)();
+        const mainSearchIcon = document.querySelector('#main-search-icon') ?? (App.warnSelectorNotFound)();
+        const resultBox = document.querySelector('.result-box') ?? (App.warnSelectorNotFound)();
+
+        mainSearchInput?.addEventListener('blur', Config.hideResultBox);
+        mainSearchInput?.addEventListener('keyup', () => search(mainSearchInput?.value));
+        mainSearchInput?.addEventListener('click', Config.showResultBox);
+        mainSearchInput?.addEventListener('focus', () => document.body.addEventListener('keyup', getEnter));
+        mainSearchInput?.addEventListener('blur', () => document.body.removeEventListener('keyup', getEnter));
+        mainSearchIcon?.addEventListener('click', () => {
+            const searchValue = mainSearchInput?.value;
+            if (searchValue) {
+                mainSearchInput?.value = '';
+                if (!developerSearch(searchValue)) {
+                    window.location = `..?search=${searchValue}`;
+                }
+            }
+        });
+
+
+        function getEnter(event) {
+            if (event.key == 'Enter') {
+                const searchValue = mainSearchInput?.value;
+                if (searchValue) {
+                    mainSearchInput?.value = '';
+                    if (!developerSearch(searchValue)) {
+                        window.location = `..?search=${searchValue}`;
+                    }
+                }
+            }
+        }
+
+        function search(value) {
+            if (value == '') {
+                resultBox.innerHTML = '';
+                Config.hideResultBox();
+                return;
+            }
+
+            if (value.includes('@')) {
+                resultBox.innerHTML = `
+                    <a href="../?search=@n"><span style="color: #00BFFF;">►</span><strong>@n</strong>: <span class="cnt">View newest tracks</span></a>
+                    <a href="../develop/list-code"><span style="color: #00BFFF;">►</span><strong>@lc or @listcode</strong>: <span class="cnt">View list code</span></a>
+                    <a href="../develop/data-capacity"><span style="color: #00BFFF;">►</span><strong>@dc or @datacapacity</strong>: <span class="cnt">View data capacity</span></a>
+                    <a href="https://japaneseasmr.com/"><span style="color: #00BFFF;">►</span><strong>@ja</strong>: <span class="cnt">Japanese ASMR</span></a>
+                    <a href="https://www.asmr.one/works"><span style="color: #00BFFF;">►</span><strong>@ao</strong>: <span class="cnt">ASMR ONE</span></a>
+                `;
+                Config.showResultBox();
+                return;
+            }
+
+            let suggestions = Database.getSearchSuggestions(value);
+            if (suggestions.length == 0) {
+                resultBox.innerHTML = `<a style="text-align:center;">-No Result-</a>`;
+            } else {
+                resultBox.innerHTML = suggestions.reduce((html, searchResult) => html.concat(searchResult.getView()), '');
+            }
+            window.settingfs.showRB();
+        }
+
+        function developerSearch(value) {
+            let active = false;
+            if (value.indexOf('@') == -1)
+                return active;
+
+            const options = ['lc', 'listcode', 'dc', 'datacapacity', 'ja', 'ao']
+            const links = [
+                '../develop/list-code', '../develop/list-code', '../develop/data-capacity', '../develop/data-capacity',
+                'https://japaneseasmr.com/', 'https://www.asmr.one/works'
+            ]
+            const optionBeforeSplit = value
+            const optionAfterSplit = optionBeforeSplit.split('-')
+            const option = options.indexOf(optionAfterSplit[0].replaceAll('@', ''))
+            if (option != -1) {
+                active = true;
+                optionAfterSplit[1] == 'b'
+                    ? window.open(links[option], '_blank')
+                    : window.location = links[option]
+            }
+            return active;
+        }
     }
 
     // For menu
@@ -93,9 +173,9 @@ class App {
             searchBox?.addEventListener('input', () => {
                 const keyword = searchBox.value.trim().toLowerCase();
 
-                if(keyword) {
+                if (keyword) {
                     listOfLinks.forEach(link => {
-                        if(link.textContent.toLowerCase().includes(keyword)) {
+                        if (link.textContent.toLowerCase().includes(keyword)) {
                             link.style.display = "block";
                             link.innerHTML = Utils.removeHighlight(link.innerHTML);
                             link.innerHTML = Utils.highlight(link.innerHTML, keyword);
@@ -122,7 +202,7 @@ class App {
                     case 'quantity':
                         sortedListOfLinks = Array.from(listOfLinks).sort((a, b) => Number(b.getAttribute('quantity')) - Number(a.getAttribute('quantity')));
                         break;
-                    default: 
+                    default:
                         throw new Error('Invalid sort type');
                 }
 

@@ -329,6 +329,10 @@
     }
 
     /* NEW MODAL */
+    .sub-rank-list a.item, .accordion-header {
+        font-size: 1rem;
+    }
+
     .border-spin-special-box {
         width: 99%;
         height: 99%;

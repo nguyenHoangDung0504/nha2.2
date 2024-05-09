@@ -67,11 +67,12 @@ class App {
     }
     static buildCategoriesModalAction() {
         const categoriesModal = document.querySelector('#categories-modal') ?? (App.warnSelectorNotFound)();
-        const accordions = categoriesModal.querySelectorAll('.accordion-header') ?? (App.warnSelectorNotFound)();
+        const accordions = categoriesModal.querySelectorAll('.accordion-header');
         const btnOpenCategoryModal = document.querySelector('#open-categories-modal-btn') ?? (App.warnSelectorNotFound)();
         const btnCloseCategoryModal = categoriesModal.querySelector('#close-categories-modal-btn') ?? (App.warnSelectorNotFound)();
+        const subRankList = categoriesModal.querySelectorAll('.sub-rank-list');
 
-        accordions?.forEach(accordion => {
+        accordions.forEach(accordion => {
             accordion.addEventListener('click', () => {
                 accordion.classList.toggle('active');
                 let panel = accordion.nextElementSibling;
@@ -80,6 +81,52 @@ class App {
                 } else {
                     panel.style.maxHeight = panel.scrollHeight + 'px';
                 }
+            });
+        });
+
+        subRankList.forEach(subRankBox => {
+            const searchBox = subRankBox.querySelector('input.search') ?? (App.warnSelectorNotFound)();
+            const sortTypeSelect = subRankBox.querySelector('select') ?? (App.warnSelectorNotFound)();
+            const linkContainer = subRankBox.querySelector('.links') ?? (App.warnSelectorNotFound)();
+            const listOfLinks = linkContainer.querySelectorAll('a.item');
+
+            searchBox?.addEventListener('input', () => {
+                const keyword = searchBox.value.trim().toLowerCase();
+
+                if(keyword) {
+                    listOfLinks.forEach(link => {
+                        if(link.textContent.toLowerCase().includes(keyword)) {
+                            link.style.display = "block";
+                            link.innerHTML = Utils.highlight(link.innerHTML);
+                            link.innerHTML = Utils.highlight(link.innerHTML, keyword);
+                            return;
+                        }
+                        link.style.display = "none";
+                    });
+                    return;
+                }
+
+                listOfLinks.forEach(link => {
+                    link.style.display = "block";
+                    link.innerHTML = Utils.removeHighlight(link.innerHTML);
+                });
+            });
+
+            sortTypeSelect?.addEventListener('input', () => {
+                let sortedListOfLinks = null;
+
+                switch (sortTypeSelect.value.toLowerCase()) {
+                    case 'name':
+                        sortedListOfLinks = Array.from(listOfLinks).sort((a, b) => a.textContent.localeCompare(b.textContent));
+                        break;
+                    case 'quantity':
+                        sortedListOfLinks = Array.from(listOfLinks).sort((a, b) => Number(b.getAttribute('quantity')) - Number(a.getAttribute('quantity')));
+                        break;
+                    default: 
+                        throw new Error('Invalid sort type');
+                }
+
+                sortedListOfLinks.forEach(link => linkContainer.appendChild(link));
             });
         });
 

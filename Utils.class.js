@@ -2,6 +2,8 @@
 
 class Utils {
     static getGroupOfPagination(currentPage, pagePerGroup, limitPage) {
+        if(pagePerGroup %2 === 0)
+            throw new Error('Only works 100% accurately when the \'pagePerGroup\' value is an odd number');
         pagePerGroup = pagePerGroup > limitPage ? limitPage : pagePerGroup;
 
         // Special case 1
@@ -43,7 +45,7 @@ class Utils {
         }
 
         return Array.from({ length: pagePerGroup }, (_, i) => startPage + i);
-    }// Only works 100% accurately when the 'pagePerGroup' value is an odd number
+    }
     static addQueryToUrl(key, value) {
         let currentLink = window.location.href;
         let url = new URL(currentLink);

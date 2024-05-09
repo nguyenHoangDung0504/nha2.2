@@ -329,9 +329,25 @@
     }
 
     /* NEW MODAL */
-    .sub-rank-list a.item, .accordion-header {
-        font-size: 1rem;
+    .sub-rank-list a.item,
+    .accordion-header,
+    .search,
+    .select-box :is(select, option, label) {
+        font-size: 12px;
     }
+
+    .sub-rank-list a.item {
+        padding-block: 7px;
+    }
+
+    .select-box,
+    .search {
+        margin-bottom: 0;
+    }
+
+    /*   .accordion-content, .accordion-header {
+    transition: 0s;
+  } */
 
     .border-spin-special-box {
         width: 99%;
@@ -339,11 +355,13 @@
     }
 
     .modal-header {
-        height: 6%;
+        height: 10%;
+        font-size: 15px;
+        padding-inline: 10px;
     }
 
     .modal-body {
-        height: calc(94% - 10px);
+        height: calc(90% - 10px);
     }
 
     .modal-body.rank-list {
@@ -351,6 +369,7 @@
         grid-template-rows: repeat(3, min-content);
         overflow-y: auto;
     }
+
     /* END NEW MODAL */
 }
 
@@ -965,6 +984,46 @@
     }
 
     /* NEW MODAL */
+    .sub-rank-list a.item,
+    .accordion-header,
+    .search,
+    .select-box :is(select, option, label) {
+        font-size: 12px;
+    }
+
+    .sub-rank-list a.item {
+        padding-block: 7px;
+    }
+
+    .select-box,
+    .search {
+        margin-bottom: 0;
+    }
+
+    /*   .accordion-content, .accordion-header {
+    transition: 0s;
+  } */
+
+    .border-spin-special-box {
+        width: 99%;
+        height: 99%;
+    }
+
+    .modal-header {
+        height: 18%;
+        font-size: 15px;
+        padding-inline: 10px;
+    }
+
+    .modal-body {
+        height: calc(82% - 10px);
+    }
+
+    .modal-body.rank-list {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        grid-template-rows: repeat(3, min-content);
+        overflow-y: auto;
+    }
 
     /* END NEW MODAL */
 }

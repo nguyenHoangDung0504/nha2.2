@@ -211,10 +211,12 @@ class App {
 
         btnOpenCategoryModal?.addEventListener('click', () => {
             categoriesModal?.classList.add('open');
+            document.body.classList.add('openModal');
         });
 
         btnCloseCategoryModal?.addEventListener('click', () => {
             categoriesModal?.classList.remove('open');
+            document.body.classList.remove('openModal');
         });
     }
 

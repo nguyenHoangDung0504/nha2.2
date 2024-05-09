@@ -31,7 +31,7 @@ class Config {
             }, 200);
         }
         static showResultBox() {
-            let searchBox = document.querySelector('input#input.search-input');
+            let searchBox = document.querySelector('input#main-search-input.search-input');
             let resultBox = document.querySelector('.result-box');
 
             if (searchBox.value)

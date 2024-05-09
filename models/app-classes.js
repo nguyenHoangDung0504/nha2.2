@@ -36,7 +36,7 @@ class SearchResult {
         let value = Utils.highlight(this.value, this.keyword);
         let href = ``;
         if (this.type == 'cv' || this.type == 'tag' || this.type == 'series')
-            href = `..?${this.type}=${this.value}`
+            href = `..?${this.type}=${encodeURIComponent(this.value)}`;
         else
             href = `../watch?code=${this.code}`;
         return `<a href="${href}">🔎 <strong>${this.displayType}</strong>: <span class="cnt">${value}</span></a>`;

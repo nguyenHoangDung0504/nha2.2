@@ -43,19 +43,18 @@ class App {
         mainSearchIcon?.addEventListener('click', () => {
             const searchValue = mainSearchInput?.value;
             if (searchValue) {
-                mainSearchInput?.value = '';
+                mainSearchInput.value = '';
                 if (!developerSearch(searchValue)) {
                     window.location = `..?search=${searchValue}`;
                 }
             }
         });
 
-
         function getEnter(event) {
             if (event.key == 'Enter') {
                 const searchValue = mainSearchInput?.value;
                 if (searchValue) {
-                    mainSearchInput?.value = '';
+                    mainSearchInput.value = '';
                     if (!developerSearch(searchValue)) {
                         window.location = `..?search=${searchValue}`;
                     }
@@ -88,7 +87,7 @@ class App {
             } else {
                 resultBox.innerHTML = suggestions.reduce((html, searchResult) => html.concat(searchResult.getView()), '');
             }
-            window.settingfs.showRB();
+            Config.showResultBox();
         }
 
         function developerSearch(value) {
@@ -231,6 +230,5 @@ class App {
         const stackTrace = new Error().stack;
         const callingLine = stackTrace.split('\n')[2];
         console.warn(`Warning, selector not found ${callingLine.trim()}`);
-        return false;
     }
 }

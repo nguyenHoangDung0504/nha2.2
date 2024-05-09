@@ -1302,9 +1302,12 @@ body.openModel>.model-container {
     font-size: 1.04rem;
 }
 
-/* a.item .highlight {
-    background-color: rgba(var(--category-color), .5);
-} */
+a.item .highlight {
+    text-decoration: none;
+    border-bottom: 2px solid var(--category-color);
+    color: var(--category-color);
+    background-color: rgba(0, 0, 0, 1);
+}
 
 .sub-rank-list a.item:hover {
     /* margin-bottom: 5px; */

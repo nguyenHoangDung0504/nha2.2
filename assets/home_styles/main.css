@@ -1291,6 +1291,10 @@ body.openModel>.model-container {
     font-size: 1.04rem;
 }
 
+/* a.item .highlight {
+    background-color: rgba(var(--category-color), .5);
+} */
+
 .sub-rank-list a.item:hover {
     /* margin-bottom: 5px; */
     /* transform: translateX(20px); */

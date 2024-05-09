@@ -97,7 +97,7 @@ class App {
                     listOfLinks.forEach(link => {
                         if(link.textContent.toLowerCase().includes(keyword)) {
                             link.style.display = "block";
-                            link.innerHTML = Utils.highlight(link.innerHTML);
+                            link.innerHTML = Utils.removeHighlight(link.innerHTML);
                             link.innerHTML = Utils.highlight(link.innerHTML, keyword);
                             return;
                         }

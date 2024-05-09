@@ -21,14 +21,11 @@ class Config {
                 Config.closeMenu();
                 return
             }
-
             Config.openMenu();
         }
     // Result box Configs
         static hideResultBox() {
-            setTimeout(() => {
-                document.querySelector('.result-box').style.display = 'none';
-            }, 200);
+            setTimeout(() => { document.querySelector('.result-box').style.display = 'none' }, 200);
         }
         static showResultBox() {
             let searchBox = document.querySelector('input#main-search-input.search-input');
@@ -62,7 +59,6 @@ class Config {
                 Config.openFullscreen();
                 return;
             }
-            
             Config.closeFullscreen();
         }
 }

@@ -5,6 +5,31 @@ class Track {
     constructor(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink) {
         Object.assign(this, { code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink });
     }
+
+    static hiddenItemTemplate = 
+    `<div class="hidden-info" id="hidden_info_of_[code]">
+        <div class="content-container">
+            <h3><b>RJ Code</b>: [rjCode]</h3>
+            <h3><b>Series</b>: [listOfSeries]</h3>
+            <h3><b>Eng Name</b>: [engName]</h3>
+            <h3><b>Original Name</b>: [japName]</h3>
+            <h3><b>CV</b>: [listOfCvs]</h3>
+            <h3><b>Tags</b>: [listOfTags]</h3>
+        </div>
+        <div class="image-container">
+            <img loading="lazy" src="[thumbnail]" alt="thumbnail of [code]">
+        </div>
+    </div>`;
+
+    getHiddenItem() {
+        const replaceValues = [
+            '[code]', '[rjCode]', '[listOfCvs]', '[listOfTags]', 
+            '[listOfSeries]', '[engName]', '[japName]', '[thumbnail]'
+        ];
+        return Object.values(this).reduce((html, replaceValue, i) => {
+            return html.replaceAll(replaceValues[i], replaceValue);
+        }, Track.hiddenItemTemplate);
+    }
 }
 class Category {
     constructor(name, quantity) {

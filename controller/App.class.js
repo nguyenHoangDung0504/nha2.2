@@ -12,11 +12,12 @@ class App {
         // Common Build
         App.buildHeaderAction();
         App.buildMenuAction();
+        App.buildCategoriesModalView();
+        App.buildCategoriesModalAction();
 
         switch (type) {
             case App.types.HOME_PAGE:
-                App.buildCategoriesModalView();
-                App.buildCategoriesModalAction();
+                App.buildGridOfTracks();
                 break;
             case App.types.WATCH_PAGE:
                 break;
@@ -61,7 +62,6 @@ class App {
                 }
             }
         }
-
         function search(value) {
             if (value == '') {
                 resultBox.innerHTML = '';
@@ -89,7 +89,6 @@ class App {
             }
             Config.showResultBox();
         }
-
         function developerSearch(value) {
             let active = false;
             if (value.indexOf('@') == -1)
@@ -218,6 +217,10 @@ class App {
             categoriesModal?.classList.remove('open');
             document.body.classList.remove('openModal');
         });
+    }
+
+    static buildGridOfTracks() {
+
     }
 
     // Call when complete build app

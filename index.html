@@ -13,14 +13,16 @@
 
     <!-- Normal scripts -->
     <script src="Utils.class.js"></script>
-    <script src="models/app-classes.js"></script>
+    <script src="models/classes.js"></script>
     <script src="models/Database.class.js"></script>
     <script src="controller/Config.class.js"></script>
     <script src="controller/App.class.js"></script>
 </head>
 
 <body class="openMenu">
-    <script>Config.deviceIsMobile() || Config.closeMenu()</script>
+    <!-- OPEN MENU IF DEVICE IS NOT MOBILE -->
+    <script>Config.deviceIsMobile() || Config.openMenu()</script>
+
     <!-- CATEGORIES MODAL -->
     <div class="modal-container" id="categories-modal">
         <div class="border-spin-special-box animate pink-blue">
@@ -263,6 +265,7 @@
         <p class="c">© 2023 NHD Hentai - ASMR Hentai. All rights reserved.</p>
     </div>
 
+    <!-- BUILD APP -->
     <script>App.buildApp()</script>
 </body>
 

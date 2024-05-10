@@ -23,11 +23,11 @@ class Track {
 
     getHiddenItem() {
         const replaceValues = [
-            '[code]', '[rjCode]', '[listOfCvs]', '[listOfTags]', 
+            '[code]', '[rjCode]', '[listOfCvs]', '[listOfTags]',
             '[listOfSeries]', '[engName]', '[japName]', '[thumbnail]'
         ];
         return Object.values(this).reduce((html, replaceValue, i) => {
-            return html.replaceAll(replaceValues[i], replaceValue);
+            return html.replaceAll(replaceValues[i], replaceValue).replace(/\s+/g, ' ');
         }, Track.hiddenItemTemplate);
     }
 }

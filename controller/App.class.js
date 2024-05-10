@@ -160,6 +160,8 @@ class App {
                     panel.style.maxHeight = panel.scrollHeight + 'px';
                 }
             });
+
+            Config.deviceIsMobile || accordion.click();
         });
 
         subRankList.forEach(subRankBox => {

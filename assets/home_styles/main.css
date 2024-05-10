@@ -136,7 +136,7 @@ input[type="text"]::selection {
     display: flex;
     position: sticky;
     top: 0;
-    background-color: var(--bg);
+    background-color: var(--bg2);
     /* width: var(--screen-width); */
     height: calc(var(--screen-height) * .10);
     overflow: hidden;
@@ -152,7 +152,7 @@ input[type="text"]::selection {
 
 .header .button-div h1.button-open {
     /*     transition: var(--time); */
-    color: var(--text-color);
+    /*     color: var(--text-color); */
     display: block;
     margin: auto;
     transform: scaleX(1.4);
@@ -160,6 +160,10 @@ input[type="text"]::selection {
     position: fixed;
     z-index: 99999;
     user-select: none;
+    background: linear-gradient(45deg, var(--special-color), deeppink);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .header .title-div {
@@ -179,11 +183,15 @@ input[type="text"]::selection {
 }
 
 .header .title-div h1.title {
-    color: var(--text-color);
+    /*     color: var(--text-color); */
     display: block;
     margin: auto;
     text-overflow: ellipsis;
     user-select: none;
+    background: linear-gradient(45deg, var(--special-color), deeppink);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .header .search-div {
@@ -196,27 +204,31 @@ input[type="text"]::selection {
 
 .header .search-div .result-box {
     position: fixed;
-    top: calc(var(--screen-height) * .1);
+    top: calc(var(--screen-height) * .09);
     height: fit-content;
     max-height: 540px;
     overflow-y: auto;
     width: 566px;
-    background-color: var(--big-bg);
+    background-color: var(--bg);
     font-size: 18px;
     border: 1px solid black;
     z-index: 99999999;
     display: none;
-    border-radius: 10px;
+    border-radius: 5px;
+    padding: 5px;
 }
 
 .header .search-div .result-box a {
     display: block;
     padding: 10px 15px;
+    transition: .3s;
+    color: #DDD;
+    border-radius: 5px;
     /* margin: 2px 0; */
 }
 
 .header .search-div .result-box a:hover {
-    background-color: rgba(0, 106, 255, 0.3);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .header .search-div .search-div2 {
@@ -227,9 +239,9 @@ input[type="text"]::selection {
 }
 
 .header .search-div .search-div2 input[type="text"].search-input {
-    padding: 15px 24px;
+    padding: 10px 24px;
     width: calc(var(--screen-width) * .34);
-    font-size: 20px;
+    font-size: 18px;
     outline: none;
     border: none;
     border-radius: 10px 0px 0px 10px;
@@ -342,8 +354,13 @@ input[type="text"]::selection {
     display: block;
     text-align: center;
     font-size: 70%;
-    color: var(--text-color);
+    /*     color: var(--text-color); */
     margin: 10px 0px;
+    background: linear-gradient(45deg, var(--special-color), deeppink);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
 }
 
 .menu .hidden-list {

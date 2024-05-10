@@ -109,14 +109,14 @@ class Utils {
             const key = JSON.stringify(args);
             if (!(key in cache)) {
                 cache[key] = func.apply(this, args);
-                console.log('Cached');
+                console.log('Cached Result!');
             }
             return cache[key];
         };
     }// Apply cache for functions
     static memoizeGetAndSearchMethods(target) {
         const methodNames = Object.getOwnPropertyNames(target).filter(name => 
-            ['get', 'search'].reduce((rs, keyword) => rs && name.includes(keyword), true)
+            ['get', 'search'].reduce((rs, keyword) => rs || name.includes(keyword), true)
             && (typeof target[name]) === 'function'
         );
         methodNames.forEach(methodName => {

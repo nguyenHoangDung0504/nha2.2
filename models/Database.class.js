@@ -265,7 +265,7 @@ class Database {
 
     // Call when completed add data
         static completeBuild() {
-            Utils.memoizeClassMethods(Database);
+            Utils.memoizeGetAndSearchMethods(Database);
             if(Database.config.test)
                 Database.testingFunctions();
         }
@@ -739,6 +739,7 @@ class Database {
     at(68697, "RJ409425", "Yuka Hinata", "Big Breasts,Cheerleader,Oneesan,Paizuri,Sister,Incest", "", "Sweet sex with lots of love while being cheered on by a cheerleader sister", "【応援/あまあま/KU100】チアガールお姉さんに応援されながら愛情たっぷりあまあまセックス", "https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/68697-0.jpg?v=1714558736762", "https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/68697-1.jpg?v=1714558735329", "https://cdn.glitch.me/36049008-0c55-496e-873e-a2f971037d73/68697t1.mp3?v=1714558734031");
     at(33085, "RJ220667", "Popura Sawano ", "ASMR,Cheerleader,Dirty Talk,School Girl", "", "Mean Cheerleading Sisters’ Edging & Masochistic Discipline Course!", "意地悪な後輩チアガール姉妹の射精我慢＆マゾ彼氏調教コース!", "https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/33085-0.jpg?v=1714558999689", "https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/33085-1.jpg?v=1714559000861", "https://cdn.glitch.me/36049008-0c55-496e-873e-a2f971037d73/33085t1.mp3?v=1714559015915");
     
+    Database.completeBuild();
 })();
 
 function at(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink) {

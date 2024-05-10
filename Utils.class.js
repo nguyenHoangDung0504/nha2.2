@@ -109,6 +109,7 @@ class Utils {
             const key = JSON.stringify(args);
             if (!(key in cache)) {
                 cache[key] = func.apply(this, args);
+                console.log('Cached');
             }
             return cache[key];
         };

@@ -306,7 +306,7 @@ class Database {
         const start = (page - 1) * trackPerPage;
         const end = Math.min(start + trackPerPage - 1, Database.listCode.length);
 
-        return Database.displayListSeries.slice(start, end + 1);
+        return Database.displayListTrack.slice(start, end + 1);
     }
     static getRandomTracks(n) {
         const listTrack = Database.listTrack;

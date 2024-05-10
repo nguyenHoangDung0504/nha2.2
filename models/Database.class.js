@@ -1,5 +1,5 @@
 'use strict';
-
+// map.forEach((value, key)=>{console.log(key, value)}) using map
 class Database {
     static config = {
         log: true,
@@ -12,11 +12,11 @@ class Database {
     static tagMap = new Map();
     static seriesMap = new Map();
 
-    static addTrackToDatabase(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink = "") {
+    static addTrackToDatabase(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink = undefined) {
         [cvs, tags, series, images, audios] = [cvs, tags, series, images, audios].map(member => Utils.standardizedTrackArrData(member));
         [cvs, tags, series] = [cvs, tags, series].map(member => member.sort());
 
-        otherLink = otherLink.split(',').filter(subStr => subStr).map(noteNLink => {
+        otherLink = otherLink?.split(',').filter(subStr => subStr).map(noteNLink => {
             noteNLink = noteNLink.trim();
             const [note, link] = noteNLink.split('::').map(item => item.trim());
             return new OtherLink(note, link);
@@ -27,20 +27,241 @@ class Database {
         Database.trackKeyMap.set(rjCode, code);
         Database.trackMap.set(code, track);
 
-
         const mapList = [Database.cvMap, Database.tagMap, Database.seriesMap];
         const classToCreate = [Cv, Tag, Series];
         
         [cvs, tags, series].forEach((member, i) => {
             member.forEach(item => {
-                if(mapList[i].has(item)) {
-                    mapList[i].get(item).quantity++;
+                const key = item.toLowerCase();
+                if(mapList[i].has(key)) {
+                    mapList[i].get(key).quantity++;
                     return;
                 }
-                mapList[i].set(member, new classToCreate[i](item, 1));
+                mapList[i].set(key, new classToCreate[i](item, 1));
             });
         });
     }
+
+    // Get data functions
+        static getCategory = Utils.memoize((type, keyword) => {
+            let map = null;
+
+            switch (type) {
+                case 'cv': map = Database.cvMap; break;
+                case 'tag': map = Database.tagMap; break;
+                case 'series': map = Database.seriesMap; break;
+                default: throw new Error('Invalid category type');
+            }
+
+            return map.get(keyword.toLowerCase());
+        });
+        static searchCategory = Utils.memoize((type, keyword) => {
+            const lowerCaseKeyword = keyword.toLowerCase();
+            const result = [];
+            let map = null;
+
+            switch (type) {
+                case 'cv': map = Database.cvMap; break;
+                case 'tag': map = Database.tagMap; break;
+                case 'series': map = Database.seriesMap; break;
+                default: throw new Error('Invalid category type');
+            }
+
+            map.forEach((value, key) => {
+                if(key.includes(lowerCaseKeyword))
+                    result.push()
+            });
+
+            return result;
+        });
+        static getSearchSuggestions(keyword) {
+            const lowerCaseKeyword = keyword.toString().toLowerCase();
+            const results = [];
+            const seen = new Set();
+    
+            Database.displayListTrack.forEach(track => {
+                const lowerCaseCode = track.code.toString();
+                const lowerCaseRjCode = track.rjCode.toLowerCase();
+                const lowerCaseJapName = track.japName.toLowerCase();
+                const lowerCaseEngName = track.engName.toLowerCase();
+    
+                // Check code
+                if (lowerCaseCode.includes(lowerCaseKeyword) && !seen.has(`${track.code}_code`)) {
+                    results.push(new SearchResult("code", track.code, keyword, track.code));
+                    seen.add(`${track.code}_code`);
+                }
+                // Check rjCode
+                if (lowerCaseRjCode.includes(lowerCaseKeyword) && !seen.has(`${track.rjCode}_rjCode`)) {
+                    results.push(new SearchResult("rjCode", track.rjCode, keyword, track.code));
+                    seen.add(`${track.rjCode}_rjCode`);
+                }
+                // Check cvs
+                track.cvs.forEach(cv => {
+                    const lowerCaseCv = cv.toLowerCase();
+                    if (lowerCaseCv.includes(lowerCaseKeyword) && !seen.has(`${cv}_cv`)) {
+                        results.push(new SearchResult("cv", cv, keyword, track.code));
+                        seen.add(`${cv}_cv`);
+                    }
+                });
+                // Check tags
+                track.tags.forEach(tag => {
+                    const lowerCaseTag = tag.toLowerCase();
+                    if (lowerCaseTag.includes(lowerCaseKeyword) && !seen.has(`${tag}_tag`)) {
+                        results.push(new SearchResult("tag", tag, keyword, track.code));
+                        seen.add(`${tag}_tag`);
+                    }
+                });
+                // Check series
+                track.series.forEach(series => {
+                    const lowerCaseSeries = series.toLowerCase();
+                    if (lowerCaseSeries.includes(lowerCaseKeyword) && !seen.has(`${series}_series`)) {
+                        results.push(new SearchResult("series", series, keyword, track.code));
+                        seen.add(`${series}_series`);
+                    }
+                });
+                // Check english name
+                if (lowerCaseEngName.includes(lowerCaseKeyword) && !seen.has(`${track.engName}_engName`)) {
+                    results.push(new SearchResult("engName", track.engName, keyword, track.code));
+                    seen.add(`${track.engName}_engName`);
+                }
+                // Check japanese name
+                if (lowerCaseJapName.includes(lowerCaseKeyword) && !seen.has(`${track.japName}_japName`)) {
+                    results.push(new SearchResult("japName", track.japName, keyword, track.code));
+                    seen.add(`${track.japName}_japName`);
+                }
+            });
+    
+            const typeOrder = ["code", "rjCode", "cv", "tag", "series", "engName", "japName"];
+    
+            results.sort((a, b) => {
+                const keywordIndexA = a.value.toString().toLowerCase().indexOf(lowerCaseKeyword);
+                const keywordIndexB = b.value.toString().toLowerCase().indexOf(lowerCaseKeyword);
+                if (keywordIndexA !== keywordIndexB) {
+                    return keywordIndexA - keywordIndexB;
+                }
+                const typeComparison = typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
+                if (typeComparison !== 0) {
+                    return typeComparison;
+                }
+                return a.value.toString().localeCompare(b.value.toString());
+            });
+            
+            return results; 
+        };
+        static getTracksByKeyword(keyword) {
+            const listTrack = Database.displayListTrack;
+            const lowerCaseKeyword = keyword.toString().toLowerCase();
+            const results = [];
+    
+            // Find Tracks with code, name or rjCode containing keywords
+            listTrack.forEach((track, index) => {
+                const lowerCaseCode = track.code.toString();
+                const lowerCaseRjCode = track.rjCode.toLowerCase();
+                const lowerCaseJapName = track.japName.toLowerCase();
+                const lowerCaseEngName = track.engName.toLowerCase();
+    
+                if (
+                    lowerCaseCode.includes(lowerCaseKeyword) ||
+                    lowerCaseRjCode.includes(lowerCaseKeyword) ||
+                    lowerCaseJapName.includes(lowerCaseKeyword) ||
+                    lowerCaseEngName.includes(lowerCaseKeyword)
+                ) {
+                    results.push(index);
+                }
+            });
+    
+            // Find Tracks with CVs contain keywords
+            listTrack.forEach((track, index) => {
+                track.cvs.forEach((cv) => {
+                    const lowerCaseCv = cv.toLowerCase();
+                    if (lowerCaseCv.includes(lowerCaseKeyword) && !results.includes(index)) {
+                        results.push(index);
+                    }
+                });
+            });
+    
+            // Find Tracks with tags containing keywords
+            listTrack.forEach((track, index) => {
+                track.tags.forEach((tag) => {
+                    const lowerCaseTag = tag.toLowerCase();
+                    if (lowerCaseTag.includes(lowerCaseKeyword) && !results.includes(index)) {
+                        results.push(index);
+                    }
+                });
+            });
+    
+            // Find Tracks with series containing keywords
+            listTrack.forEach((track, index) => {
+                track.series.forEach((series) => {
+                    const lowerCaseSeries = series.toLowerCase();
+                    if (lowerCaseSeries.includes(lowerCaseKeyword) && !results.includes(index)) {
+                        results.push(index);
+                    }
+                });
+            });
+    
+            return results.map((index) => listTrack[index]);
+        };
+        static getTracksByCategory(categoryType, keyword) {
+            const listTrack = Database.displayListTrack;
+            const lowerCaseKeyword = keyword.toLowerCase();
+            const tracks = [];
+            const categoryTypes = ['cv', 'tag', 'series'];
+            const categories = ['cvs', 'tags', 'series'];
+    
+            listTrack.forEach(track => {
+                if (track[categories[categoryTypes.indexOf(categoryType)]].some(t => t.toLowerCase() === lowerCaseKeyword))
+                    tracks.push(track);
+            });
+    
+            return tracks;
+        }
+        static getTracksByIdentify(identify) {
+            let rs = '';
+    
+            Database.listTrack.forEach(track => {
+                if (track.code.toString() === identify || track.rjCode.toLowerCase() === identify.toLowerCase()) {
+                    rs = track;
+                }
+            });
+    
+            return rs;
+        }
+        static getTrackDataOfPage(page, trackPerPage) {
+            const start = (page - 1) * trackPerPage;
+            const end = Math.min(start + trackPerPage - 1, Database.listCode.length);
+    
+            return Database.displayListTrack.slice(start, end + 1);
+        }
+        static getRandomTracks(n) {
+            const listTrack = Database.listTrack;
+            let shuffledIndexes = JSON.parse(localStorage.getItem('shuffledIndexes'));
+    
+            if (!shuffledIndexes || shuffledIndexes.length < n) {
+                const remainingIndexes = Array.from(
+                    Array(!shuffledIndexes ? listTrack.length : listTrack.length - shuffledIndexes.length).keys()
+                );
+                Utils.shuffleArray(remainingIndexes);
+                if (!shuffledIndexes) {
+                    shuffledIndexes = remainingIndexes;
+                } else {
+                    shuffledIndexes.push(...remainingIndexes);
+                }
+                localStorage.setItem('shuffledIndexes', JSON.stringify(shuffledIndexes));
+            }
+    
+            const randomTracks = [];
+            for (let i = 0; i < n; i++) {
+                const trackIndex = shuffledIndexes[i];
+                const track = listTrack[trackIndex];
+                randomTracks.push(track);
+            }
+    
+            shuffledIndexes = shuffledIndexes.slice(n);
+            localStorage.setItem('shuffledIndexes', JSON.stringify(shuffledIndexes));
+    
+            return randomTracks;
+        }
 }
 
 ((t0i0a = '') => {
@@ -490,8 +711,6 @@ class Database {
     at(68697, "RJ409425", "Yuka Hinata", "Big Breasts,Cheerleader,Oneesan,Paizuri,Sister,Incest", "", "Sweet sex with lots of love while being cheered on by a cheerleader sister", "【応援/あまあま/KU100】チアガールお姉さんに応援されながら愛情たっぷりあまあまセックス", "https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/68697-0.jpg?v=1714558736762", "https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/68697-1.jpg?v=1714558735329", "https://cdn.glitch.me/36049008-0c55-496e-873e-a2f971037d73/68697t1.mp3?v=1714558734031");
     at(33085, "RJ220667", "Popura Sawano ", "ASMR,Cheerleader,Dirty Talk,School Girl", "", "Mean Cheerleading Sisters’ Edging & Masochistic Discipline Course!", "意地悪な後輩チアガール姉妹の射精我慢＆マゾ彼氏調教コース!", "https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/33085-0.jpg?v=1714558999689", "https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/33085-1.jpg?v=1714559000861", "https://cdn.glitch.me/36049008-0c55-496e-873e-a2f971037d73/33085t1.mp3?v=1714559015915");
     
-
-    Database.buildData();
 })();
 
 function at(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink) {

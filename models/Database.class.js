@@ -1,6 +1,5 @@
 'use strict';
 
-@Utils.memoizeClassMethods // Receives database class as argument, makes changes on it
 class Database {
     static config = {
         log: true,
@@ -268,7 +267,7 @@ class Database {
     static buildData() {
         if(Database.config.test)
             return;
-
+        Utils.memoizeClassMethods(Database);
     }
 }
 

@@ -27,7 +27,7 @@ class Track {
             '[listOfSeries]', '[engName]', '[japName]', '[thumbnail]'
         ];
         return Object.values(this).reduce((html, replaceValue, i) => {
-            return html.replaceAll(replaceValues[i], replaceValue).replace(/\s+/g, ' ');
+            return html.replaceAll(replaceValues[i], replaceValue)
         }, Track.hiddenItemTemplate);
     }
 }

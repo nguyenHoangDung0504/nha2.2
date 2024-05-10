@@ -1,5 +1,7 @@
 'use strict';
 
+const urlParams = new URLSearchParams(window.location.search);
+
 class App {
     static types = {
         HOME_PAGE: 'Home page',
@@ -161,7 +163,7 @@ class App {
                 }
             });
 
-            Config.deviceIsMobile || accordion.click();
+            Config.deviceIsMobile() || accordion.click();
         });
 
         subRankList.forEach(subRankBox => {

@@ -38,33 +38,33 @@ class Category {
 }
 class Cv extends Category {
     constructor(name, quantity) {
-        super(name, quantity);
+        super(...arguments);
     }
 }
 class Tag extends Category {
     constructor(name, quantity) {
-        super(name, quantity);
+        super(...arguments);
     }
 }
 class Series extends Category {
     constructor(name, quantity) {
-        super(name, quantity);
+        super(...arguments);
     }
 }
 class SearchResult {
     constructor(type, value, keyword, code) {
         Object.assign(this, { type, value, keyword, code });
-        this.displayType = Utils.convertToTitleCase(this.type);
     }
 
     getView() {
-        let value = Utils.highlight(this.value, this.keyword);
-        let href = ``;
-        if (this.type == 'cv' || this.type == 'tag' || this.type == 'series')
-            href = `..?${this.type}=${encodeURIComponent(this.value)}`;
-        else
-            href = `../watch?code=${this.code}`;
-        return `<a href="${href}">🔎 <strong>${this.displayType}</strong>: <span class="cnt">${value}</span></a>`;
+        const value = Utils.highlight(this.value, this.keyword);
+        const href = ['cv', 'tag', 'series'].includes(this.type) ? `..?${this.type}=${encodeURIComponent(this.value)}` : `../watch?code=${this.code}`;
+        this.type = Utils.convertToTitleCase(this.type);
+        return `<a href="${href}">
+            <i class="fas fa-search"></i>&nbsp;
+            <strong>${this.type}</strong>:
+            <span class="cnt">${value}</span>
+        </a>`;
     }
 }
 class OtherLink {

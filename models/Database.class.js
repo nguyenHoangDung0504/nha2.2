@@ -264,11 +264,32 @@ class Database {
         }
 
     // Call when completed add data
-    static buildData() {
-        if(Database.config.test)
-            return;
-        Utils.memoizeClassMethods(Database);
-    }
+        static completeBuild() {
+            Utils.memoizeClassMethods(Database);
+            if(Database.config.test)
+                Database.testingFunctions();
+        }
+        static testingFunctions() {
+            if(!Database.config.log) return;
+            console.log('\n\n\n\n\n');
+            console.time('Database functions testing time');
+            console.log('Testing functions-----------------------------------------------------------------------');
+            console.log( 'Get category "cv" with keyword "" (Get all CVs):', Database.getCategory('cv', '') );
+            console.log( 'Get category "tag" with keyword "" (Get all Tags):', Database.getCategory('tag', '') );
+            console.log( 'Get category "series" with keyword "" (Get all Series):', Database.getCategory('series', '') );
+            console.log( 'Get search suggestions with keyword "Na"', Database.getSearchSuggestions('Na') );
+            console.log( 'Get all tracks by keyword "saka"', Database.getTracksByKeyword('saka') );
+            console.log( 'Get tracks by category "cv" with keyword "narumi aisaka"', Database.getTracksByCategory('cv', 'narumi aisaka') );
+            console.log( 'Get tracks by category "tag" with keyword "elf"', Database.getTracksByCategory('tag', 'elf') );
+            console.log( 'Get tracks by category "series" with keyword "ドスケベjKシリーズ"', Database.getTracksByCategory('series', 'ドスケベjKシリーズ') );
+            console.log( 'Get tracks by identify with code "107613"', Database.getTracksByIdentify('107613') );
+            console.log( 'Get tracks by identify with RJcode "Rj377038"', Database.getTracksByIdentify('Rj377038') );
+            console.log( 'Get random 10 tracks', Database.getRandomTracks(10) );
+            console.log( 'Get random 20 tracks', Database.getRandomTracks(20) );
+            console.log('End testing functions------------------------------------------------------------------');
+            console.timeEnd('Database functions testing time');
+            console.log('\n\n\n\n\n');
+        }
 }
 
 ((t0i0a = '') => {

@@ -1,5 +1,6 @@
 'use strict';
-// map.forEach((value, key)=>{console.log(key, value)}) using map
+
+@Utils.memoizeClassMethods // Receives database class as argument, makes changes on it
 class Database {
     static config = {
         log: true,
@@ -43,7 +44,7 @@ class Database {
     }
 
     // Get data functions
-        static getCategory = Utils.memoize((type, keyword) => {
+        static getCategory(type, keyword) {
             let map = null;
 
             switch (type) {
@@ -54,8 +55,8 @@ class Database {
             }
 
             return map.get(keyword.toLowerCase());
-        });
-        static searchCategory = Utils.memoize((type, keyword) => {
+        }
+        static searchCategory(type, keyword) {
             const lowerCaseKeyword = keyword.toLowerCase();
             const result = [];
             let map = null;
@@ -69,11 +70,11 @@ class Database {
 
             map.forEach((value, key) => {
                 if(key.includes(lowerCaseKeyword))
-                    result.push()
+                    result.push(value);
             });
 
             return result;
-        });
+        }
         static getSearchSuggestions(keyword) {
             const lowerCaseKeyword = keyword.toString().toLowerCase();
             const results = [];
@@ -147,7 +148,7 @@ class Database {
             });
             
             return results; 
-        };
+        }
         static getTracksByKeyword(keyword) {
             const listTrack = Database.displayListTrack;
             const lowerCaseKeyword = keyword.toString().toLowerCase();
@@ -201,7 +202,7 @@ class Database {
             });
     
             return results.map((index) => listTrack[index]);
-        };
+        }
         static getTracksByCategory(categoryType, keyword) {
             const listTrack = Database.displayListTrack;
             const lowerCaseKeyword = keyword.toLowerCase();
@@ -262,6 +263,13 @@ class Database {
     
             return randomTracks;
         }
+
+    // Call when completed add data
+    static buildData() {
+        if(Database.config.test)
+            return;
+
+    }
 }
 
 ((t0i0a = '') => {

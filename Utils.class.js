@@ -114,6 +114,13 @@ class Utils {
             return cache[key];
         };
     }// Apply cache for functions
+    static memoizeClassMethods(target) {
+        const methodNames = Object.getOwnPropertyNames(target.prototype)
+                                .filter(name => typeof target.prototype[name] === 'function' && (name.includes('get') || name.includes('search')));
+        methodNames.forEach(methodName => {
+            target.prototype[methodName] = Utils.memoize(target.prototype[methodName]);
+        });
+    }
 
     //Sort functions
         static byName = (a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase());

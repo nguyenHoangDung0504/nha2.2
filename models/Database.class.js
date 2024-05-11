@@ -5,7 +5,11 @@ class Database {
         log: true,
         test: true
     };
-
+    static categoryType = {
+        CV: 0,
+        TAG: 1,
+        SERIES: 2,
+    };
     static trackKeyMap = new Map();
     static trackMap = new Map();
     static cvMap = new Map();
@@ -71,37 +75,30 @@ class Database {
         Database.keyList = Database.getSortedTrackKeysByUploadOrder(desc);
     }
 
-    // Get category functions
+    // Get/search category functions
     static getCategory(type, keyword) {
+        const { CV, TAG, SERIES } = Database.categoryType;
         let map = null;
 
         switch (type) {
-            case 'cv': map = Database.cvMap; break;
-            case 'tag': map = Database.tagMap; break;
-            case 'series': map = Database.seriesMap; break;
+            case CV: map = Database.cvMap; break;
+            case TAG: map = Database.tagMap; break;
+            case SERIES: map = Database.seriesMap; break;
             default: throw new Error('Invalid category type');
         }
 
         return map.get(keyword.toLowerCase());
     }
-    static getCv(keyword) {
-        return Database.getCategory('cv', keyword);
-    }
-    static getTag(keyword) {
-        return Database.getCategory('tag', keyword);
-    }
-    static getSeries(keyword) {
-        return Database.getCategory('series', keyword);
-    }
     static searchCategory(type, keyword) {
+        const { CV, TAG, SERIES } = Database.categoryType;
         const lowerCaseKeyword = keyword.toLowerCase();
         const result = [];
         let map = null;
 
         switch (type) {
-            case 'cv': map = Database.cvMap; break;
-            case 'tag': map = Database.tagMap; break;
-            case 'series': map = Database.seriesMap; break;
+            case CV: map = Database.cvMap; break;
+            case TAG: map = Database.tagMap; break;
+            case SERIES: map = Database.seriesMap; break;
             default: throw new Error('Invalid category type');
         }
 
@@ -112,234 +109,199 @@ class Database {
 
         return result;
     }
-    static searchCv(keyword) {
-        return Database.searchCategory('cv', keyword);
+
+    // Get/search keys list functions
+    static searchTracksKey(keyword) {
+        const lowerCaseKeyword = keyword.toString().toLowerCase().trim();
+        const keyList = [];
+
+        Database.keyList.forEach(codeKey => {
+            let { code, rjCode, engName, japName, cvs, tags, series } = Database.trackMap.get(codeKey);
+
+            // Standardized data
+            code = code.toString();
+            [rjCode, engName, japName] = [rjCode, engName, japName].map(s => s.toLowerCase());
+
+            // Find Tracks with code, name or rjCode containing keywords
+            if([code, rjCode, engName, japName].some(valueToCheck => valueToCheck.includes(lowerCaseKeyword)))
+                keyList.push(codeKey);
+
+            // Find Tracks with CVs, tags or series contain keywords
+            [cvs, tags, series].forEach(list => {
+                list.forEach(item => {
+                    if(item.toLowerCase().includes(lowerCaseKeyword) && !keyList.includes(key))
+                        keyList.push(codeKey);
+                });
+            });
+        });
+
+        return keyList;
     }
-    static searchTag(keyword) {
-        return Database.searchCategory('tag', keyword);
+    static getTrackKeysByCategory(type, keyword) {
+        const lowerCaseKeyword = keyword.toLowerCase();
+        const tracks = [];
+        const categories = ['cvs', 'tags', 'series'];
+
+        Database.keyList.forEach(codeKey => {
+            const track = Database.trackMap.get(codeKey);
+            if (track[categories[type]].some(t => t.toLowerCase() === lowerCaseKeyword))
+                tracks.push(track);
+        });
+
+        return tracks;
     }
-    static searchSeries(keyword) {
-        return Database.searchCategory('series', keyword);
+    // Get data functions
+    static getSearchSuggestions(keyword) {
+        const lowerCaseKeyword = keyword.toString().toLowerCase();
+        const results = [];
+        const seen = new Set();
+
+        Database.displayListTrack.forEach(track => {
+            const lowerCaseCode = track.code.toString();
+            const lowerCaseRjCode = track.rjCode.toLowerCase();
+            const lowerCaseJapName = track.japName.toLowerCase();
+            const lowerCaseEngName = track.engName.toLowerCase();
+
+            // Check code
+            if (lowerCaseCode.includes(lowerCaseKeyword) && !seen.has(`${track.code}_code`)) {
+                results.push(new SearchResult("code", track.code, keyword, track.code));
+                seen.add(`${track.code}_code`);
+            }
+            // Check rjCode
+            if (lowerCaseRjCode.includes(lowerCaseKeyword) && !seen.has(`${track.rjCode}_rjCode`)) {
+                results.push(new SearchResult("rjCode", track.rjCode, keyword, track.code));
+                seen.add(`${track.rjCode}_rjCode`);
+            }
+            // Check cvs
+            track.cvs.forEach(cv => {
+                const lowerCaseCv = cv.toLowerCase();
+                if (lowerCaseCv.includes(lowerCaseKeyword) && !seen.has(`${cv}_cv`)) {
+                    results.push(new SearchResult("cv", cv, keyword, track.code));
+                    seen.add(`${cv}_cv`);
+                }
+            });
+            // Check tags
+            track.tags.forEach(tag => {
+                const lowerCaseTag = tag.toLowerCase();
+                if (lowerCaseTag.includes(lowerCaseKeyword) && !seen.has(`${tag}_tag`)) {
+                    results.push(new SearchResult("tag", tag, keyword, track.code));
+                    seen.add(`${tag}_tag`);
+                }
+            });
+            // Check series
+            track.series.forEach(series => {
+                const lowerCaseSeries = series.toLowerCase();
+                if (lowerCaseSeries.includes(lowerCaseKeyword) && !seen.has(`${series}_series`)) {
+                    results.push(new SearchResult("series", series, keyword, track.code));
+                    seen.add(`${series}_series`);
+                }
+            });
+            // Check english name
+            if (lowerCaseEngName.includes(lowerCaseKeyword) && !seen.has(`${track.engName}_engName`)) {
+                results.push(new SearchResult("engName", track.engName, keyword, track.code));
+                seen.add(`${track.engName}_engName`);
+            }
+            // Check japanese name
+            if (lowerCaseJapName.includes(lowerCaseKeyword) && !seen.has(`${track.japName}_japName`)) {
+                results.push(new SearchResult("japName", track.japName, keyword, track.code));
+                seen.add(`${track.japName}_japName`);
+            }
+        });
+
+        const typeOrder = ["code", "rjCode", "cv", "tag", "series", "engName", "japName"];
+
+        results.sort((a, b) => {
+            const keywordIndexA = a.value.toString().toLowerCase().indexOf(lowerCaseKeyword);
+            const keywordIndexB = b.value.toString().toLowerCase().indexOf(lowerCaseKeyword);
+            if (keywordIndexA !== keywordIndexB) {
+                return keywordIndexA - keywordIndexB;
+            }
+            const typeComparison = typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
+            if (typeComparison !== 0) {
+                return typeComparison;
+            }
+            return a.value.toString().localeCompare(b.value.toString());
+        });
+        
+        return results; 
     }
 
-    // Get data functions
-        static getSearchSuggestions(keyword) {
-            const lowerCaseKeyword = keyword.toString().toLowerCase();
-            const results = [];
-            const seen = new Set();
-    
-            Database.displayListTrack.forEach(track => {
-                const lowerCaseCode = track.code.toString();
-                const lowerCaseRjCode = track.rjCode.toLowerCase();
-                const lowerCaseJapName = track.japName.toLowerCase();
-                const lowerCaseEngName = track.engName.toLowerCase();
-    
-                // Check code
-                if (lowerCaseCode.includes(lowerCaseKeyword) && !seen.has(`${track.code}_code`)) {
-                    results.push(new SearchResult("code", track.code, keyword, track.code));
-                    seen.add(`${track.code}_code`);
-                }
-                // Check rjCode
-                if (lowerCaseRjCode.includes(lowerCaseKeyword) && !seen.has(`${track.rjCode}_rjCode`)) {
-                    results.push(new SearchResult("rjCode", track.rjCode, keyword, track.code));
-                    seen.add(`${track.rjCode}_rjCode`);
-                }
-                // Check cvs
-                track.cvs.forEach(cv => {
-                    const lowerCaseCv = cv.toLowerCase();
-                    if (lowerCaseCv.includes(lowerCaseKeyword) && !seen.has(`${cv}_cv`)) {
-                        results.push(new SearchResult("cv", cv, keyword, track.code));
-                        seen.add(`${cv}_cv`);
-                    }
-                });
-                // Check tags
-                track.tags.forEach(tag => {
-                    const lowerCaseTag = tag.toLowerCase();
-                    if (lowerCaseTag.includes(lowerCaseKeyword) && !seen.has(`${tag}_tag`)) {
-                        results.push(new SearchResult("tag", tag, keyword, track.code));
-                        seen.add(`${tag}_tag`);
-                    }
-                });
-                // Check series
-                track.series.forEach(series => {
-                    const lowerCaseSeries = series.toLowerCase();
-                    if (lowerCaseSeries.includes(lowerCaseKeyword) && !seen.has(`${series}_series`)) {
-                        results.push(new SearchResult("series", series, keyword, track.code));
-                        seen.add(`${series}_series`);
-                    }
-                });
-                // Check english name
-                if (lowerCaseEngName.includes(lowerCaseKeyword) && !seen.has(`${track.engName}_engName`)) {
-                    results.push(new SearchResult("engName", track.engName, keyword, track.code));
-                    seen.add(`${track.engName}_engName`);
-                }
-                // Check japanese name
-                if (lowerCaseJapName.includes(lowerCaseKeyword) && !seen.has(`${track.japName}_japName`)) {
-                    results.push(new SearchResult("japName", track.japName, keyword, track.code));
-                    seen.add(`${track.japName}_japName`);
-                }
-            });
-    
-            const typeOrder = ["code", "rjCode", "cv", "tag", "series", "engName", "japName"];
-    
-            results.sort((a, b) => {
-                const keywordIndexA = a.value.toString().toLowerCase().indexOf(lowerCaseKeyword);
-                const keywordIndexB = b.value.toString().toLowerCase().indexOf(lowerCaseKeyword);
-                if (keywordIndexA !== keywordIndexB) {
-                    return keywordIndexA - keywordIndexB;
-                }
-                const typeComparison = typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
-                if (typeComparison !== 0) {
-                    return typeComparison;
-                }
-                return a.value.toString().localeCompare(b.value.toString());
-            });
-            
-            return results; 
-        }
-        static getTracksByKeyword(keyword) {
-            const listTrack = Database.displayListTrack;
-            const lowerCaseKeyword = keyword.toString().toLowerCase();
-            const results = [];
-    
-            // Find Tracks with code, name or rjCode containing keywords
-            listTrack.forEach((track, index) => {
-                const lowerCaseCode = track.code.toString();
-                const lowerCaseRjCode = track.rjCode.toLowerCase();
-                const lowerCaseJapName = track.japName.toLowerCase();
-                const lowerCaseEngName = track.engName.toLowerCase();
-    
-                if (
-                    lowerCaseCode.includes(lowerCaseKeyword) ||
-                    lowerCaseRjCode.includes(lowerCaseKeyword) ||
-                    lowerCaseJapName.includes(lowerCaseKeyword) ||
-                    lowerCaseEngName.includes(lowerCaseKeyword)
-                ) {
-                    results.push(index);
-                }
-            });
-    
-            // Find Tracks with CVs contain keywords
-            listTrack.forEach((track, index) => {
-                track.cvs.forEach((cv) => {
-                    const lowerCaseCv = cv.toLowerCase();
-                    if (lowerCaseCv.includes(lowerCaseKeyword) && !results.includes(index)) {
-                        results.push(index);
-                    }
-                });
-            });
-    
-            // Find Tracks with tags containing keywords
-            listTrack.forEach((track, index) => {
-                track.tags.forEach((tag) => {
-                    const lowerCaseTag = tag.toLowerCase();
-                    if (lowerCaseTag.includes(lowerCaseKeyword) && !results.includes(index)) {
-                        results.push(index);
-                    }
-                });
-            });
-    
-            // Find Tracks with series containing keywords
-            listTrack.forEach((track, index) => {
-                track.series.forEach((series) => {
-                    const lowerCaseSeries = series.toLowerCase();
-                    if (lowerCaseSeries.includes(lowerCaseKeyword) && !results.includes(index)) {
-                        results.push(index);
-                    }
-                });
-            });
-    
-            return results.map((index) => listTrack[index]);
-        }
-        static getTracksByCategory(categoryType, keyword) {
-            const listTrack = Database.displayListTrack;
-            const lowerCaseKeyword = keyword.toLowerCase();
-            const tracks = [];
-            const categoryTypes = ['cv', 'tag', 'series'];
-            const categories = ['cvs', 'tags', 'series'];
-    
-            listTrack.forEach(track => {
-                if (track[categories[categoryTypes.indexOf(categoryType)]].some(t => t.toLowerCase() === lowerCaseKeyword))
-                    tracks.push(track);
-            });
-    
-            return tracks;
-        }
-        static getTracksByIdentify(identify) {
-            let rs = '';
-    
-            Database.listTrack.forEach(track => {
-                if (track.code.toString() === identify || track.rjCode.toLowerCase() === identify.toLowerCase()) {
-                    rs = track;
-                }
-            });
-    
-            return rs;
-        }
-        static getTrackDataOfPage(page, trackPerPage) {
-            const start = (page - 1) * trackPerPage;
-            const end = Math.min(start + trackPerPage - 1, Database.listCode.length);
-    
-            return Database.displayListTrack.slice(start, end + 1);
-        }
-        static getRandomTracks(n) {
-            const listTrack = Database.listTrack;
-            let shuffledIndexes = JSON.parse(localStorage.getItem('shuffledIndexes'));
-    
-            if (!shuffledIndexes || shuffledIndexes.length < n) {
-                const remainingIndexes = Array.from(
-                    Array(!shuffledIndexes ? listTrack.length : listTrack.length - shuffledIndexes.length).keys()
-                );
-                Utils.shuffleArray(remainingIndexes);
-                if (!shuffledIndexes) {
-                    shuffledIndexes = remainingIndexes;
-                } else {
-                    shuffledIndexes.push(...remainingIndexes);
-                }
-                localStorage.setItem('shuffledIndexes', JSON.stringify(shuffledIndexes));
+
+    static getTracksByIdentify(identify) {
+        let rs = '';
+
+        Database.listTrack.forEach(track => {
+            if (track.code.toString() === identify || track.rjCode.toLowerCase() === identify.toLowerCase()) {
+                rs = track;
             }
-    
-            const randomTracks = [];
-            for (let i = 0; i < n; i++) {
-                const trackIndex = shuffledIndexes[i];
-                const track = listTrack[trackIndex];
-                randomTracks.push(track);
+        });
+
+        return rs;
+    }
+    static getTrackDataOfPage(page, trackPerPage) {
+        const start = (page - 1) * trackPerPage;
+        const end = Math.min(start + trackPerPage - 1, Database.listCode.length);
+
+        return Database.displayListTrack.slice(start, end + 1);
+    }
+    static getRandomTracks(n) {
+        const listTrack = Database.listTrack;
+        let shuffledIndexes = JSON.parse(localStorage.getItem('shuffledIndexes'));
+
+        if (!shuffledIndexes || shuffledIndexes.length < n) {
+            const remainingIndexes = Array.from(
+                Array(!shuffledIndexes ? listTrack.length : listTrack.length - shuffledIndexes.length).keys()
+            );
+            Utils.shuffleArray(remainingIndexes);
+            if (!shuffledIndexes) {
+                shuffledIndexes = remainingIndexes;
+            } else {
+                shuffledIndexes.push(...remainingIndexes);
             }
-    
-            shuffledIndexes = shuffledIndexes.slice(n);
             localStorage.setItem('shuffledIndexes', JSON.stringify(shuffledIndexes));
-    
-            return randomTracks;
         }
+
+        const randomTracks = [];
+        for (let i = 0; i < n; i++) {
+            const trackIndex = shuffledIndexes[i];
+            const track = listTrack[trackIndex];
+            randomTracks.push(track);
+        }
+
+        shuffledIndexes = shuffledIndexes.slice(n);
+        localStorage.setItem('shuffledIndexes', JSON.stringify(shuffledIndexes));
+
+        return randomTracks;
+    }
 
     // Call when completed add data
-        static completeBuild() {
-            Utils.memoizeGetAndSearchMethods(Database);
-            Database.sortListTrackByRjCode();
-            if(Database.config.test)
-                Database.testingFunctions();
-        }
-        static testingFunctions() {
-            if(!Database.config.log) return;
-            console.log('\n\n\n\n\n');
-            console.time('Database functions testing time');
-            console.log('Testing functions-----------------------------------------------------------------------');
-            console.log( 'Get category "cv" with keyword "" (Get all CVs):', Database.getCategory('cv', '') );
-            console.log( 'Get category "tag" with keyword "" (Get all Tags):', Database.getCategory('tag', '') );
-            console.log( 'Get category "series" with keyword "" (Get all Series):', Database.getCategory('series', '') );
-            console.log( 'Get search suggestions with keyword "Na"', Database.getSearchSuggestions('Na') );
-            console.log( 'Get all tracks by keyword "saka"', Database.getTracksByKeyword('saka') );
-            console.log( 'Get tracks by category "cv" with keyword "narumi aisaka"', Database.getTracksByCategory('cv', 'narumi aisaka') );
-            console.log( 'Get tracks by category "tag" with keyword "elf"', Database.getTracksByCategory('tag', 'elf') );
-            console.log( 'Get tracks by category "series" with keyword "ドスケベjKシリーズ"', Database.getTracksByCategory('series', 'ドスケベjKシリーズ') );
-            console.log( 'Get tracks by identify with code "107613"', Database.getTracksByIdentify('107613') );
-            console.log( 'Get tracks by identify with RJcode "Rj377038"', Database.getTracksByIdentify('Rj377038') );
-            console.log( 'Get random 10 tracks', Database.getRandomTracks(10) );
-            console.log( 'Get random 20 tracks', Database.getRandomTracks(20) );
-            console.log('End testing functions------------------------------------------------------------------');
-            console.timeEnd('Database functions testing time');
-            console.log('\n\n\n\n\n');
-        }
+    static completeBuild() {
+        Utils.memoizeGetAndSearchMethods(Database);
+        Database.sortListTrackByRjCode();
+        if(Database.config.test)
+            Database.testingFunctions();
+    }
+    static testingFunctions() {
+        if(!Database.config.log) return;
+        console.log('\n\n\n\n\n');
+        console.time('Database functions testing time');
+        console.log('Testing functions-----------------------------------------------------------------------');
+        console.log( 'Get category "cv" with keyword "" (Get all CVs):', Database.getCategory('cv', '') );
+        console.log( 'Get category "tag" with keyword "" (Get all Tags):', Database.getCategory('tag', '') );
+        console.log( 'Get category "series" with keyword "" (Get all Series):', Database.getCategory('series', '') );
+        console.log( 'Get search suggestions with keyword "Na"', Database.getSearchSuggestions('Na') );
+        console.log( 'Get all tracks by keyword "saka"', Database.getTracksByKeyword('saka') );
+        console.log( 'Get tracks by category "cv" with keyword "narumi aisaka"', Database.getTracksByCategory('cv', 'narumi aisaka') );
+        console.log( 'Get tracks by category "tag" with keyword "elf"', Database.getTracksByCategory('tag', 'elf') );
+        console.log( 'Get tracks by category "series" with keyword "ドスケベjKシリーズ"', Database.getTracksByCategory('series', 'ドスケベjKシリーズ') );
+        console.log( 'Get tracks by identify with code "107613"', Database.getTracksByIdentify('107613') );
+        console.log( 'Get tracks by identify with RJcode "Rj377038"', Database.getTracksByIdentify('Rj377038') );
+        console.log( 'Get random 10 tracks', Database.getRandomTracks(10) );
+        console.log( 'Get random 20 tracks', Database.getRandomTracks(20) );
+        console.log('End testing functions------------------------------------------------------------------');
+        console.timeEnd('Database functions testing time');
+        console.log('\n\n\n\n\n');
+    }
 }
 
 ((t0i0a = '') => {

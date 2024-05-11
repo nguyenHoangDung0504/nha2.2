@@ -34,17 +34,17 @@ class App {
 
     // For search box
     static buildHeaderAction() {
-        const mainSearchInput = document.querySelector('#main-search-input') ?? (App.warnSelectorNotFound)();
-        const mainSearchIcon = document.querySelector('#main-search-icon') ?? (App.warnSelectorNotFound)();
-        const resultBox = document.querySelector('.result-box') ?? (App.warnSelectorNotFound)();
+        const mainSearchInput = document.querySelector('#main-search-input');
+        const mainSearchIcon = document.querySelector('#main-search-icon');
+        const resultBox = document.querySelector('.result-box');
 
-        mainSearchInput?.addEventListener('blur', Config.hideResultBox);
-        mainSearchInput?.addEventListener('keyup', () => search(mainSearchInput?.value));
-        mainSearchInput?.addEventListener('click', Config.showResultBox);
-        mainSearchInput?.addEventListener('focus', () => document.body.addEventListener('keyup', getEnter));
-        mainSearchInput?.addEventListener('blur', () => document.body.removeEventListener('keyup', getEnter));
-        mainSearchIcon?.addEventListener('click', () => {
-            const searchValue = mainSearchInput?.value;
+        mainSearchInput.addEventListener('blur', Config.hideResultBox);
+        mainSearchInput.addEventListener('keyup', () => search(mainSearchInput.value));
+        mainSearchInput.addEventListener('click', Config.showResultBox);
+        mainSearchInput.addEventListener('focus', () => document.body.addEventListener('keyup', getEnter));
+        mainSearchInput.addEventListener('blur', () => document.body.removeEventListener('keyup', getEnter));
+        mainSearchIcon.addEventListener('click', () => {
+            const searchValue = mainSearchInput.value;
             if (searchValue) {
                 mainSearchInput.value = '';
                 if (!developerSearch(searchValue)) {
@@ -55,7 +55,7 @@ class App {
 
         function getEnter(event) {
             if (event.key == 'Enter') {
-                const searchValue = mainSearchInput?.value;
+                const searchValue = mainSearchInput.value;
                 if (searchValue) {
                     mainSearchInput.value = '';
                     if (!developerSearch(searchValue)) {
@@ -116,17 +116,17 @@ class App {
 
     // For menu
     static buildMenuAction() {
-        const toggleMenuBtn = document.querySelector('#toggle-menu-btn') ?? (App.warnSelectorNotFound)();
-        const closeMenuBtn = document.querySelector('#close-menu-btn') ?? (App.warnSelectorNotFound)();
+        const toggleMenuBtn = document.querySelector('#toggle-menu-btn');
+        const closeMenuBtn = document.querySelector('#close-menu-btn');
 
-        toggleMenuBtn?.addEventListener('click', Config.toggleMenu);
-        closeMenuBtn?.addEventListener('click', Config.closeMenu);
+        toggleMenuBtn.addEventListener('click', Config.toggleMenu);
+        closeMenuBtn.addEventListener('click', Config.closeMenu);
     }
 
     // For categories modal
     static buildCategoriesModalView() {
-        const [rankListCvCtn, rankListTagCtn, rankListSeriesCtn] = ['.rank-list-grid-item.cv-b', '.rank-list-grid-item.tag-b', '.rank-list-grid-item.series-b'].map(selector => document.querySelector(selector) ?? (App.warnSelectorNotFound)());
-        const [listCvCtn, listTagCtn, listSeriesCtn] = [rankListCvCtn, rankListTagCtn, rankListSeriesCtn].map(ctn => ctn.querySelector('.links') ?? (App.warnSelectorNotFound)());
+        const [rankListCvCtn, rankListTagCtn, rankListSeriesCtn] = ['.rank-list-grid-item.cv-b', '.rank-list-grid-item.tag-b', '.rank-list-grid-item.series-b'].map(selector => document.querySelector(selector));
+        const [listCvCtn, listTagCtn, listSeriesCtn] = [rankListCvCtn, rankListTagCtn, rankListSeriesCtn].map(ctn => ctn.querySelector('.links'));
         const listLength = [Database.listCv, Database.listTag, Database.listSeries].map(list => list.length);
         let [cvHtml, tagHtml, seriesHtml] = Array(3).fill('');
 
@@ -146,10 +146,10 @@ class App {
         listSeriesCtn.innerHTML = seriesHtml;
     }
     static buildCategoriesModalAction() {
-        const categoriesModal = document.querySelector('#categories-modal') ?? (App.warnSelectorNotFound)();
+        const categoriesModal = document.querySelector('#categories-modal');
         const accordions = categoriesModal.querySelectorAll('.accordion-header');
-        const btnOpenCategoryModal = document.querySelector('#open-categories-modal-btn') ?? (App.warnSelectorNotFound)();
-        const btnCloseCategoryModal = categoriesModal.querySelector('#close-categories-modal-btn') ?? (App.warnSelectorNotFound)();
+        const btnOpenCategoryModal = document.querySelector('#open-categories-modal-btn');
+        const btnCloseCategoryModal = categoriesModal.querySelector('#close-categories-modal-btn');
         const subRankList = categoriesModal.querySelectorAll('.sub-rank-list');
 
         accordions.forEach(accordion => {
@@ -167,12 +167,12 @@ class App {
         });
 
         subRankList.forEach(subRankBox => {
-            const searchBox = subRankBox.querySelector('input.search') ?? (App.warnSelectorNotFound)();
-            const sortTypeSelect = subRankBox.querySelector('select') ?? (App.warnSelectorNotFound)();
-            const linkContainer = subRankBox.querySelector('.links') ?? (App.warnSelectorNotFound)();
+            const searchBox = subRankBox.querySelector('input.search');
+            const sortTypeSelect = subRankBox.querySelector('select');
+            const linkContainer = subRankBox.querySelector('.links');
             const listOfLinks = linkContainer.querySelectorAll('a.item');
 
-            searchBox?.addEventListener('input', () => {
+            searchBox.addEventListener('input', () => {
                 const keyword = searchBox.value.trim().toLowerCase();
 
                 if (keyword) {
@@ -194,7 +194,7 @@ class App {
                 });
             });
 
-            sortTypeSelect?.addEventListener('input', () => {
+            sortTypeSelect.addEventListener('input', () => {
                 let sortedListOfLinks = null;
 
                 switch (sortTypeSelect.value.toLowerCase()) {
@@ -212,32 +212,22 @@ class App {
             });
         });
 
-        btnOpenCategoryModal?.addEventListener('click', () => {
-            categoriesModal?.classList.add('open');
+        btnOpenCategoryModal.addEventListener('click', () => {
+            categoriesModal.classList.add('open');
             document.body.classList.add('openModal');
         });
 
-        btnCloseCategoryModal?.addEventListener('click', () => {
-            categoriesModal?.classList.remove('open');
+        btnCloseCategoryModal.addEventListener('click', () => {
+            categoriesModal.classList.remove('open');
             document.body.classList.remove('openModal');
         });
-    }
-
-    static buildGridOfTracks() {
-
     }
 
     // Call when complete build app
     static startSendAppStatus() {
         // Send status to the app that embeds this app
         parent.postMessage({ type: 'urlChange', version: 2.2, url: window.location.href }, '*');
-        setInterval(() => parent.postMessage({ type: 'alive' }, '*'), 2500);
+        setInterval(() => parent.postMessage({ type: 'alive' }, '*'), 3000);
         window.addEventListener('beforeunload', () => parent.postMessage({ type: 'beforeUnload' }, '*'));
-    }
-
-    static warnSelectorNotFound() {
-        const stackTrace = new Error().stack;
-        const callingLine = stackTrace.split('\n')[2];
-        console.warn(`Warning, selector not found ${callingLine.trim()}`);
     }
 }

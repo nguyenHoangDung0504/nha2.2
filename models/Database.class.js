@@ -47,32 +47,32 @@ class Database {
     }
 
     // Get sorted key list functions
-    static getSortedTrackKeysByRjCode(desc) {
+    static getSortedTracksKeyByRjCode(desc) {
         const keyList = Database.trackKeyMap.values().sort((a, b) => {
-            const [nA, nB] = [a, b].map(_ => _.replace('RJ', ''));
-            return nA - nB || Number(nA) - Number(nB);
+            const [nA, nB] = [a, b].map(({ rjCode }) => rjCode.replace('RJ', ''));
+            return nA.length - nB.length || Number(nA) - Number(nB);
         });
 
         return desc ? keyList.reverse() : keyList;
     }
-    static getSortedTrackKeysByCode(desc) {
+    static getSortedTracksKeyByCode(desc) {
         const keyList = Database.trackMap.values().sort((a, b) => a.code - b.code);
         return desc ? keyList.reverse() : keyList;
     }
-    static getSortedTrackKeysByUploadOrder(desc) {
+    static getSortedTracksKeyByUploadOrder(desc) {
         const keyList = Database.trackMap.values();
         return desc ? keyList.reverse() : keyList;
     }
 
     // Sort tracks functions
-    static sortListTrackByRjCode(desc = false) {
-        Database.keyList = Database.getSortedTrackKeysByRjCode(desc);
+    static sortRjCode(desc = false) {
+        Database.keyList = Database.getSortedTracksKeyByRjCode(desc);
     }
-    static sortListTrackByCode(desc = false) {
-        Database.keyList = Database.getSortedTrackKeysByCode(desc);
+    static sortByCode(desc = false) {
+        Database.keyList = Database.getSortedTracksKeyByCode(desc);
     }
-    static sortListTrackByUploadOrder(desc = false) {
-        Database.keyList = Database.getSortedTrackKeysByUploadOrder(desc);
+    static sortByUploadOrder(desc = false) {
+        Database.keyList = Database.getSortedTracksKeyByUploadOrder(desc);
     }
 
     // Get/search category functions
@@ -110,46 +110,93 @@ class Database {
         return result;
     }
 
-    // Get/search keys list functions
+    // Get/Search tracks key functions
     static searchTracksKey(keyword) {
-        const lowerCaseKeyword = keyword.toString().toLowerCase().trim();
+        const lowerCaseKeyword = keyword.toString().toLowerCase();
         const keyList = [];
 
+        // Find Tracks with code, name or rjCode containing keywords
         Database.keyList.forEach(codeKey => {
             let { code, rjCode, engName, japName, cvs, tags, series } = Database.trackMap.get(codeKey);
 
             // Standardized data
             code = code.toString();
-            [rjCode, engName, japName] = [rjCode, engName, japName].map(s => s.toLowerCase());
+            [rjCode, engName, japName] = [rjCode, engName, japName].map(str => str.toLowerCase());
 
-            // Find Tracks with code, name or rjCode containing keywords
-            if([code, rjCode, engName, japName].some(valueToCheck => valueToCheck.includes(lowerCaseKeyword)))
+            // Find Tracks with code, names or rjCode containing keywords
+            if ([code, rjCode, engName, japName].some(valueToCheck => valueToCheck.includes(lowerCaseKeyword)))
                 keyList.push(codeKey);
 
-            // Find Tracks with CVs, tags or series contain keywords
+            // Find Tracks with CVs, tag or series contain keywords
             [cvs, tags, series].forEach(list => {
                 list.forEach(item => {
-                    if(item.toLowerCase().includes(lowerCaseKeyword) && !keyList.includes(key))
-                        keyList.push(codeKey);
+                    if(!item.toLowerCase().includes(lowerCaseKeyword) || keyList.includes(codeKey)) return;
+                    keyList.push(codeKey);
                 });
             });
         });
 
         return keyList;
     }
-    static getTrackKeysByCategory(type, keyword) {
+    static getTracksKeyByCategory(type, keyword) {
         const lowerCaseKeyword = keyword.toLowerCase();
-        const tracks = [];
-        const categories = ['cvs', 'tags', 'series'];
+        const keyList = [];
+        const category = ['cvs', 'tags', 'series'][['cv', 'tag', 'series'].indexOf(type)];
+
+        if(!category)
+            throw new Error('Invalid category type');
 
         Database.keyList.forEach(codeKey => {
             const track = Database.trackMap.get(codeKey);
-            if (track[categories[type]].some(t => t.toLowerCase() === lowerCaseKeyword))
-                tracks.push(track);
+            if(track[category].some(t => t.toLowerCase() === lowerCaseKeyword))
+                keyList.push(codeKey);
         });
 
-        return tracks;
+        return keyList;
     }
+    static getTracksKeyByCv(keyword) {
+        return Database.getTracksKeyByCategory('cv', keyword);
+    }
+    static getTracksKeyByTag(keyword) {
+        return Database.getTracksKeyByCategory('tag', keyword);
+    }
+    static getTracksKeyBySeries(keyword) {
+        return Database.getTracksKeyByCategory('series', keyword);
+    }
+    static getTracksKeyForPage(page, trackPerPage = Config.trackPerPage) {
+        const start = (page - 1) * trackPerPage;
+        const end = Math.min(start + trackPerPage - 1, Database.trackMap.size);
+
+        return Database.keyList.slice(start, end + 1);
+    }
+    static getRandomTracksKey(n) {
+        const keyList = Database.keyList;
+        const shuffledIndexes = JSON.parse(localStorage.getItem('shuffledIndexes'));
+        const randomKeyList = [];
+
+        if (!shuffledIndexes || shuffledIndexes.length < n) {
+            const remainingIndexes = Array.from(
+                Array(!shuffledIndexes ? keyList.length : keyList.length - shuffledIndexes.length).keys()
+            );
+            Utils.shuffleArray(remainingIndexes);
+            if (!shuffledIndexes) {
+                shuffledIndexes = remainingIndexes;
+            } else {
+                shuffledIndexes.push(...remainingIndexes);
+            }
+            localStorage.setItem('shuffledIndexes', JSON.stringify(shuffledIndexes));
+        }
+
+        for (let i = 0; i < n; i++) {
+            randomKeyList.push(keyList[shuffledIndexes[i]]);
+        }
+
+        shuffledIndexes = shuffledIndexes.slice(n);
+        localStorage.setItem('shuffledIndexes', JSON.stringify(shuffledIndexes));
+
+        return randomKeyList;
+    }
+
     // Get data functions
     static getSearchSuggestions(keyword) {
         const lowerCaseKeyword = keyword.toString().toLowerCase();
@@ -225,53 +272,8 @@ class Database {
         
         return results; 
     }
-
-
     static getTracksByIdentify(identify) {
-        let rs = '';
-
-        Database.listTrack.forEach(track => {
-            if (track.code.toString() === identify || track.rjCode.toLowerCase() === identify.toLowerCase()) {
-                rs = track;
-            }
-        });
-
-        return rs;
-    }
-    static getTrackDataOfPage(page, trackPerPage) {
-        const start = (page - 1) * trackPerPage;
-        const end = Math.min(start + trackPerPage - 1, Database.listCode.length);
-
-        return Database.displayListTrack.slice(start, end + 1);
-    }
-    static getRandomTracks(n) {
-        const listTrack = Database.listTrack;
-        let shuffledIndexes = JSON.parse(localStorage.getItem('shuffledIndexes'));
-
-        if (!shuffledIndexes || shuffledIndexes.length < n) {
-            const remainingIndexes = Array.from(
-                Array(!shuffledIndexes ? listTrack.length : listTrack.length - shuffledIndexes.length).keys()
-            );
-            Utils.shuffleArray(remainingIndexes);
-            if (!shuffledIndexes) {
-                shuffledIndexes = remainingIndexes;
-            } else {
-                shuffledIndexes.push(...remainingIndexes);
-            }
-            localStorage.setItem('shuffledIndexes', JSON.stringify(shuffledIndexes));
-        }
-
-        const randomTracks = [];
-        for (let i = 0; i < n; i++) {
-            const trackIndex = shuffledIndexes[i];
-            const track = listTrack[trackIndex];
-            randomTracks.push(track);
-        }
-
-        shuffledIndexes = shuffledIndexes.slice(n);
-        localStorage.setItem('shuffledIndexes', JSON.stringify(shuffledIndexes));
-
-        return randomTracks;
+        return Database.trackMap.get(identify) ?? Database.trackMap.get(Database.codeMap.get(identify));
     }
 
     // Call when completed add data

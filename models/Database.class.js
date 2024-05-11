@@ -21,7 +21,7 @@ class Database {
         [cvs, tags, series, images, audios] = [cvs, tags, series, images, audios].map(member => Utils.standardizedTrackArrData(member));
         [cvs, tags, series] = [cvs, tags, series].map(member => member.sort());
 
-        otherLink = otherLink?.split(',').filter(subStr => subStr).map(noteNLink => {
+        otherLink = otherLink.split(',').filter(subStr => subStr).map(noteNLink => {
             noteNLink = noteNLink.trim();
             const [note, link] = noteNLink.split('::').map(item => item.trim());
             return new OtherLink(note, link);
@@ -141,7 +141,7 @@ class Database {
     static getTracksKeyByCategory(type, keyword) {
         const lowerCaseKeyword = keyword.toLowerCase();
         const keyList = [];
-        const category = ['cvs', 'tags', 'series'][['cv', 'tag', 'series'].indexOf(type)];
+        const category = ['cvs', 'tags', 'series'][type];
 
         if(!category)
             throw new Error('Invalid category type');
@@ -153,15 +153,6 @@ class Database {
         });
 
         return keyList;
-    }
-    static getTracksKeyByCv(keyword) {
-        return Database.getTracksKeyByCategory('cv', keyword);
-    }
-    static getTracksKeyByTag(keyword) {
-        return Database.getTracksKeyByCategory('tag', keyword);
-    }
-    static getTracksKeyBySeries(keyword) {
-        return Database.getTracksKeyByCategory('series', keyword);
     }
     static getTracksKeyForPage(page, trackPerPage = Config.trackPerPage) {
         const start = (page - 1) * trackPerPage;
@@ -273,7 +264,7 @@ class Database {
         return results; 
     }
     static getTracksByIdentify(identify) {
-        return Database.trackMap.get(identify) ?? Database.trackMap.get(Database.codeMap.get(identify));
+        return Database.trackMap.get(identify) ?? Database.trackMap.get(Number(identify)) ?? Database.trackMap.get(Database.codeMap.get(identify));
     }
 
     // Call when completed add data
@@ -287,20 +278,20 @@ class Database {
         if(!Database.config.log) return;
         console.log('\n\n\n\n\n');
         console.time('Database functions testing time');
-        console.log('Testing functions-----------------------------------------------------------------------');
-        console.log( 'Get category "cv" with keyword "" (Get all CVs):', Database.getCategory('cv', '') );
-        console.log( 'Get category "tag" with keyword "" (Get all Tags):', Database.getCategory('tag', '') );
-        console.log( 'Get category "series" with keyword "" (Get all Series):', Database.getCategory('series', '') );
+        console.log( 'Testing functions-----------------------------------------------------------------------');
+        console.log( 'Get category "cv" with keyword "" (Get all CVs):', Database.getCategory(Database.categoryType.CV, '') );
+        console.log( 'Get category "tag" with keyword "" (Get all Tags):', Database.getCategory(Database.categoryType.TAG, '') );
+        console.log( 'Get category "series" with keyword "" (Get all Series):', Database.getCategory(Database.categoryType.SERIES, '') );
         console.log( 'Get search suggestions with keyword "Na"', Database.getSearchSuggestions('Na') );
-        console.log( 'Get all tracks by keyword "saka"', Database.getTracksByKeyword('saka') );
-        console.log( 'Get tracks by category "cv" with keyword "narumi aisaka"', Database.getTracksByCategory('cv', 'narumi aisaka') );
-        console.log( 'Get tracks by category "tag" with keyword "elf"', Database.getTracksByCategory('tag', 'elf') );
-        console.log( 'Get tracks by category "series" with keyword "ドスケベjKシリーズ"', Database.getTracksByCategory('series', 'ドスケベjKシリーズ') );
+        console.log( 'Get all tracks by keyword "saka"', Database.searchTracksKey('saka') );
+        console.log( 'Get tracks by category "cv" with keyword "narumi aisaka"', Database.getTracksKeyByCategory(Database.categoryType.CV, 'narumi aisaka') );
+        console.log( 'Get tracks by category "tag" with keyword "elf"', Database.getTracksKeyByCategory(Database.categoryType.TAG, 'elf') );
+        console.log( 'Get tracks by category "series" with keyword "ドスケベjKシリーズ"', Database.getTracksKeyByCategory(Database.categoryType.SERIES, 'ドスケベjKシリーズ') );
         console.log( 'Get tracks by identify with code "107613"', Database.getTracksByIdentify('107613') );
         console.log( 'Get tracks by identify with RJcode "Rj377038"', Database.getTracksByIdentify('Rj377038') );
-        console.log( 'Get random 10 tracks', Database.getRandomTracks(10) );
-        console.log( 'Get random 20 tracks', Database.getRandomTracks(20) );
-        console.log('End testing functions------------------------------------------------------------------');
+        console.log( 'Get random 10 tracks', Database.getRandomTracksKey(10) );
+        console.log( 'Get random 20 tracks', Database.getRandomTracksKey(20) );
+        console.log( 'End testing functions------------------------------------------------------------------');
         console.timeEnd('Database functions testing time');
         console.log('\n\n\n\n\n');
     }

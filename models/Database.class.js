@@ -11,6 +11,7 @@ class Database {
     static cvMap = new Map();
     static tagMap = new Map();
     static seriesMap = new Map();
+    static keyList = [];
 
     static addTrackToDatabase(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink = undefined) {
         [cvs, tags, series, images, audios] = [cvs, tags, series, images, audios].map(member => Utils.standardizedTrackArrData(member));
@@ -23,7 +24,6 @@ class Database {
         })
 
         const track = new Track(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink);
-        Database.trackKeyMap.set(code, code);
         Database.trackKeyMap.set(rjCode, code);
         Database.trackMap.set(code, track);
 
@@ -42,38 +42,87 @@ class Database {
         });
     }
 
+    // Get sorted key list functions
+    static getSortedTrackKeysByRjCode(desc) {
+        const keyList = Database.trackKeyMap.values().sort((a, b) => {
+            const [nA, nB] = [a, b].map(_ => _.replace('RJ', ''));
+            return nA - nB || Number(nA) - Number(nB);
+        });
+
+        return desc ? keyList.reverse() : keyList;
+    }
+    static getSortedTrackKeysByCode(desc) {
+        const keyList = Database.trackMap.values().sort((a, b) => a.code - b.code);
+        return desc ? keyList.reverse() : keyList;
+    }
+    static getSortedTrackKeysByUploadOrder(desc) {
+        const keyList = Database.trackMap.values();
+        return desc ? keyList.reverse() : keyList;
+    }
+
+    // Sort tracks functions
+    static sortListTrackByRjCode(desc = false) {
+        Database.keyList = Database.getSortedTrackKeysByRjCode(desc);
+    }
+    static sortListTrackByCode(desc = false) {
+        Database.keyList = Database.getSortedTrackKeysByCode(desc);
+    }
+    static sortListTrackByUploadOrder(desc = false) {
+        Database.keyList = Database.getSortedTrackKeysByUploadOrder(desc);
+    }
+
+    // Get category functions
+    static getCategory(type, keyword) {
+        let map = null;
+
+        switch (type) {
+            case 'cv': map = Database.cvMap; break;
+            case 'tag': map = Database.tagMap; break;
+            case 'series': map = Database.seriesMap; break;
+            default: throw new Error('Invalid category type');
+        }
+
+        return map.get(keyword.toLowerCase());
+    }
+    static getCv(keyword) {
+        return Database.getCategory('cv', keyword);
+    }
+    static getTag(keyword) {
+        return Database.getCategory('tag', keyword);
+    }
+    static getSeries(keyword) {
+        return Database.getCategory('series', keyword);
+    }
+    static searchCategory(type, keyword) {
+        const lowerCaseKeyword = keyword.toLowerCase();
+        const result = [];
+        let map = null;
+
+        switch (type) {
+            case 'cv': map = Database.cvMap; break;
+            case 'tag': map = Database.tagMap; break;
+            case 'series': map = Database.seriesMap; break;
+            default: throw new Error('Invalid category type');
+        }
+
+        map.forEach((value, key) => {
+            if(key.includes(lowerCaseKeyword))
+                result.push(value);
+        });
+
+        return result;
+    }
+    static searchCv(keyword) {
+        return Database.searchCategory('cv', keyword);
+    }
+    static searchTag(keyword) {
+        return Database.searchCategory('tag', keyword);
+    }
+    static searchSeries(keyword) {
+        return Database.searchCategory('series', keyword);
+    }
+
     // Get data functions
-        static getCategory(type, keyword) {
-            let map = null;
-
-            switch (type) {
-                case 'cv': map = Database.cvMap; break;
-                case 'tag': map = Database.tagMap; break;
-                case 'series': map = Database.seriesMap; break;
-                default: throw new Error('Invalid category type');
-            }
-
-            return map.get(keyword.toLowerCase());
-        }
-        static searchCategory(type, keyword) {
-            const lowerCaseKeyword = keyword.toLowerCase();
-            const result = [];
-            let map = null;
-
-            switch (type) {
-                case 'cv': map = Database.cvMap; break;
-                case 'tag': map = Database.tagMap; break;
-                case 'series': map = Database.seriesMap; break;
-                default: throw new Error('Invalid category type');
-            }
-
-            map.forEach((value, key) => {
-                if(key.includes(lowerCaseKeyword))
-                    result.push(value);
-            });
-
-            return result;
-        }
         static getSearchSuggestions(keyword) {
             const lowerCaseKeyword = keyword.toString().toLowerCase();
             const results = [];
@@ -266,6 +315,7 @@ class Database {
     // Call when completed add data
         static completeBuild() {
             Utils.memoizeGetAndSearchMethods(Database);
+            Database.sortListTrackByRjCode();
             if(Database.config.test)
                 Database.testingFunctions();
         }

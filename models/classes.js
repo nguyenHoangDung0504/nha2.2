@@ -6,8 +6,7 @@ class Track {
         Object.assign(this, { code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink });
     }
 
-    static hiddenItemTemplate = 
-    `<div class="hidden-info" id="hidden_info_of_[code]">
+    static hiddenItemTemplate = /*html*/`<div class="hidden-info" id="hidden_info_of_[code]">
         <div class="content-container">
             <h3><b>RJ Code</b>: [rjCode]</h3>
             <h3><b>Series</b>: [listOfSeries]</h3>

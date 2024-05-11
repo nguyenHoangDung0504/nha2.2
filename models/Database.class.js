@@ -21,7 +21,7 @@ class Database {
         [cvs, tags, series, images, audios] = [cvs, tags, series, images, audios].map(member => Utils.standardizedTrackArrData(member));
         [cvs, tags, series] = [cvs, tags, series].map(member => member.sort());
 
-        otherLink = otherLink.split(',').filter(subStr => subStr).map(noteNLink => {
+        otherLink = otherLink?.split(',').filter(subStr => subStr).map(noteNLink => {
             noteNLink = noteNLink.trim();
             const [note, link] = noteNLink.split('::').map(item => item.trim());
             return new OtherLink(note, link);
@@ -48,10 +48,10 @@ class Database {
 
     // Get sorted key list functions
     static getSortedTracksKeyByRjCode(desc) {
-        const keyList = Database.trackKeyMap.values().sort((a, b) => {
-            const [nA, nB] = [a, b].map(({ rjCode }) => rjCode.replace('RJ', ''));
+        const keyList = [...Database.trackKeyMap.keys()].sort((a, b) => {
+            const [nA, nB] = [a, b].map(rjCode => rjCode.replace('RJ', ''));
             return nA.length - nB.length || Number(nA) - Number(nB);
-        });
+        }).map(rjCodeKey => Database.trackKeyMap.get(rjCodeKey));
 
         return desc ? keyList.reverse() : keyList;
     }
@@ -65,7 +65,7 @@ class Database {
     }
 
     // Sort tracks functions
-    static sortRjCode(desc = false) {
+    static sortByRjCode(desc = false) {
         Database.keyList = Database.getSortedTracksKeyByRjCode(desc);
     }
     static sortByCode(desc = false) {
@@ -162,7 +162,7 @@ class Database {
     }
     static getRandomTracksKey(n) {
         const keyList = Database.keyList;
-        const shuffledIndexes = JSON.parse(localStorage.getItem('shuffledIndexes'));
+        let shuffledIndexes = JSON.parse(localStorage.getItem('shuffledIndexes'));
         const randomKeyList = [];
 
         if (!shuffledIndexes || shuffledIndexes.length < n) {
@@ -194,7 +194,8 @@ class Database {
         const results = [];
         const seen = new Set();
 
-        Database.displayListTrack.forEach(track => {
+        Database.keyList.forEach(keyCode => {
+            const track = Database.trackMap.get(keyCode);
             const lowerCaseCode = track.code.toString();
             const lowerCaseRjCode = track.rjCode.toLowerCase();
             const lowerCaseJapName = track.japName.toLowerCase();
@@ -264,13 +265,13 @@ class Database {
         return results; 
     }
     static getTracksByIdentify(identify) {
-        return Database.trackMap.get(identify) ?? Database.trackMap.get(Number(identify)) ?? Database.trackMap.get(Database.codeMap.get(identify));
+        return Database.trackMap.get(identify) ?? Database.trackMap.get(Number(identify)) ?? Database.trackMap.get(Database.trackKeyMap.get(identify.toUpperCase()));
     }
 
     // Call when completed add data
     static completeBuild() {
         Utils.memoizeGetAndSearchMethods(Database);
-        Database.sortListTrackByRjCode();
+        Database.sortByRjCode();
         if(Database.config.test)
             Database.testingFunctions();
     }

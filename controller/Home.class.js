@@ -85,9 +85,7 @@ class Home {
     }
 
     static buildPagination(page, limitPage) {
-        const group = Utils.getGroupOfPagination(page, Config.trackPerPage, limitPage);
-        
-
+        const group = Utils.getGroupOfPagination(page, Config.linksPerGroupPagination, limitPage);
         let links0 = [
             `<a class="[class]" href="${Utils.addQueryToUrl('page', '1')}" id="first-link">&lt;&lt;</a>`,
             `[links]`,
@@ -107,6 +105,7 @@ class Home {
     static setMessage(message) {
         Home.reuableElements.messageBox.innerHTML = message;
     }
+    
     static setMessagePlus(message) {
         Home.reuableElements.messageBox.innerHTML += '<br>' + message;
     }

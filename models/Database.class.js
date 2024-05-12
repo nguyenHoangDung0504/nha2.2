@@ -276,6 +276,7 @@ class Database {
     }
     static testingFunctions() {
         if(!Database.config.log) return;
+        Config.log = true;
         console.log('\n\n\n\n\n');
         console.time('Database functions testing time');
         console.log( 'Testing functions-----------------------------------------------------------------------');
@@ -294,6 +295,7 @@ class Database {
         console.log( 'End testing functions------------------------------------------------------------------');
         console.timeEnd('Database functions testing time');
         console.log('\n\n\n\n\n');
+        Config.log = false;
     }
 }
 

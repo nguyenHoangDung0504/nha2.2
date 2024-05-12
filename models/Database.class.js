@@ -259,7 +259,7 @@ class Database {
     // Call when completed add data
     static completeBuild() {
         Utils.memoizeGetAndSearchMethods(Database);
-        Database.sortByRjCode();
+        Database.sortByRjCode(true);
         [Database.cvMap, Database.tagMap, Database.seriesMap] = [Database.cvMap, Database.tagMap, Database.seriesMap].map(map => {
             return new Map([...map.entries()].sort((a, b) => a[1].name.localeCompare(b[1].name)));
         });

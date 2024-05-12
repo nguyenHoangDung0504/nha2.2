@@ -16,10 +16,18 @@ class Home {
     static keyList = Database.keyList;
 
     static build() {
+        // Reset html
+        for (const element in Home.reuableElements) {
+            if (Object.hasOwnProperty.call(Home.reuableElements, element)) {
+                Home.reuableElements[element].innerHTML = '';
+            }
+        }
+
+        Home.setMessage('NHD Hentai - ASMR Hentai Tracks');
+
         if (Home.search) {
             if (search == '@newest' || search == '@n') {
                 Database.sortByUploadOrder();
-                Home.setMessage('NHD Hentai - ASMR Hentai Tracks');
             } else {
                 const searchValues = Home.search.split(',').map(v => v.trim()).filter(v => v);
                 searchValues.forEach(searchValue => {
@@ -53,17 +61,16 @@ class Home {
         Home.page = !Home.page ? 1 : Home.page;
         Home.page < 1 || Home.page > limitPage ? window.history.back() : '';
 
-        Home.keyList = Database.getTracksKeyForPage(Home.page, null, Home.keyList);
-        Home.reuableElements.gridContainer.innerHTML = ''; // Reset html
+        Home.keyList = Database.getTracksKeyForPage(Home.page, Config.trackPerPage, Home.keyList);
         Home.keyList.forEach(codeKey => {
             Home.reuableElements.gridContainer.appendChild(Database.trackMap.get(codeKey).getGridItemElement());
         });
     }
 
     static setMessage(message) {
-        Home.reuableElements.messageBox.textContent = message;
+        Home.reuableElements.messageBox.innerHTML = message;
     }
     static setMessagePlus(message) {
-        Home.reuableElements.messageBox.textContent += '<br>' + message;
+        Home.reuableElements.messageBox.innerHTML += '<br>' + message;
     }
 }

@@ -73,6 +73,7 @@ body p.message {
     display: block;
     font-size: 22px;
     margin: calc(var(--screen-width) * .02) calc(var(--screen-width) * .06);
+    line-height: 1.75;
 }
 
 body.openMenu p.message {

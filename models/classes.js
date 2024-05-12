@@ -6,28 +6,28 @@ class Track {
         Object.assign(this, { code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink });
     }
 
-    static hiddenItemTemplate = /*html*/`<div class="hidden-info" id="hidden_info_of_[code]">
-        <div class="content-container">
-            <h3><b>RJ Code</b>: [rjCode]</h3>
-            <h3><b>Series</b>: [listOfSeries]</h3>
-            <h3><b>Eng Name</b>: [engName]</h3>
-            <h3><b>Original Name</b>: [japName]</h3>
-            <h3><b>CV</b>: [listOfCvs]</h3>
-            <h3><b>Tags</b>: [listOfTags]</h3>
-        </div>
-        <div class="image-container">
-            <img loading="lazy" src="[thumbnail]" alt="thumbnail of [code]">
-        </div>
-    </div>`;
-
     getHiddenItem() {
-        const replaceValues = [
-            '[code]', '[rjCode]', '[listOfCvs]', '[listOfTags]',
-            '[listOfSeries]', '[engName]', '[japName]', '[thumbnail]'
-        ];
-        return Object.values(this).reduce((html, replaceValue, i) => {
-            return html.replaceAll(replaceValues[i], replaceValue)
-        }, Track.hiddenItemTemplate);
+        const cvs = getCategoryHtml(this.cvs, Database.categoryType.CV);
+        const tags = getCategoryHtml(this.tags, Database.categoryType.TAG);
+        const series = getCategoryHtml(this.series, Database.categoryType.SERIES);
+        
+        function getCategoryHtml(keys, type) {
+            return keys.map(key => Database.getCategory(type, key).getHtml()).join(', ');
+        }
+        
+        return `<div class="hidden-info" id="hidden_info_of_${this.code}">
+            <div class="content-container">
+                <h3><b>RJ Code</b>: ${this.rjCode}</h3>
+                <h3><b>Series</b>: ${series}</h3>
+                <h3><b>Eng Name</b>: ${this.engName}</h3>
+                <h3><b>Original Name</b>: ${this.japName}</h3>
+                <h3><b>CV</b>: ${cvs}</h3>
+                <h3><b>Tags</b>: ${tags}</h3>
+            </div>
+            <div class="image-container">
+                <img loading="lazy" src="[thumbnail]" alt="thumbnail of ${this.code}">
+            </div>
+        </div>`;
     }
 }
 class Category {
@@ -39,15 +39,27 @@ class Cv extends Category {
     constructor(name, quantity) {
         super(...arguments);
     }
+
+    getHtml() {
+        return `<span class="cv">${this.name} (${this.quantity})</span>`;
+    }
 }
 class Tag extends Category {
     constructor(name, quantity) {
         super(...arguments);
     }
+
+    getHtml() {
+        return `<span class="tag">${this.name} (${this.quantity})</span>`;
+    }
 }
 class Series extends Category {
     constructor(name, quantity) {
         super(...arguments);
+    }
+
+    getHtml() {
+        return `<span class="series">${this.name} (${this.quantity})</span>`;
     }
 }
 class SearchResult {

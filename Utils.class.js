@@ -103,6 +103,20 @@ class Utils {
                 .replaceAll('’', "'")
             );
     }
+    static filterUniqueObjects(arr) {
+        const uniqueObjects = [];
+        const set = new Set();
+        
+        arr.forEach(obj => {
+            const stringified = JSON.stringify(obj);
+            if (!set.has(stringified)) {
+                set.add(stringified);
+                uniqueObjects.push(obj);
+            }
+        });
+        
+        return uniqueObjects;
+    }
     static memoize(func) {
         const cache = {};
         return function(...args) {

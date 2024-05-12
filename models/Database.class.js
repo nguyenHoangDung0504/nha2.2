@@ -58,7 +58,7 @@ class Database {
         return desc ? keyList.reverse() : keyList;
     }
     static getSortedTracksKeyByCode(desc) {
-        const keyList = Database.trackMap.values().sort((a, b) => a.code - b.code);
+        const keyList = Database.trackMap.keys().sort((a, b) => a - b);
         return desc ? keyList.reverse() : keyList;
     }
     static getSortedTracksKeyByUploadOrder(desc) {
@@ -113,12 +113,12 @@ class Database {
     }
 
     // Get/Search tracks key functions
-    static searchTracksKey(keyword) {
+    static searchTracksKey(keyword, keyListToSearch = Database.keyList) {
         const lowerCaseKeyword = keyword.toString().toLowerCase();
         const keyList = [];
 
         // Find Tracks with code, name or rjCode containing keywords
-        Database.keyList.forEach(codeKey => {
+        keyListToSearch.forEach(codeKey => {
             let { code, rjCode, engName, japName, cvs, tags, series } = Database.trackMap.get(codeKey);
 
             // Standardized data
@@ -140,7 +140,7 @@ class Database {
 
         return keyList;
     }
-    static getTracksKeyByCategory(type, keyword) {
+    static getTracksKeyByCategory(type, keyword, keyListToSearch = Database.keyList) {
         const lowerCaseKeyword = keyword.toLowerCase();
         const keyList = [];
         const category = ['cvs', 'tags', 'series'][type];
@@ -148,7 +148,7 @@ class Database {
         if(!category)
             throw new Error('Invalid category type');
 
-        Database.keyList.forEach(codeKey => {
+        keyListToSearch.forEach(codeKey => {
             const track = Database.trackMap.get(codeKey);
             if(track[category].some(t => t.toLowerCase() === lowerCaseKeyword))
                 keyList.push(codeKey);

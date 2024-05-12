@@ -1,7 +1,7 @@
 'use strict';
 
 class Config {
-    static trackPerPage = Config.deviceIsMobile() ? 20 : 40;
+    static trackPerPage = Config.deviceIsMobile() ? 28 : 40;
     
     static deviceIsMobile() {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);

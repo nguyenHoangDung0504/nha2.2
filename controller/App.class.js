@@ -48,7 +48,7 @@ class App {
             if (searchValue) {
                 mainSearchInput.value = '';
                 if (!developerSearch(searchValue)) {
-                    window.location = `..?search=${searchValue}`;
+                    window.location = `..?search=${encodeURIComponent(searchValue)}`;
                 }
             }
         });
@@ -59,12 +59,14 @@ class App {
                 if (searchValue) {
                     mainSearchInput.value = '';
                     if (!developerSearch(searchValue)) {
-                        window.location = `..?search=${searchValue}`;
+                        window.location = `..?search=${encodeURIComponent(searchValue)}`;
                     }
                 }
             }
         }
         function search(value) {
+            const splittedValue = value.split(',').map(v => v.trim());
+
             if (value == '') {
                 resultBox.innerHTML = '';
                 Config.hideResultBox();
@@ -72,7 +74,7 @@ class App {
             }
 
             if (value.includes('@')) {
-                resultBox.innerHTML = `
+                resultBox.innerHTML = /*html*/`
                     <a href="../?search=@n"><span style="color: #00BFFF;">►</span><strong>@n</strong>: <span class="cnt">View newest tracks</span></a>
                     <a href="../develop/list-code"><span style="color: #00BFFF;">►</span><strong>@lc or @listcode</strong>: <span class="cnt">View list code</span></a>
                     <a href="../develop/data-capacity"><span style="color: #00BFFF;">►</span><strong>@dc or @datacapacity</strong>: <span class="cnt">View data capacity</span></a>
@@ -83,7 +85,9 @@ class App {
                 return;
             }
 
-            let suggestions = Database.getSearchSuggestions(value);
+            let suggestions = Utils.filterUniqueObjects(splittedValue.reduce((arrOfSuggestion, v) => {
+                return arrOfSuggestion.concat(Database.getSearchSuggestions(value));
+            }, []));
             if (suggestions.length == 0) {
                 resultBox.innerHTML = `<a style="text-align:center;">-No Result-</a>`;
             } else {

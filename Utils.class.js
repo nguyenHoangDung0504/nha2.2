@@ -2,7 +2,7 @@
 
 class Utils {
     static getGroupOfPagination(currentPage, pagePerGroup, limitPage) {
-        if(pagePerGroup %2 === 0)
+        if(pagePerGroup % 2 === 0)
             throw new Error('Only works 100% accurately when the \'pagePerGroup\' value is an odd number');
         pagePerGroup = pagePerGroup > limitPage ? limitPage : pagePerGroup;
 

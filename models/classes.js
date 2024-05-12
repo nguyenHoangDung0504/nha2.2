@@ -25,13 +25,13 @@ class Track {
         <div class="image-container">
             <img loading="lazy" src="${this.thumbnail}" alt="thumbnail of ${this.code}">
         </div>`;
-        
+
         return hiddenInfoBlock;
     }
 
     getGridItemElement() {
         const gridItem = document.createElement('div');
-        
+
         gridItem.dataset.code = this.code;
         gridItem.classList.add('grid-item');
         gridItem.id = `link_to_${this.code}`;
@@ -56,6 +56,36 @@ class Track {
         </div>`;
 
         return gridItem;
+    }
+
+    addActionDisplayHiddenItemFor(actionBox, timeOut = 400) {
+        let hiddenItem = document.querySelector(`hidden_info_of_${this.code}`);
+        let timeoutId;
+
+        if(!hiddenItem) {
+            hiddenItem = this.getHiddenItemElement();
+            document.body.appendChild(hiddenItem);
+        }
+
+        actionBox.addEventListener('mouseenter', event => {
+            timeoutId = setTimeout(() => {
+                hiddenItem.style.opacity = '1';
+            }, timeOut);
+            const x = event.clientX;
+            const y = event.clientY;
+            hiddenItem.style.left = ((x <= -30 + screen.width - hiddenItem.offsetWidth) ? x : (x - hiddenItem.offsetWidth)) + "px";
+            hiddenItem.style.top = ((y <= screen.height - hiddenItem.offsetHeight) ? y : (y - hiddenItem.offsetHeight)) + "px";
+        });
+        actionBox.addEventListener('mouseleave', () => {
+            clearTimeout(timeoutId);
+            hiddenItem.style.opacity = '0';
+        });
+        actionBox.addEventListener('mousemove', event => {
+            const x = event.clientX;
+            const y = event.clientY;
+            hiddenItem.style.left = ((x <= -30 + screen.width - hiddenItem.offsetWidth) ? x : (x - hiddenItem.offsetWidth)) + "px";
+            hiddenItem.style.top = ((y <= screen.height - hiddenItem.offsetHeight) ? y : (y - hiddenItem.offsetHeight)) + "px";
+        });
     }
 
     static getListOfCategoryHtml(keys, type) {
@@ -118,7 +148,7 @@ class OtherLink {
 
 // App classes
 class SwipeHandler {
-    constructor(element, leftToRight = ()=>null, rightToLeft = ()=>null, up = ()=>null, down = ()=>null, thresholdRatio = 2) {
+    constructor(element, leftToRight = () => null, rightToLeft = () => null, up = () => null, down = () => null, thresholdRatio = 2) {
         /**
          * leftToRight: function to call when the swipe/drag action is from left to right
          * rightToLeft:                                                     right to left

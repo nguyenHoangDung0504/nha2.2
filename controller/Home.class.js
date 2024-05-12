@@ -53,7 +53,7 @@ class Home {
         } if (Home.sort == 'oldest') {
             Home.keyList = Home.keyList.reverse();
         } if (Home.keyList.length === 0) {
-            Home.setMessage(`There weren't any results found&ensp;&ensp; <a href="javascript:void(0)" class="series" onclick="window.history.back()">Back</a>`);
+            Home.setMessagePlus(`There weren't any results found&ensp;&ensp; <a href="javascript:void(0)" class="series" onclick="window.history.back()">Back</a>`);
         }
 
         let limitPage = Math.ceil(Home.keyList.length / Config.trackPerPage);

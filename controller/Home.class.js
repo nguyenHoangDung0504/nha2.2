@@ -25,15 +25,13 @@ class Home {
         Home.page < 1 || Home.page > limitPage ? window.history.back() : '';
 
         // Reset html
-        for (const element in Home.reuableElements) {
-            if (Object.hasOwnProperty.call(Home.reuableElements, element)) {
-                Home.reuableElements[element].innerHTML = '';
-            }
-        }
+        Home.reuableElements.hiddenDataContainer.innerHTML = '';
+        Home.reuableElements.gridContainer.innerHTML = '';
+        Home.reuableElements.paginationBody.innerHTML = '';
 
         Home.setMessage('NHD Hentai - ASMR Hentai Tracks');
         Home.buildGrid();
-        Home.buildPagination(page, limitPage);
+        Home.buildPagination(Home.page, limitPage);
     }
 
     static filterKeyList() {
@@ -88,9 +86,20 @@ class Home {
 
     static buildPagination(page, limitPage) {
         const group = Utils.getGroupOfPagination(page, Config.trackPerPage, limitPage);
-        if (page == 1) {
-            // Home.reuableElements.paginationBody.querySelector('.')
-        }
+        let links0 = [
+            `<a class="[class]" href="${Utils.addQueryToUrl('page', '1')}" id="first-link">&lt;&lt;</a>`,
+            `[links]`,
+            `<a class="[class]" href="${Utils.addQueryToUrl('page', limitPage)}" id="last-link">&gt;&gt;</a>`
+        ], links = ``;
+
+        links0[0] = (page == 1) ? links0[0].replace('[class]', 'block') : links0[0];
+        links0[2] = (page == limitPage) ? links0[2].replace('[class]', 'block') : links0[2];
+        
+        group.forEach((p) => {
+            links += `<a class="${p == page ? 'active' : ''}" href="${Utils.addQueryToUrl('page', p)}">${p}</a>`;
+        });
+
+        Home.reuableElements.paginationBody.innerHTML = links0.join('');
     }
 
     static setMessage(message) {

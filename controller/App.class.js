@@ -9,8 +9,8 @@ class App {
         ALT_PLAYER: 2
     }
 
-    static build(type = App.types.HOME_PAGE) {
-        console.time(`${type} - Build base app time`);
+    static build(type = App.types.HOME) {
+        console.time(`Build app time`);
         // Common Build
         App.buildHeaderAction();
         App.buildMenuAction();
@@ -29,7 +29,7 @@ class App {
 
         App.startSendAppStatus();
         document.body.style.display = 'block';
-        console.timeEnd(`${type} - Build app time`);
+        console.timeEnd(`Build app time`);
     }
 
     // For search box
@@ -161,10 +161,7 @@ class App {
                     panel.style.maxHeight = panel.scrollHeight + 'px';
                 }
             });
-
-            Config.deviceIsMobile() || accordion.click();
         });
-
         subRankList.forEach(subRankBox => {
             const searchBox = subRankBox.querySelector('input.search');
             const sortTypeSelect = subRankBox.querySelector('select');
@@ -184,6 +181,8 @@ class App {
                         }
                         link.style.display = "none";
                     });
+                    const sortedListOfLinks = Array.from(listOfLinks).sort((a, b) => a.textContent.toLowerCase().indexOf(keyword) - b.textContent.toLowerCase().indexOf(keyword));
+                    sortedListOfLinks.forEach(link => linkContainer.appendChild(link));
                     return;
                 }
 
@@ -191,6 +190,7 @@ class App {
                     link.style.display = "block";
                     link.innerHTML = Utils.removeHighlight(link.innerHTML);
                 });
+                sortTypeSelect.dispatchEvent(new Event('input'));
             });
 
             sortTypeSelect.addEventListener('input', () => {
@@ -210,16 +210,23 @@ class App {
                 sortedListOfLinks.forEach(link => linkContainer.appendChild(link));
             });
         });
+        btnOpenCategoryModal.addEventListener('click', openCatgoriesModal);
+        btnCloseCategoryModal.addEventListener('click', closeCatgoriesModal);
 
-        btnOpenCategoryModal.addEventListener('click', () => {
+        categoriesModal.addEventListener('click', event => {
+            if(event.target.classList.contains('modal-container')) {
+                closeCatgoriesModal();
+            }
+        });
+
+        function openCatgoriesModal() {
             categoriesModal.classList.add('open');
             document.body.classList.add('openModal');
-        });
-
-        btnCloseCategoryModal.addEventListener('click', () => {
+        }
+        function closeCatgoriesModal() {
             categoriesModal.classList.remove('open');
             document.body.classList.remove('openModal');
-        });
+        }
     }
 
     // Call when complete build app

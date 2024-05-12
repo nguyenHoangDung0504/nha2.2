@@ -86,7 +86,7 @@ class App {
             }
 
             let suggestions = Utils.filterUniqueObjects(splittedValue.reduce((arrOfSuggestion, v) => {
-                return arrOfSuggestion.concat(Database.getSearchSuggestions(value));
+                return arrOfSuggestion.concat(Database.getSearchSuggestions(v));
             }, []));
             if (suggestions.length == 0) {
                 resultBox.innerHTML = `<a style="text-align:center;">-No Result-</a>`;

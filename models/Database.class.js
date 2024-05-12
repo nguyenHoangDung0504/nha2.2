@@ -249,21 +249,7 @@ class Database {
             }
         });
 
-        const typeOrder = ["code", "rjCode", "cv", "tag", "series", "engName", "japName"];
-
-        results.sort((a, b) => {
-            const keywordIndexA = a.value.toString().toLowerCase().indexOf(lowerCaseKeyword);
-            const keywordIndexB = b.value.toString().toLowerCase().indexOf(lowerCaseKeyword);
-            if (keywordIndexA !== keywordIndexB) {
-                return keywordIndexA - keywordIndexB;
-            }
-            const typeComparison = typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
-            if (typeComparison !== 0) {
-                return typeComparison;
-            }
-            return a.value.toString().localeCompare(b.value.toString());
-        });
-        
+        results.sort(Utils.sortSuggestionFn);
         return results; 
     }
     static getTracksByIdentify(identify) {

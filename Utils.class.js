@@ -141,4 +141,17 @@ class Utils {
     //Sort functions
         static byName = (a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase());
         static byQuantity = (a, b) => a.quantity - b.quantity;
+        static sortSuggestionFn = (a, b) => {
+            const typeOrder = ["code", "rjCode", "cv", "tag", "series", "engName", "japName"];
+            const keywordIndexA = a.value.toString().toLowerCase().indexOf(lowerCaseKeyword);
+            const keywordIndexB = b.value.toString().toLowerCase().indexOf(lowerCaseKeyword);
+            if (keywordIndexA !== keywordIndexB) {
+                return keywordIndexA - keywordIndexB;
+            }
+            const typeComparison = typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
+            if (typeComparison !== 0) {
+                return typeComparison;
+            }
+            return a.value.toString().localeCompare(b.value.toString());
+        }
 }

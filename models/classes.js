@@ -74,7 +74,7 @@ class OtherLink {
 
 // App classes
 class SwipeHandler {
-    constructor(element, leftToRight = void(0), rightToLeft = void(0), up = void(0), down = void(0), thresholdRatio = 2) {
+    constructor(element, leftToRight = ()=>null, rightToLeft = ()=>null, up = ()=>null, down = ()=>null, thresholdRatio = 2) {
         /**
          * leftToRight: function to call when the swipe/drag action is from left to right
          * rightToLeft:                                                     right to left
@@ -84,6 +84,8 @@ class SwipeHandler {
         Object.assign(this, { element, leftToRight, rightToLeft, up, down, thresholdRatio });
         this.startX = 0; this.startY = 0;
         this.endX = 0; this.endY = 0;
+        this.isSelectingText = false;
+        document.addEventListener('selectionchange', this.handleSelectionChange.bind(this));
     }
 
     registerEvents() {
@@ -99,23 +101,29 @@ class SwipeHandler {
         }
         this.startX = event.clientX;
         this.startY = event.clientY;
+        this.isSelectingText = false;
     }
 
     handleMouseUp(event) {
         this.endX = event.clientX;
         this.endY = event.clientY;
-        this.handleSwipe();
+        if (!this.isSelectingText) {
+            this.handleSwipe();
+        }
     }
 
     handleTouchStart(event) {
         this.startX = event.touches[0].clientX;
         this.startY = event.touches[0].clientY;
+        this.isSelectingText = false;
     }
 
     handleTouchEnd(event) {
         this.endX = event.changedTouches[0].clientX;
         this.endY = event.changedTouches[0].clientY;
-        this.handleSwipe();
+        if (!this.isSelectingText) {
+            this.handleSwipe();
+        }
     }
 
     handleSwipe() {
@@ -137,6 +145,10 @@ class SwipeHandler {
             }
             this.down();
         }
+    }
+
+    handleSelectionChange() {
+        this.isSelectingText = !!document.getSelection().toString(); // Cập nhật biến khi bôi đen văn bản
     }
 }
 class VideoPlayer {

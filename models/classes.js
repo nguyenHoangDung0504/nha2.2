@@ -74,21 +74,16 @@ class OtherLink {
 
 // App classes
 class SwipeHandler {
-    constructor(element, leftToRight, rightToLeft, up, down, thresholdRatio = 2) {
+    constructor(element, leftToRight = void(0), rightToLeft = void(0), up = void(0), down = void(0), thresholdRatio = 2) {
         /**
          * leftToRight: function to call when the swipe/drag action is from left to right
          * rightToLeft:                                                     right to left
          * up         :                                                     bottom to top
          * down       :                                                     top to bottom
          */
-        this.element = element;
-        this.thresholdRatio = thresholdRatio;
+        Object.assign(this, { element, leftToRight, rightToLeft, up, down, thresholdRatio });
         this.startX = 0; this.startY = 0;
         this.endX = 0; this.endY = 0;
-        this.leftToRight = leftToRight ?? function() { return };
-        this.rightToLeft = rightToLeft ?? function() { return };
-        this.up = up ?? function() { return };
-        this.down = down ?? function() { return };
     }
 
     registerEvents() {

@@ -121,6 +121,7 @@ class App {
 
         toggleMenuBtn.addEventListener('click', Config.toggleMenu);
         closeMenuBtn.addEventListener('click', Config.closeMenu);
+        new SwipeHandler(document.body, Config.openMenu, Config.closeMenu).registerEvents();
     }
 
     // For categories modal

@@ -26,6 +26,10 @@ class App {
 
         App.startSendAppStatus();
         document.body.style.display = 'block';
+        window.addEventListener('load', ()=>{
+            const loadTime = window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart;
+            console.log(`Loading time: ${loadTime} ms`);
+        });
         console.timeEnd(`Build app time`);
     }
 

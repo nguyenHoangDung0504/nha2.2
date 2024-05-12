@@ -2,32 +2,32 @@
 
 const urlParams = new URLSearchParams(window.location.search);
 
-class BaseApp {
+class App {
     static types = {
         HOME: 0,
         WATCH: 1,
         ALT_PLAYER: 2
     }
 
-    static buildApp(type = BaseApp.types.HOME_PAGE) {
+    static build(type = App.types.HOME_PAGE) {
         console.time(`${type} - Build base app time`);
         // Common Build
-        BaseApp.buildHeaderAction();
-        BaseApp.buildMenuAction();
-        BaseApp.buildCategoriesModalView();
-        BaseApp.buildCategoriesModalAction();
+        App.buildHeaderAction();
+        App.buildMenuAction();
+        App.buildCategoriesModalView();
+        App.buildCategoriesModalAction();
 
         switch (type) {
-            case BaseApp.types.HOME:
+            case App.types.HOME:
                 break;
-            case BaseApp.types.WATCH:
+            case App.types.WATCH:
                 break;
-            case BaseApp.types.ALT_PLAYER:
+            case App.types.ALT_PLAYER:
                 break;
             default: throw new Error('Invalid app type');
         }
 
-        BaseApp.startSendAppStatus();
+        App.startSendAppStatus();
         document.body.style.display = 'block';
         console.timeEnd(`${type} - Build app time`);
     }
@@ -138,6 +138,8 @@ class BaseApp {
                 htmls[index] += /*html*/`<a href="../?${types[index]}=${encodeURIComponent(name)}" class="item" quantity="${quantity}">${name}</a>`;
             });
         });
+
+        const [cvHtml, tagHtml, seriesHtml] = htmls;
         listCvCtn.innerHTML = cvHtml;
         listTagCtn.innerHTML = tagHtml;
         listSeriesCtn.innerHTML = seriesHtml;

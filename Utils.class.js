@@ -109,7 +109,7 @@ class Utils {
             const key = JSON.stringify(args);
             if (!(key in cache)) {
                 cache[key] = func.apply(this, args);
-                console.log('Cached Result!');
+                console.log(`%cCached result of: ${func.name}(${args.join(', ')})`, 'background: #222; color: #00BFFF; padding: 5px;');
             }
             return cache[key];
         };

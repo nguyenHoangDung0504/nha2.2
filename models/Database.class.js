@@ -280,9 +280,9 @@ class Database {
         console.log('\n\n\n\n\n');
         console.time('Database functions testing time');
         console.log( 'Testing functions-----------------------------------------------------------------------');
-        console.log( 'Get category "cv" with keyword "" (Get all CVs):', Database.getCategory(Database.categoryType.CV, '') );
-        console.log( 'Get category "tag" with keyword "" (Get all Tags):', Database.getCategory(Database.categoryType.TAG, '') );
-        console.log( 'Get category "series" with keyword "" (Get all Series):', Database.getCategory(Database.categoryType.SERIES, '') );
+        console.log( 'Get category "cv" with keyword "kaede akino":', Database.getCategory(Database.categoryType.CV, 'kaede akino') );
+        console.log( 'Get category "tag" with keyword "armpit":', Database.getCategory(Database.categoryType.TAG, 'armpit') );
+        console.log( 'Get category "series" with keyword "platonicangels洗脳プロジェクト (platonicangels brainwashing project)":', Database.getCategory(Database.categoryType.SERIES, 'platonicangels洗脳プロジェクト (platonicangels brainwashing project)') );
         console.log( 'Get search suggestions with keyword "Na"', Database.getSearchSuggestions('Na') );
         console.log( 'Get all tracks by keyword "saka"', Database.searchTracksKey('saka') );
         console.log( 'Get tracks by category "cv" with keyword "narumi aisaka"', Database.getTracksKeyByCategory(Database.categoryType.CV, 'narumi aisaka') );

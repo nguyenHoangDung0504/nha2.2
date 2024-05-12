@@ -11,11 +11,17 @@ class Home {
     static reuableElements = {
         messageBox: document.querySelector('.message'),
         hiddenDataContainer: document.querySelector('.hidden-data-container'),
-        gridContainer: document.querySelector('.grid-container')
+        gridContainer: document.querySelector('.grid-container'),
+        paginationBody: document.querySelector('.pagination-body'),
     }
     static keyList = Database.keyList;
 
     static build() {
+        let limitPage = Math.ceil(Home.keyList.length / Config.trackPerPage);
+        limitPage == 0 ? limitPage = 1 : limitPage;
+        Home.page = !Home.page ? 1 : Home.page;
+        Home.page < 1 || Home.page > limitPage ? window.history.back() : '';
+
         // Reset html
         for (const element in Home.reuableElements) {
             if (Object.hasOwnProperty.call(Home.reuableElements, element)) {
@@ -25,11 +31,7 @@ class Home {
 
         Home.setMessage('NHD Hentai - ASMR Hentai Tracks');
         Home.buildGrid();
-
-        let limitPage = Math.ceil(Home.keyList.length / Config.trackPerPage);
-        limitPage == 0 ? limitPage = 1 : limitPage;
-        Home.page = !Home.page ? 1 : Home.page;
-        Home.page < 1 || Home.page > limitPage ? window.history.back() : '';
+        Home.buildPagination(page, limitPage);
     }
 
     static buildGrid() {
@@ -80,8 +82,11 @@ class Home {
         });
     }
 
-    static buildPagination() {
-
+    static buildPagination(page, limitPage) {
+        const group = Utils.getGroupOfPagination(page, Config.trackPerPage, limitPage);
+        if(page == 1) {
+            // Home.reuableElements.paginationBody.querySelector('.')
+        }
     }
 
     static setMessage(message) {

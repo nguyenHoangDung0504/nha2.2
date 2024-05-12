@@ -143,8 +143,8 @@ class Utils {
         static byQuantity = (a, b) => a.quantity - b.quantity;
         static sortSuggestionFn = (a, b) => {
             const typeOrder = ["code", "rjCode", "cv", "tag", "series", "engName", "japName"];
-            const keywordIndexA = a.value.toString().toLowerCase().indexOf(lowerCaseKeyword);
-            const keywordIndexB = b.value.toString().toLowerCase().indexOf(lowerCaseKeyword);
+            const keywordIndexA = a.value.toString().toLowerCase().indexOf(a.keyword);
+            const keywordIndexB = b.value.toString().toLowerCase().indexOf(b.keyword);
             if (keywordIndexA !== keywordIndexB) {
                 return keywordIndexA - keywordIndexB;
             }

@@ -212,7 +212,6 @@ class App {
         });
         btnOpenCategoryModal.addEventListener('click', openCatgoriesModal);
         btnCloseCategoryModal.addEventListener('click', closeCatgoriesModal);
-
         categoriesModal.addEventListener('click', event => {
             if(event.target.classList.contains('modal-container')) {
                 closeCatgoriesModal();

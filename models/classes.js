@@ -73,6 +73,77 @@ class OtherLink {
 }
 
 // App classes
+class SwipeHandler {
+    constructor(element, leftToRight, rightToLeft, up, down, thresholdRatio = 2) {
+        /**
+         * leftToRight: function to call when the swipe/drag action is from left to right
+         * rightToLeft:                                                     right to left
+         * up         :                                                     bottom to top
+         * down       :                                                     top to bottom
+         */
+        this.element = element;
+        this.thresholdRatio = thresholdRatio;
+        this.startX = 0; this.startY = 0;
+        this.endX = 0; this.endY = 0;
+        this.leftToRight = leftToRight ?? function() { return };
+        this.rightToLeft = rightToLeft ?? function() { return };
+        this.up = up ?? function() { return };
+        this.down = down ?? function() { return };
+    }
+
+    registerEvents() {
+        this.element.addEventListener('mousedown', this.handleMouseDown.bind(this));
+        this.element.addEventListener('mouseup', this.handleMouseUp.bind(this));
+        this.element.addEventListener('touchstart', this.handleTouchStart.bind(this));
+        this.element.addEventListener('touchend', this.handleTouchEnd.bind(this));
+    }
+
+    handleMouseDown(event) {
+        if (event.target.tagName === "IMG") {
+            event.preventDefault();
+        }
+        this.startX = event.clientX;
+        this.startY = event.clientY;
+    }
+
+    handleMouseUp(event) {
+        this.endX = event.clientX;
+        this.endY = event.clientY;
+        this.handleSwipe();
+    }
+
+    handleTouchStart(event) {
+        this.startX = event.touches[0].clientX;
+        this.startY = event.touches[0].clientY;
+    }
+
+    handleTouchEnd(event) {
+        this.endX = event.changedTouches[0].clientX;
+        this.endY = event.changedTouches[0].clientY;
+        this.handleSwipe();
+    }
+
+    handleSwipe() {
+        const deltaX = this.endX - this.startX;
+        const deltaY = this.endY - this.startY;
+        const absDeltaX = Math.abs(deltaX);
+        const absDeltaY = Math.abs(deltaY);
+
+        if (absDeltaX > absDeltaY && absDeltaX / absDeltaY > this.thresholdRatio) {
+            if (deltaX > 0) {
+                this.leftToRight();
+                return;
+            }
+            this.rightToLeft();
+        } else if (absDeltaY > absDeltaX && absDeltaY / absDeltaX > this.thresholdRatio) {
+            if (deltaY > 0) {
+                this.up();
+                return;
+            }
+            this.down();
+        }
+    }
+}
 class VideoPlayer {
     constructor(src) {
         this.isDragging = false;

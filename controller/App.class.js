@@ -18,8 +18,7 @@ class App {
         App.buildCategoriesModalAction();
 
         switch (type) {
-            case App.types.HOME:
-                break;
+            case App.types.HOME: Home.build(); break;
             case App.types.WATCH:
                 break;
             case App.types.ALT_PLAYER:
@@ -65,7 +64,7 @@ class App {
             }
         }
         function search(value) {
-            const splittedValue = value.split(',').map(v => v.trim());
+            const splittedValue = value.split(',').map(v => v.trim()).filter(v => v);
 
             if (value == '') {
                 resultBox.innerHTML = '';
@@ -91,7 +90,7 @@ class App {
             if (suggestions.length == 0) {
                 resultBox.innerHTML = `<a style="text-align:center;">-No Result-</a>`;
             } else {
-                resultBox.innerHTML = suggestions.reduce((html, searchResult) => html.concat(searchResult.getView()), '');
+                resultBox.innerHTML = suggestions.reduce((html, searchResult) => html.concat(searchResult.getHtml()), '');
             }
             Config.showResultBox();
         }

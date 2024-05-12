@@ -6,28 +6,60 @@ class Track {
         Object.assign(this, { code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink });
     }
 
-    getHiddenItem() {
-        const cvs = getCategoryHtml(this.cvs, Database.categoryType.CV);
-        const tags = getCategoryHtml(this.tags, Database.categoryType.TAG);
-        const series = getCategoryHtml(this.series, Database.categoryType.SERIES);
+    getHiddenItemElement() {
+        const hiddenInfoBlock = document.createElement('div');
+        const cvs = Track.getListOfCategoryHtml(this.cvs, Database.categoryType.CV);
+        const tags = Track.getListOfCategoryHtml(this.tags, Database.categoryType.TAG);
+        const series = Track.getListOfCategoryHtml(this.series, Database.categoryType.SERIES);
+
+        hiddenInfoBlock.classList.add('hidden-info');
+        hiddenInfoBlock.id = `hidden_info_of_${this.code}`;
+        hiddenInfoBlock.innerHTML = `<div class="content-container">
+            <h3><b>RJ Code</b>: ${this.rjCode}</h3>
+            <h3><b>Series</b>: ${series}</h3>
+            <h3><b>Eng Name</b>: ${this.engName}</h3>
+            <h3><b>Original Name</b>: ${this.japName}</h3>
+            <h3><b>CV</b>: ${cvs}</h3>
+            <h3><b>Tags</b>: ${tags}</h3>
+        </div>
+        <div class="image-container">
+            <img loading="lazy" src="${this.thumbnail}" alt="thumbnail of ${this.code}">
+        </div>`;
         
-        function getCategoryHtml(keys, type) {
-            return keys.map(key => Database.getCategory(type, key).getHtml()).join(', ');
-        }
+        return hiddenInfoBlock;
+    }
+
+    getGridItemElement() {
+        const gridItem = document.createElement('div');
         
-        return `<div class="hidden-info" id="hidden_info_of_${this.code}">
-            <div class="content-container">
-                <h3><b>RJ Code</b>: ${this.rjCode}</h3>
-                <h3><b>Series</b>: ${series}</h3>
-                <h3><b>Eng Name</b>: ${this.engName}</h3>
-                <h3><b>Original Name</b>: ${this.japName}</h3>
-                <h3><b>CV</b>: ${cvs}</h3>
-                <h3><b>Tags</b>: ${tags}</h3>
-            </div>
-            <div class="image-container">
-                <img loading="lazy" src="[thumbnail]" alt="thumbnail of ${this.code}">
+        gridItem.dataset.code = this.code;
+        gridItem.classList.add('grid-item');
+        gridItem.id = `link_to_${this.code}`;
+        gridItem.innerHTML = `<div class="image-container">
+            <a href="/watch?code=${this.code}">
+                <img loading="lazy" src="${this.thumbnail}" alt="thumbnail of ${this.code}">
+            </a>
+        </div>
+        <div class="flex-container">
+            <a href="/watch?code=${this.code}">
+                <div class="text-container">
+                    <p class="multiline-ellipsis">
+                        <b><i>${this.rjCode}</i></b> - <span>${this.engName}</span>
+                    </p>
+                </div>
+            </a>
+            <div class="text-container">
+                <p class="singleline-ellipsis"><br>
+                    <b>CV</b>: ${Track.getListOfCategoryHtml(this.cvs, Database.categoryType.CV)}
+                </p>
             </div>
         </div>`;
+
+        return gridItem;
+    }
+
+    static getListOfCategoryHtml(keys, type) {
+        return keys.map(key => Database.getCategory(type, key).getHtml()).join(', ');
     }
 }
 class Category {
@@ -67,7 +99,7 @@ class SearchResult {
         Object.assign(this, { type, value, keyword, code });
     }
 
-    getView() {
+    getHtml() {
         const value = Utils.highlight(this.value, this.keyword);
         const href = ['cv', 'tag', 'series'].includes(this.type) ? `..?${this.type}=${encodeURIComponent(this.value)}` : `../watch?code=${this.code}`;
         this.type = Utils.convertToTitleCase(this.type);

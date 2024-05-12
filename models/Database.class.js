@@ -156,11 +156,11 @@ class Database {
 
         return keyList;
     }
-    static getTracksKeyForPage(page, trackPerPage = Config.trackPerPage) {
+    static getTracksKeyForPage(page, trackPerPage = Config.trackPerPage, listToGet = Database.keyList) {
         const start = (page - 1) * trackPerPage;
-        const end = Math.min(start + trackPerPage - 1, Database.trackMap.size);
+        const end = Math.min(start + trackPerPage - 1, listToGet.length);
 
-        return Database.keyList.slice(start, end + 1);
+        return listToGet.slice(start, end + 1);
     }
     static getRandomTracksKey(n) {
         const keyList = Database.keyList;

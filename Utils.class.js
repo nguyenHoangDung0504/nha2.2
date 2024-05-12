@@ -116,7 +116,7 @@ class Utils {
     }// Apply cache for functions
     static memoizeGetAndSearchMethods(target) {
         const methodNames = Object.getOwnPropertyNames(target).filter(name => 
-            ['get', 'search'].reduce((rs, keyword) => rs || name.includes(keyword), true)
+            ['get', 'search'].some(keyword => name.includes(keyword))
             && (typeof target[name]) === 'function'
         );
         methodNames.forEach(methodName => {

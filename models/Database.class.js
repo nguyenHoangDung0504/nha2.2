@@ -1,9 +1,11 @@
 'use strict';
 
+console.time('Build Database Time');
 class Database {
     static config = {
         log: true,
-        test: true
+        test: true,
+        clearLog: false,
     };
     static categoryType = {
         CV: 0,
@@ -272,8 +274,19 @@ class Database {
     static completeBuild() {
         Utils.memoizeGetAndSearchMethods(Database);
         Database.sortByRjCode();
+        [Database.cvMap, Database.tagMap, Database.seriesMap] = [Database.cvMap, Database.tagMap, Database.seriesMap].map(map => {
+            return new Map([...map.entries()].sort((a, b) => a[1].name.localeCompare(b[1].name)));
+        });
+        console.timeEnd('Build Database Time');
+        console.log('Added:', Database.keyList.length, 'Tracks');
+        console.log('Complete build tracks map:', Database.trackMap);
+        console.log('Complete build CVs map:', Database.cvMap);
+        console.log('Complete build tags map:', Database.tagMap);
+        console.log('Complete build series map:', Database.seriesMap);
         if(Database.config.test)
             Database.testingFunctions();
+        if(Database.config.clearLog)
+            setTimeout(()=>{ console.clear(); }, 5000);
     }
     static testingFunctions() {
         if(!Database.config.log) return;

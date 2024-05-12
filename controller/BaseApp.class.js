@@ -2,33 +2,33 @@
 
 const urlParams = new URLSearchParams(window.location.search);
 
-class App {
+class BaseApp {
     static types = {
-        HOME_PAGE: 'Home page',
-        WATCH_PAGE: 'Watch page',
-        ALT_PLAYER_PAGE: 'Alt player type'
+        HOME: 0,
+        WATCH: 1,
+        ALT_PLAYER: 2
     }
 
-    static buildApp(type = App.types.HOME_PAGE) {
-        console.time(`${type} - Build app time`);
+    static buildApp(type = BaseApp.types.HOME_PAGE) {
+        console.time(`${type} - Build base app time`);
         // Common Build
-        App.buildHeaderAction();
-        App.buildMenuAction();
-        App.buildCategoriesModalView();
-        App.buildCategoriesModalAction();
+        BaseApp.buildHeaderAction();
+        BaseApp.buildMenuAction();
+        BaseApp.buildCategoriesModalView();
+        BaseApp.buildCategoriesModalAction();
 
         switch (type) {
-            case App.types.HOME_PAGE:
-                App.buildGridOfTracks();
+            case BaseApp.types.HOME:
                 break;
-            case App.types.WATCH_PAGE:
+            case BaseApp.types.WATCH:
                 break;
-            case App.types.ALT_PLAYER_PAGE:
+            case BaseApp.types.ALT_PLAYER:
                 break;
             default: throw new Error('Invalid app type');
         }
 
-        App.startSendAppStatus();
+        BaseApp.startSendAppStatus();
+        document.body.style.display = 'block';
         console.timeEnd(`${type} - Build app time`);
     }
 
@@ -127,19 +127,16 @@ class App {
     static buildCategoriesModalView() {
         const [rankListCvCtn, rankListTagCtn, rankListSeriesCtn] = ['.rank-list-grid-item.cv-b', '.rank-list-grid-item.tag-b', '.rank-list-grid-item.series-b'].map(selector => document.querySelector(selector));
         const [listCvCtn, listTagCtn, listSeriesCtn] = [rankListCvCtn, rankListTagCtn, rankListSeriesCtn].map(ctn => ctn.querySelector('.links'));
-        const listLength = [Database.listCv, Database.listTag, Database.listSeries].map(list => list.length);
-        let [cvHtml, tagHtml, seriesHtml] = Array(3).fill('');
+        const listLength = [Database.cvMap, Database.tagMap, Database.seriesMap].map(map => map.size);
+        const types = ['cv', 'tag', 'series'];
+        let htmls = Array(3).fill('');
 
-        [rankListCvCtn, rankListTagCtn, rankListSeriesCtn]
-            .forEach((ctn, index) => ctn.querySelector('.title').textContent += ` (${listLength[index]})`);
-        Database.listCv.forEach(({ name, quantity }) => {
-            cvHtml += `<a href="../?cv=${encodeURIComponent(name)}" class="item" quantity="${quantity}">${name}</a>`;
-        });
-        Database.listTag.forEach(({ name, quantity }) => {
-            tagHtml += `<a href="../?tag=${encodeURIComponent(name)}" class="item" quantity="${quantity}">${name}</a>`;
-        });
-        Database.listSeries.forEach(({ name, quantity }) => {
-            seriesHtml += `<a href="../?series=${encodeURIComponent(name)}" class="item" quantity="${quantity}">${name}</a>`;
+        [rankListCvCtn, rankListTagCtn, rankListSeriesCtn].forEach((ctn, index) => ctn.querySelector('.title').textContent += ` (${listLength[index]})`);
+        [Database.cvMap, Database.tagMap, Database.seriesMap].forEach((map, index) => {
+            map.forEach(value => {
+                const { name, quantity } = value;
+                htmls[index] += /*html*/`<a href="../?${types[index]}=${encodeURIComponent(name)}" class="item" quantity="${quantity}">${name}</a>`;
+            });
         });
         listCvCtn.innerHTML = cvHtml;
         listTagCtn.innerHTML = tagHtml;

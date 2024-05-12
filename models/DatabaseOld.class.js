@@ -1,7 +1,7 @@
 'use strict';
 
-console.time('Build Database Time');
-class Database {
+console.time('Build DatabaseOld Time');
+class DatabaseOld {
     static log = true;
     static listTrack = [];
     static listCode = [];
@@ -24,10 +24,10 @@ class Database {
         })
 
         const track = new Track(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink);
-        Database.listTrack.push(track);
-        Database.listCode.push(code);
+        DatabaseOld.listTrack.push(track);
+        DatabaseOld.listCode.push(code);
 
-        const listOfListToAddItem = [Database.listCv, Database.listTag, Database.listSeries];
+        const listOfListToAddItem = [DatabaseOld.listCv, DatabaseOld.listTag, DatabaseOld.listSeries];
         const classToCreate = [Cv, Tag, Series];
         [cvs, tags, series].forEach((member, index) => {
             member.forEach(item => {
@@ -46,37 +46,37 @@ class Database {
 
     // Sort tracks functions
     static sortListTrackByRjCode(desc = false) {
-        Database.displayListTrack = [...Database.listTrack].sort((a, b) => {
+        DatabaseOld.displayListTrack = [...DatabaseOld.listTrack].sort((a, b) => {
             return Number(b.rjCode.replace('RJ', '').replaceAll('?', '')) - Number(a.rjCode.replace('RJ', '').replaceAll('?', ''))
         });
         if (desc)
-            Database.displayListTrack.reverse();
+            DatabaseOld.displayListTrack.reverse();
     }
     static sortListTrackByCode(desc = false) {
-        Database.displayListTrack = [...Database.listTrack].sort((a, b) => a.code - b.code);
+        DatabaseOld.displayListTrack = [...DatabaseOld.listTrack].sort((a, b) => a.code - b.code);
         if (desc)
-            Database.displayListTrack.reverse();
+            DatabaseOld.displayListTrack.reverse();
     }
     static sortListTrackByUploadOrder(desc = false) {
-        Database.displayListTrack = [...Database.listTrack];
+        DatabaseOld.displayListTrack = [...DatabaseOld.listTrack];
         if (desc)
-            Database.displayListTrack.reverse();
+            DatabaseOld.displayListTrack.reverse();
     }
 
     //Sort categories functions
     static sortListCategoryByName(listName, desc = false) {
         switch (listName.toLowerCase()) {
             case 'cv':
-                Database.displayListCv = [...Database.listCv].sort(Utils.byName);
-                if (!desc) Database.displayListCv.reverse();
+                DatabaseOld.displayListCv = [...DatabaseOld.listCv].sort(Utils.byName);
+                if (!desc) DatabaseOld.displayListCv.reverse();
                 break;
             case 'tag':
-                Database.displayListTag = [...Database.listTag].sort(Utils.byName);
-                if (!desc) Database.displayListTag.reverse();
+                DatabaseOld.displayListTag = [...DatabaseOld.listTag].sort(Utils.byName);
+                if (!desc) DatabaseOld.displayListTag.reverse();
                 break;
             case 'series':
-                Database.displayListSeries = [...Database.listSeries].sort(Utils.byName);
-                if (!desc) Database.displayListSeries.reverse();
+                DatabaseOld.displayListSeries = [...DatabaseOld.listSeries].sort(Utils.byName);
+                if (!desc) DatabaseOld.displayListSeries.reverse();
                 break;
 
             default:
@@ -86,16 +86,16 @@ class Database {
     static sortListCategoryByQuantity(listName, desc = false) {
         switch (listName.toLowerCase()) {
             case 'cv':
-                Database.displayListCv = [...Database.listCv].sort(Utils.byQuantity);
-                if (desc) Database.displayListCv.reverse();
+                DatabaseOld.displayListCv = [...DatabaseOld.listCv].sort(Utils.byQuantity);
+                if (desc) DatabaseOld.displayListCv.reverse();
                 break;
             case 'tag':
-                Database.displayListTag = [...Database.listTag].sort(Utils.byQuantity);
-                if (desc) Database.displayListTag.reverse();
+                DatabaseOld.displayListTag = [...DatabaseOld.listTag].sort(Utils.byQuantity);
+                if (desc) DatabaseOld.displayListTag.reverse();
                 break;
             case 'series':
-                Database.displayListSeries = [...Database.listSeries].sort(Utils.byQuantity);
-                if (desc) Database.displayListSeries.reverse();
+                DatabaseOld.displayListSeries = [...DatabaseOld.listSeries].sort(Utils.byQuantity);
+                if (desc) DatabaseOld.displayListSeries.reverse();
                 break;
 
             default:
@@ -109,11 +109,11 @@ class Database {
         let arrayToSearch, returnValue = '';
 
         if (type === 'cv') {
-            arrayToSearch = [...Database.listCv];
+            arrayToSearch = [...DatabaseOld.listCv];
         } else if (type === 'tag') {
-            arrayToSearch = [...Database.listTag];
+            arrayToSearch = [...DatabaseOld.listTag];
         } else if (type === 'series') {
-            arrayToSearch = [...Database.listSeries];
+            arrayToSearch = [...DatabaseOld.listSeries];
         } else {
             return '';
         }
@@ -130,11 +130,11 @@ class Database {
         let arrayToSearch;
 
         if (type === 'cv') {
-            arrayToSearch = [...Database.listCv];
+            arrayToSearch = [...DatabaseOld.listCv];
         } else if (type === 'tag') {
-            arrayToSearch = [...Database.listTag];
+            arrayToSearch = [...DatabaseOld.listTag];
         } else if (type === 'series') {
-            arrayToSearch = [...Database.listSeries];
+            arrayToSearch = [...DatabaseOld.listSeries];
         } else {
             return [];
         }
@@ -154,7 +154,7 @@ class Database {
         const results = [];
         const seen = new Set();
 
-        Database.displayListTrack.forEach(track => {
+        DatabaseOld.displayListTrack.forEach(track => {
             const lowerCaseCode = track.code.toString();
             const lowerCaseRjCode = track.rjCode.toLowerCase();
             const lowerCaseJapName = track.japName.toLowerCase();
@@ -224,7 +224,7 @@ class Database {
         return results; 
     };
     static getTracksByKeyword(keyword) {
-        const listTrack = Database.displayListTrack;
+        const listTrack = DatabaseOld.displayListTrack;
         const lowerCaseKeyword = keyword.toString().toLowerCase();
         const results = [];
 
@@ -278,7 +278,7 @@ class Database {
         return results.map((index) => listTrack[index]);
     };
     static getTracksByCategory(categoryType, keyword) {
-        const listTrack = Database.displayListTrack;
+        const listTrack = DatabaseOld.displayListTrack;
         const lowerCaseKeyword = keyword.toLowerCase();
         const tracks = [];
         const categoryTypes = ['cv', 'tag', 'series'];
@@ -294,7 +294,7 @@ class Database {
     static getTracksByIdentify(identify) {
         let rs = '';
 
-        Database.listTrack.forEach(track => {
+        DatabaseOld.listTrack.forEach(track => {
             if (track.code.toString() === identify || track.rjCode.toLowerCase() === identify.toLowerCase()) {
                 rs = track;
             }
@@ -304,12 +304,12 @@ class Database {
     }
     static getTrackDataOfPage(page, trackPerPage) {
         const start = (page - 1) * trackPerPage;
-        const end = Math.min(start + trackPerPage - 1, Database.listCode.length);
+        const end = Math.min(start + trackPerPage - 1, DatabaseOld.listCode.length);
 
-        return Database.displayListTrack.slice(start, end + 1);
+        return DatabaseOld.displayListTrack.slice(start, end + 1);
     }
     static getRandomTracks(n) {
-        const listTrack = Database.listTrack;
+        const listTrack = DatabaseOld.listTrack;
         let shuffledIndexes = JSON.parse(localStorage.getItem('shuffledIndexes'));
 
         if (!shuffledIndexes || shuffledIndexes.length < n) {
@@ -340,39 +340,39 @@ class Database {
 
     // Call when completed add data
     static buildData() {
-        Database.sortListTrackByRjCode();
-        Database.displayListCv = Database.listCv.sort(Utils.byName);
-        Database.displayListTag = Database.listTag.sort(Utils.byName);
-        Database.displayListSeries = Database.listSeries.sort(Utils.byName);
+        DatabaseOld.sortListTrackByRjCode();
+        DatabaseOld.displayListCv = DatabaseOld.listCv.sort(Utils.byName);
+        DatabaseOld.displayListTag = DatabaseOld.listTag.sort(Utils.byName);
+        DatabaseOld.displayListSeries = DatabaseOld.listSeries.sort(Utils.byName);
 
-        console.timeEnd('Build Database Time');
-        console.log(`Added: ${Database.listCode.length} Tracks`);
+        console.timeEnd('Build DatabaseOld Time');
+        console.log(`Added: ${DatabaseOld.listCode.length} Tracks`);
         const listNames = ['List Track', 'List Cv', 'List Tag', 'List Series'];
-        [Database.displayListTrack, Database.displayListCv, Database.displayListTag, Database.displayListSeries].forEach((list, index) => {
-            if(!Database.log) return;
+        [DatabaseOld.displayListTrack, DatabaseOld.displayListCv, DatabaseOld.displayListTag, DatabaseOld.displayListSeries].forEach((list, index) => {
+            if(!DatabaseOld.log) return;
             console.log(`Complete Build ${listNames[index]}:`, list);
         });
-        Database.testingFunctions();
+        DatabaseOld.testingFunctions();
     }
     static testingFunctions() {
-        if(!Database.log) return;
+        if(!DatabaseOld.log) return;
         console.log('\n\n\n\n\n');
-        console.time('Database functions testing time');
+        console.time('DatabaseOld functions testing time');
         console.log('Testing functions-----------------------------------------------------------------------');
-        console.log( 'Get category "cv" with keyword "" (Get all CVs):', Database.getCategory('cv', '') );
-        console.log( 'Get category "tag" with keyword "" (Get all Tags):', Database.getCategory('tag', '') );
-        console.log( 'Get category "series" with keyword "" (Get all Series):', Database.getCategory('series', '') );
-        console.log( 'Get search suggestions with keyword "Na"', Database.getSearchSuggestions('Na') );
-        console.log( 'Get all tracks by keyword "saka"', Database.getTracksByKeyword('saka') );
-        console.log( 'Get tracks by category "cv" with keyword "narumi aisaka"', Database.getTracksByCategory('cv', 'narumi aisaka') );
-        console.log( 'Get tracks by category "tag" with keyword "elf"', Database.getTracksByCategory('tag', 'elf') );
-        console.log( 'Get tracks by category "series" with keyword "ドスケベjKシリーズ"', Database.getTracksByCategory('series', 'ドスケベjKシリーズ') );
-        console.log( 'Get tracks by identify with code "107613"', Database.getTracksByIdentify('107613') );
-        console.log( 'Get tracks by identify with RJcode "Rj377038"', Database.getTracksByIdentify('Rj377038') );
-        console.log( 'Get random 10 tracks', Database.getRandomTracks(10) );
-        console.log( 'Get random 20 tracks', Database.getRandomTracks(20) );
+        console.log( 'Get category "cv" with keyword "" (Get all CVs):', DatabaseOld.getCategory('cv', '') );
+        console.log( 'Get category "tag" with keyword "" (Get all Tags):', DatabaseOld.getCategory('tag', '') );
+        console.log( 'Get category "series" with keyword "" (Get all Series):', DatabaseOld.getCategory('series', '') );
+        console.log( 'Get search suggestions with keyword "Na"', DatabaseOld.getSearchSuggestions('Na') );
+        console.log( 'Get all tracks by keyword "saka"', DatabaseOld.getTracksByKeyword('saka') );
+        console.log( 'Get tracks by category "cv" with keyword "narumi aisaka"', DatabaseOld.getTracksByCategory('cv', 'narumi aisaka') );
+        console.log( 'Get tracks by category "tag" with keyword "elf"', DatabaseOld.getTracksByCategory('tag', 'elf') );
+        console.log( 'Get tracks by category "series" with keyword "ドスケベjKシリーズ"', DatabaseOld.getTracksByCategory('series', 'ドスケベjKシリーズ') );
+        console.log( 'Get tracks by identify with code "107613"', DatabaseOld.getTracksByIdentify('107613') );
+        console.log( 'Get tracks by identify with RJcode "Rj377038"', DatabaseOld.getTracksByIdentify('Rj377038') );
+        console.log( 'Get random 10 tracks', DatabaseOld.getRandomTracks(10) );
+        console.log( 'Get random 20 tracks', DatabaseOld.getRandomTracks(20) );
         console.log('End testing functions------------------------------------------------------------------');
-        console.timeEnd('Database functions testing time');
+        console.timeEnd('DatabaseOld functions testing time');
         console.log('\n\n\n\n\n');
     }
 }
@@ -825,9 +825,9 @@ class Database {
     addTrack(33085, "RJ220667", "Popura Sawano ", "ASMR,Cheerleader,Dirty Talk,School Girl", "", "Mean Cheerleading Sisters’ Edging & Masochistic Discipline Course!", "意地悪な後輩チアガール姉妹の射精我慢＆マゾ彼氏調教コース!", "https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/33085-0.jpg?v=1714558999689", "https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/33085-1.jpg?v=1714559000861", "https://cdn.glitch.me/36049008-0c55-496e-873e-a2f971037d73/33085t1.mp3?v=1714559015915");
     
 
-    Database.buildData();
+    DatabaseOld.buildData();
 })();
 
 function addTrack(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink) {
-    Database.addTrackToDatabase(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink);
+    DatabaseOld.addTrackToDatabase(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink);
 }

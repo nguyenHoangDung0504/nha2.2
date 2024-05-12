@@ -86,6 +86,8 @@ class Home {
 
     static buildPagination(page, limitPage) {
         const group = Utils.getGroupOfPagination(page, Config.trackPerPage, limitPage);
+        
+
         let links0 = [
             `<a class="[class]" href="${Utils.addQueryToUrl('page', '1')}" id="first-link">&lt;&lt;</a>`,
             `[links]`,
@@ -94,12 +96,12 @@ class Home {
 
         links0[0] = (page == 1) ? links0[0].replace('[class]', 'block') : links0[0];
         links0[2] = (page == limitPage) ? links0[2].replace('[class]', 'block') : links0[2];
-        
+
         group.forEach((p) => {
             links += `<a class="${p == page ? 'active' : ''}" href="${Utils.addQueryToUrl('page', p)}">${p}</a>`;
         });
 
-        Home.reuableElements.paginationBody.innerHTML = links0.join('');
+        Home.reuableElements.paginationBody.innerHTML = links0.join('').replace('[links]', links);
     }
 
     static setMessage(message) {

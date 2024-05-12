@@ -2,6 +2,7 @@
 
 class Config {
     static trackPerPage = Config.deviceIsMobile() ? 28 : 40;
+    static linksPerGroupPagination = Config.deviceIsMobile() ? 5 : 7;
     
     static deviceIsMobile() {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);

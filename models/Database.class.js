@@ -162,8 +162,7 @@ class Database {
 
         return listToGet.slice(start, end + 1);
     }
-    static getRandomTracksKey(n) {
-        const keyList = Database.keyList;
+    static getRandomTracksKey(n, keyList = Database.keyList) {
         let shuffledIndexes = JSON.parse(localStorage.getItem('shuffledIndexes'));
         const randomKeyList = [];
 
@@ -288,8 +287,8 @@ class Database {
         console.log( '\tGet tracks by category "cv" with keyword "narumi aisaka"', Database.getTracksKeyByCategory(Database.categoryType.CV, 'narumi aisaka') );
         console.log( '\tGet tracks by category "tag" with keyword "elf"', Database.getTracksKeyByCategory(Database.categoryType.TAG, 'elf') );
         console.log( '\tGet tracks by category "series" with keyword "ドスケベjKシリーズ"', Database.getTracksKeyByCategory(Database.categoryType.SERIES, 'ドスケベjKシリーズ') );
-        console.log( '\tGet tracks by identify with code "107613"', Database.getTracksByIdentify('107613') );
-        console.log( '\tGet tracks by identify with RJcode "Rj377038"', Database.getTracksByIdentify('Rj377038') );
+        console.log( '\tGet tracks by identify with code "107613"', Database.getTrackByIdentify('107613') );
+        console.log( '\tGet tracks by identify with RJcode "Rj377038"', Database.getTrackByIdentify('Rj377038') );
         console.log( '\tGet random 10 tracks', Database.getRandomTracksKey(10) );
         console.log( '\tGet random 20 tracks', Database.getRandomTracksKey(20) );
         console.log( 'End testing functions------------------------------------------------------------------');

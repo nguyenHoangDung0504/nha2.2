@@ -51,7 +51,7 @@ class Home {
         }
         // CV, tag, series handling
         else {
-            processGetCategory('cv', Database.categoryType.CV, Home.setMessage);
+            processGetCategory('cv', Database.categoryType.CV, Home.setMessagePlus);
             processGetCategory('tag', Database.categoryType.TAG, Home.setMessagePlus);
             processGetCategory('series', Database.categoryType.SERIES, Home.setMessagePlus);
 

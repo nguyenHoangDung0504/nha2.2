@@ -16,7 +16,7 @@ class Track {
         hiddenInfoBlock.id = `hidden_info_of_${this.code}`;
         hiddenInfoBlock.innerHTML = `<div class="content-container">
             <h3><b>RJ Code</b>: ${this.rjCode}</h3>
-            <h3><b>Series</b>: ${series}</h3>
+            <h3 ${series ? '' : 'style="display: none;"'}><b>Series</b>: ${series}</h3>
             <h3><b>Eng Name</b>: ${this.engName}</h3>
             <h3><b>Original Name</b>: ${this.japName}</h3>
             <h3><b>CV</b>: ${cvs}</h3>

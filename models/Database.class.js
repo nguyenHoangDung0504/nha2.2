@@ -296,6 +296,7 @@ class Database {
         console.timeEnd('Database functions testing time');
         console.log('\n\n\n\n\n');
         Config.log = false;
+        Database.config.log = false;
     }
 }
 

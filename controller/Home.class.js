@@ -17,6 +17,7 @@ class Home {
     static keyList = Database.keyList;
 
     static build() {
+        Home.setMessage('NHD Hentai - ASMR Hentai Tracks');
         Home.filterKeyList();
 
         let limitPage = Math.ceil(Home.keyList.length / Config.trackPerPage);
@@ -29,7 +30,7 @@ class Home {
         Home.reuableElements.gridContainer.innerHTML = '';
         Home.reuableElements.paginationBody.innerHTML = '';
 
-        Home.setMessage('NHD Hentai - ASMR Hentai Tracks');
+        // Start build
         Home.buildGrid();
         Home.buildPagination(Home.page, limitPage);
     }
@@ -37,7 +38,7 @@ class Home {
     static filterKeyList() {
         // Search handling
         if (Home.search) {
-            if (search == '@newest' || search == '@n') {
+            if (Home.search == '@newest' || Home.search == '@n') {
                 Database.sortByUploadOrder();
             } else {
                 const searchValues = Home.search.split(',').map(v => v.trim()).filter(v => v);
@@ -45,7 +46,7 @@ class Home {
                     Home.keyList = Database.searchTracksKey(searchValue, Home.keyList);
                 });
                 const resultCount = Home.keyList.length;
-                Home.setMessage(`Search result for keyword${resultCount > 0 ? 's' : ''}: <b><i>"${searchValues.map(v => `"${v}"`).join(', ')}"</i></b> (${resultCount})`);
+                Home.setMessage(`Search result for keyword${resultCount > 0 ? 's' : ''}: <b><i>"${searchValues.join(', ')}"</i></b> (${resultCount})`);
             }
         }
         // CV, tag, series handling

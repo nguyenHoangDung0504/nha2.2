@@ -151,6 +151,13 @@ input[type="text"]::selection {
     height: inherit;
 }
 
+.gradient-bg-text {
+    background: linear-gradient(20deg, var(--special-color), deeppink, var(--special-color), deeppink);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 .header .button-div h1.button-open {
     /*     transition: var(--time); */
     /*     color: var(--text-color); */
@@ -161,7 +168,7 @@ input[type="text"]::selection {
     position: fixed;
     z-index: 99999;
     user-select: none;
-    background: linear-gradient(45deg, var(--special-color), deeppink);
+    background: linear-gradient(0deg, var(--special-color), var(--special-color), deeppink, deeppink);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -189,10 +196,6 @@ input[type="text"]::selection {
     margin: auto;
     text-overflow: ellipsis;
     user-select: none;
-    background: linear-gradient(45deg, var(--special-color), deeppink);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .header .search-div {
@@ -357,11 +360,6 @@ input[type="text"]::selection {
     font-size: 70%;
     /*     color: var(--text-color); */
     margin: 10px 0px;
-    background: linear-gradient(45deg, var(--special-color), deeppink);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
 }
 
 .menu .hidden-list {
@@ -1211,7 +1209,7 @@ body.openModel>.model-container {
     justify-content: space-between;
     color: white;
     font-weight: 600;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     padding: 5px 20px;
     background-color: black;
     border-bottom: 3px solid var(--border-spin-special-box-main-color);

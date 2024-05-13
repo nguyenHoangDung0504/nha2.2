@@ -622,7 +622,7 @@ class AudioController {
     }
 }
 class AudioPlayer {
-    constructor(audioElements, track) {
+    constructor(audioElements, track = null) {
         this.audioElements = audioElements;
         this.track = track;
         this.currentAudioIndex = 0;

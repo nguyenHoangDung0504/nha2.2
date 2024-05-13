@@ -27,9 +27,11 @@ class Database {
             noteNLink = noteNLink.trim();
             const [note, link] = noteNLink.split('::').map(item => item.trim());
             return new OtherLink(note, link);
-        })
+        });
 
         const track = new Track(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLinks);
+        if (!track.images.includes(track.thumbnail)) 
+            track.images.unshift(track.thumbnail);
         Database.trackKeyMap.set(rjCode, code);
         Database.trackMap.set(code, track);
 

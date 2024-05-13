@@ -1,15 +1,30 @@
 'use strict';
 
 class AltPlayer {
+    static urlParams = new URLSearchParams(window.location.search);
+    static trackKey = AltPlayer.urlParams.get("code");
+    static track = Database.getTrackByIdentify(AltPlayer.trackKey);
     static isPortrait = false;
     static reuableElements = {
         elem: document.documentElement,
         fullscreenBtn: document.querySelector('#fullscreen-btn'),
-        fullscreenIcon: document.querySelector('#fullscreen-btn i')
+        fullscreenIcon: document.querySelector('#fullscreen-btn i'),
+        contentContainer: document.querySelector('.content-container'),
+        mp3Container: document.querySelector('.menu-mp3')
     }
 
     static build() {
-        const { elem, fullscreenBtn } = AltPlayer.reuableElements;
+        if(!AltPlayer.track) {
+            alert('Code not found!');
+            return;
+        }
+        document.title = "~Alt Player - " + AltPlayer.track.code;
+        AltPlayer.buildActions();
+        AltPlayer.buildContent();
+    }
+
+    static buildActions() {
+        const { fullscreenBtn, contentContainer, mp3Container } = AltPlayer.reuableElements;
         const alignBtn = document.querySelector('#align-btn');
 
         document.querySelector('#opn-cls-menu-btn').addEventListener('click', () => {
@@ -24,26 +39,46 @@ class AltPlayer {
         });
         
         alignBtn.addEventListener('click', () => {
-            document.body.classList.toggle('menu-ctn-right');
             const icon = alignBtn.querySelector('i');
-            if (Array.from(icon.classList).includes('fa-align-left')) {
+
+            document.body.classList.toggle('menu-ctn-right');
+            if (icon.classList.contains('fa-align-left')) {
                 icon.classList.remove('fa-align-left');
                 icon.classList.add('fa-align-right');
-            } else if (Array.from(icon.classList).includes('fa-align-right')) {
+            } else if (icon.classList.contains('fa-align-right')) {
                 icon.classList.remove('fa-align-right');
                 icon.classList.add('fa-align-left');
             }
         });
         
-        AltPlayer.reuableElements.fullscreenBtn.addEventListener('click', () => {
-            if(document.fullscreen) {
-                closeFullscreen();
-                return;
-            }
-            openFullscreen();
+        fullscreenBtn.addEventListener('click', () => document.fullscreen ? closeFullscreen() : openFullscreen());
+
+        document.querySelector('#next-btn').addEventListener('click', () => {
+            contentContainer.appendChild(contentContainer.firstChild);
+        });
+        document.querySelector('#prev-btn').addEventListener('click', () => {
+            contentContainer.insertBefore(contentContainer.lastChild, contentContainer.firstChild);
         });
     }
-
+    static buildContent() {
+        const { contentContainer, mp3Container } = AltPlayer.reuableElements;
+        const { images, audios } = AltPlayer.track;
+        
+        images.forEach(iov => {
+            contentContainer.appendChild(iov.includes('.mp4') 
+                ? new VideoPlayer(iov) 
+                : new ImageDisplayer(iov, AltPlayer.closeFullscreen, AltPlayer.openFullscreen)
+            );
+        });
+        audios.forEach(src => {
+            mp3Container.appendChild(new AudioController(src));
+        });
+        
+        new AudioPlayer(
+            Array.from(document.querySelectorAll('audio')), 
+            AltPlayer.track
+        ).setupMediaSession();
+    }
     static openFullscreen() {
         const icon = AltPlayer.reuableElements.fullscreenIcon;
 
@@ -92,32 +127,4 @@ class AltPlayer {
         }
     }
 }
-
-const contentContainer = document.querySelector('.content-container');
-const mp3Container = document.querySelector('.menu-mp3');
-
-document.querySelector('#next-btn').addEventListener('click', () => {
-    contentContainer.appendChild(contentContainer.firstChild);
-});
-
-document.querySelector('#prev-btn').addEventListener('click', () => {
-    contentContainer.insertBefore(contentContainer.lastChild, contentContainer.firstChild);
-});
-
-const urlParams = new URLSearchParams(window.location.search);
-let trackId = urlParams.get("code");
-let track = window.databasefs.getTrackByCode(trackId) || window.databasefs.getTrackByRjCode(trackId);
-if (!trackId || !track) {
-    window.history.back();
-}
-document.title = "NHD ASMR - Alt Player: " + track.code;
-
-if (!track.images.includes(track.thumbnail))
-    track.images.unshift(track.thumbnail);
-
-track.images.forEach(iov => {
-    contentContainer.appendChild(iov.includes('.mp4') ? new window.classes.VideoPlayer(iov) : new window.classes.ImageDisplayer(iov, closeFullscreen, openFullscreen));
-});
-track.audios.forEach(src => {
-    mp3Container.appendChild(new window.classes.AudioPlayer(src));
-});
+AltPlayer.build();

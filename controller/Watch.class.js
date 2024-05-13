@@ -5,7 +5,7 @@ class Watch {
     static trackKey = Watch.urlParams.get('code') || Watch.urlParams.get('rjcode');
     static track = Database.getTrackByIdentify(Watch.trackKey);
     static reuableElements = {
-        contentDiv: document.querySelector('.content-div'),
+        contentDiv: document.querySelector('.content_div'),
         postBox: document.querySelector('.post-box'),
     }
 
@@ -16,6 +16,7 @@ class Watch {
         }
 
         Watch.buildVidDiv();
+        Watch.buildContentDiv();
         Watch.buildCloseMenuAction();
     }
 
@@ -52,14 +53,14 @@ class Watch {
 
         cvs.forEach(cv => {
             const cvKeylistToRandom = Database.getTracksKeyByCategory(Database.categoryType.CV, cv, keyListToRandom);
-            const numberOfTrack = cvKeylistToRandom.length;
+            let numberOfTrack = cvKeylistToRandom.length;
 
             if (numberOfTrack <= 0)
                 return;
 
             localStorage.removeItem('shuffledIndexes');
             numberOfTrack = numberOfTrack <= 6 ? numberOfTrack : 6;
-            const cvRandomKeyList = Database.getRandomTracksKey(numberOfTrack, keyListToRandom);
+            const cvRandomKeyList = Database.getRandomTracksKey(numberOfTrack, cvKeylistToRandom);
             const newTitle = document.createElement('h2');
             const newPostBox = document.createElement('div');
 

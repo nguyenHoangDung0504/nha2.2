@@ -1,7 +1,7 @@
 const urlParams = new URLSearchParams(window.location.search);
 const trackKey = urlParams.get("code");
 const track = Database.getTrackByIdentify(trackKey);
-if(!AltPlayer.track) {
+if(!track) {
     alert('Code not found!');
 }
 

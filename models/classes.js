@@ -484,7 +484,7 @@ class ImageDisplayer {
         }
     }
 }
-class AudioPlayer {
+class AudioController {
     constructor(src) {
         this.isDragging = false;
         this.currentTime = 0;
@@ -619,6 +619,74 @@ class AudioPlayer {
             this.audio.dataset.isPause = true;
             this.audio.pause();
         }, 10);
+    }
+}
+class AudioPlayer {
+    constructor(audioElements, track) {
+        this.audioElements = audioElements;
+        this.track = track;
+        this.currentAudioIndex = 0;
+    }
+
+    playCurrentTrack() {
+        this.audioElements[this.currentAudioIndex].play();
+    }
+
+    pauseCurrentTrack() {
+        this.audioElements[this.currentAudioIndex].pause();
+    }
+
+    playNextTrack() {
+        this.pauseCurrentTrack();
+        this.currentAudioIndex++;
+        if (this.currentAudioIndex >= this.audioElements.length) {
+            this.currentAudioIndex = 0;
+        }
+        this.playCurrentTrack();
+    }
+
+    playPreviousTrack() {
+        this.pauseCurrentTrack();
+        this.currentAudioIndex--;
+        if (this.currentAudioIndex < 0) {
+            this.currentAudioIndex = this.audioElements.length - 1;
+        }
+        this.playCurrentTrack();
+    }
+
+    setupMediaSession() {
+        if ('mediaSession' in navigator) {
+            const track = this.track;
+            
+            if(track) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: `~${track.code}`,
+                    artist: `${track.cvs.join(', ')}`,
+                    album: `${track.series.join(', ')}`,
+                    artwork: [
+                        ...track.images.map(src => {
+                            return { src, sizes: '512x512', type: 'image/jpeg' };
+                        })
+                    ]
+                });
+            }
+
+            navigator.mediaSession.setActionHandler('play', () => {
+                this.playCurrentTrack();
+            });
+
+            navigator.mediaSession.setActionHandler('pause', () => {
+                this.pauseCurrentTrack();
+            });
+
+            navigator.mediaSession.setActionHandler('nexttrack', () => {
+                this.playNextTrack();
+            });
+
+            navigator.mediaSession.setActionHandler('previoustrack', () => {
+                this.playPreviousTrack();
+            });
+        }
     }
 }
 

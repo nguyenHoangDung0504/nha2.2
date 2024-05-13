@@ -59,6 +59,9 @@ class Utils {
 
         return url.toString();
     }
+    static getFileNameFromUrl(url) {
+        return url.slice(url.lastIndexOf('/')+1, url.lastIndexOf('?'));
+    }
     static shuffleArray(array) {
         let currentIndex = array.length;
         let temporaryValue, randomIndex;

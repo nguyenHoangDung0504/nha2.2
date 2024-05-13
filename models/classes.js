@@ -2,8 +2,8 @@
 
 // Data classes
 class Track {
-    constructor(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink) {
-        Object.assign(this, { code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink });
+    constructor(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLinks) {
+        Object.assign(this, { code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLinks });
     }
 
     getHiddenItemElement() {
@@ -58,6 +58,22 @@ class Track {
         return gridItem;
     }
 
+    getPostBoxItem() {
+        const item = document.createElement('a');
+
+        item.dataset.code = this.code;
+        item.href = `../watch?code=${this.code}`;
+        item.innerHTML = `<div class="imgcontainer image-container">
+            <img loading="lazy" src="${this.thumbnail}" alt="thumbnail of ${this.code}">
+        </div>
+        <div class="text-box">
+            <p class="content-p"><b><i>${this.rjCode}</i></b> - ${this.engName}</p>
+        </div>`;
+        this.addActionDisplayHiddenItemFor(item.querySelector('.image-container'));
+
+        return item;
+    }
+
     addActionDisplayHiddenItemFor(actionBox, timeOut = 400) {
         let hiddenItem = document.querySelector(`hidden_info_of_${this.code}`);
         let timeoutId;
@@ -105,6 +121,9 @@ class Cv extends Category {
     getHtml() {
         return `<span class="cv">${this.name} (${this.quantity})</span>`;
     }
+    getHtmlLink() {
+        return `<a href="../?cv=${encodeURIComponent(this.name)}">${this.getHtml()}</a>`;
+    }
 }
 class Tag extends Category {
     constructor(name, quantity) {
@@ -114,6 +133,9 @@ class Tag extends Category {
     getHtml() {
         return `<span class="tag">${this.name} (${this.quantity})</span>`;
     }
+    getHtmlLink() {
+        return `<a href="../?tag=${encodeURIComponent(this.name)}">${this.getHtml()}</a>`;
+    }
 }
 class Series extends Category {
     constructor(name, quantity) {
@@ -122,6 +144,9 @@ class Series extends Category {
 
     getHtml() {
         return `<span class="series">${this.name} (${this.quantity})</span>`;
+    }
+    getHtmlLink() {
+        return `<a href="../?series=${encodeURIComponent(this.name)}">${this.getHtml()}</a>`;
     }
 }
 class SearchResult {

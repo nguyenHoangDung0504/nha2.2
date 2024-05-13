@@ -19,17 +19,17 @@ class Database {
     static seriesMap = new Map();
     static keyList = [];
 
-    static addTrackToDatabase(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink = undefined) {
+    static addTrackToDatabase(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLinks = undefined) {
         [cvs, tags, series, images, audios] = [cvs, tags, series, images, audios].map(member => Utils.standardizedTrackArrData(member));
         [cvs, tags, series] = [cvs, tags, series].map(member => member.sort());
 
-        otherLink = otherLink?.split(',').filter(subStr => subStr).map(noteNLink => {
+        otherLinks = otherLinks?.split(',').filter(subStr => subStr).map(noteNLink => {
             noteNLink = noteNLink.trim();
             const [note, link] = noteNLink.split('::').map(item => item.trim());
             return new OtherLink(note, link);
         })
 
-        const track = new Track(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLink);
+        const track = new Track(code, rjCode, cvs, tags, series, engName, japName, thumbnail, images, audios, otherLinks);
         Database.trackKeyMap.set(rjCode, code);
         Database.trackMap.set(code, track);
 
@@ -252,7 +252,7 @@ class Database {
         results.sort(Utils.sortSuggestionFn);
         return results; 
     }
-    static getTracksByIdentify(identify) {
+    static getTrackByIdentify(identify) {
         return Database.trackMap.get(identify) ?? Database.trackMap.get(Number(identify)) ?? Database.trackMap.get(Database.trackKeyMap.get(identify.toUpperCase()));
     }
 

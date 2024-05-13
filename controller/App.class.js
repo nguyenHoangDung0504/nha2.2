@@ -19,7 +19,7 @@ class App {
 
         switch (type) {
             case App.types.HOME: Home.build(); break;
-            case App.types.WATCH: break;
+            case App.types.WATCH: Watch.build(); break;
             case App.types.ALT_PLAYER: break;
             default: throw new Error('Invalid app type');
         }

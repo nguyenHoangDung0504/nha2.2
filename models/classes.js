@@ -596,3 +596,5 @@ class AudioPlayer {
         }, 10);
     }
 }
+
+Utils.memoizeGetAndSearchMethods(Track, Cv, Tag, Series, SearchResult, OtherLink);

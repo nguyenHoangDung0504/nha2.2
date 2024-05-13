@@ -127,13 +127,15 @@ class Utils {
             return cache[key];
         };
     }// Apply cache for functions
-    static memoizeGetAndSearchMethods(target) {
-        const methodNames = Object.getOwnPropertyNames(target).filter(name => 
-            ['get', 'search'].some(keyword => name.includes(keyword))
-            && (typeof target[name]) === 'function'
-        );
-        methodNames.forEach(methodName => {
-            target[methodName] = Utils.memoize(target[methodName]);
+    static memoizeGetAndSearchMethods(...targets) {
+        targets.forEach(target => {
+            const methodNames = Object.getOwnPropertyNames(target).filter(name => 
+                ['get', 'search'].some(keyword => name.includes(keyword))
+                && (typeof target[name]) === 'function'
+            );
+            methodNames.forEach(methodName => {
+                target[methodName] = Utils.memoize(target[methodName]);
+            });
         });
     }// Apply cache for all function have 'get' or 'search'
 

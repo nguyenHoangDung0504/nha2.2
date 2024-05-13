@@ -61,6 +61,7 @@ class Home {
                     listOfItems.forEach(item => {
                         Home.keyList = Database.getTracksKeyByCategory(type, item, Home.keyList);
                     });
+                    if(Home.keyList.length == 0) return;
                     messageFunction(`${['CV', 'Tag', 'Series'][type]}: ${Track.getListOfCategoryHtml(listOfItems, type)}`);
                 }
             }
@@ -71,7 +72,7 @@ class Home {
         }
         // Check keys list
         if (Home.keyList.length === 0) {
-            Home.setMessagePlus(`There weren't any results found&ensp;&ensp; <a href="javascript:void(0)" class="series" onclick="window.history.back()">Back</a>`);
+            Home.setMessagePlus(`There weren't any results found&ensp;&ensp; <a style="padding-inline: 20px;" href="javascript:void(0)" class="series" onclick="window.history.back()">Back</a>`);
         }
     }
 

@@ -238,10 +238,10 @@ class SwipeHandler {
             this.rightToLeft();
         } else if (absDeltaY > absDeltaX && absDeltaY / absDeltaX > this.thresholdRatio) {
             if (deltaY > 0) {
-                this.up();
+                this.down();
                 return;
             }
-            this.down();
+            this.up();
         }
     }
 
@@ -408,89 +408,17 @@ class ImageDisplayer {
             }
             openFullscreen();
         });
-        new SwipeHandler(this.div, ()=>{
-            document.querySelector('#prev-btn').click();
-        }, () => {
-            document.querySelector('#next-btn').click();
-        }, () => {
-            document.body.classList.add('open-menu-mp3');
-        }, () => {
-            document.body.classList.remove('open-menu-mp3');
-        }).registerEvents();
-        // this.div.addEventListener('touchstart', this.handleTouchStart.bind(this), false);
-        // this.div.addEventListener('touchmove', this.handleTouchMove.bind(this), false);
-        // this.div.addEventListener('touchend', this.handleTouchEnd.bind(this), false);
-        // this.div.addEventListener('mousedown', this.handleMouseDown.bind(this), false);
-        // this.div.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
-        // this.div.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
+
+        new SwipeHandler(this.div, 
+            () => document.querySelector('#prev-btn').click(),
+            () => document.querySelector('#next-btn').click(),
+            () => document.body.classList.add('open-menu-mp3'),
+            () => document.body.classList.remove('open-menu-mp3')
+        ).registerEvents();
+
         ctn.appendChild(this.div);
         return ctn;
     }
-
-    // handleTouchStart(evt) {
-    //     if (evt.touches.length === 1) {
-    //         this.startX = evt.touches[0].clientX;
-    //         this.currentX = this.startX;
-    //         this.startY = evt.touches[0].clientY;
-    //         this.currentY = this.startY;
-    //     }
-    // }
-
-    // handleTouchMove(evt) {
-    //     if (evt.touches.length === 1) {
-    //         this.currentX = evt.touches[0].clientX;
-    //         this.currentY = evt.touches[0].clientY;
-    //         this.diffX = this.currentX - this.startX;
-    //         this.diffY = this.currentY - this.startY;
-    //     }
-    // }
-
-    // handleTouchEnd(evt) {
-    //     if (event.changedTouches.length === 1) {
-    //         if ((this.diffX > 15) && (Math.abs(this.diffY) < 30)) {
-    //             document.querySelector('#prev-btn').click();
-    //         } else if ((this.diffX < -15) && (Math.abs(this.diffY) < 30)) {
-    //             document.querySelector('#next-btn').click();
-    //         } else if ((this.diffY > 15) && (Math.abs(this.diffX) < 50)) {
-    //             document.body.classList.remove('open-menu-mp3');
-    //         } else if ((this.diffY < -15) && (Math.abs(this.diffX) < 50)) {
-    //             document.body.classList.add('open-menu-mp3');
-    //         }
-    //         this.startX = 0; this.currentX = 0;
-    //         this.startY = 0; this.currentY = 0;
-    //         this.diffX = 0; this.diffY = 0;
-    //     }
-    // }
-
-    // handleMouseDown(evt) {
-    //     this.mouseDown = true;
-    //     this.startMouseX = evt.clientX; this.currentMouseX = this.startMouseX;
-    //     this.startMouseY = evt.clientY; this.currentMouseY = this.startMouseY;
-    // }
-
-    // handleMouseMove(evt) {
-    //     if (this.mouseDown) {
-    //         this.currentMouseX = evt.clientX; this.diffMouseX = this.currentMouseX - this.startMouseX;
-    //         this.currentMouseY = evt.clientY; this.diffMouseY = this.currentMouseY - this.startMouseY;
-    //     }
-    // }
-
-    // handleMouseUp(evt) {
-    //     if (this.mouseDown) {
-    //         if (this.diffMouseX > 15 && this.diffMouseY < 20) {
-    //             document.querySelector('#prev-btn').click();
-    //         } else if (this.diffMouseX < -15 && this.diffMouseY < 20) {
-    //             document.querySelector('#next-btn').click();
-    //         } else if (this.diffMouseY > 15 && this.diffMouseX < 20) {
-    //             document.body.classList.remove('open-menu-mp3');
-    //         } else if (this.diffMouseY < -15 && this.diffMouseX < 20) {
-    //             document.body.classList.add('open-menu-mp3');
-    //         }
-    //         this.mouseDown = false;
-    //         this.startMouseX = 0; this.currentMouseX = 0; this.diffMouseX = 0;
-    //         this.startMouseY = 0; this.currentMouseY = 0; this.diffMouseY = 0;
-    //     }
-    // }
 }
 class AudioController {
     constructor(src) {

@@ -51,7 +51,7 @@ class AltPlayer {
             }
         });
         
-        fullscreenBtn.addEventListener('click', () => document.fullscreen ? closeFullscreen() : openFullscreen());
+        fullscreenBtn.addEventListener('click', () => document.fullscreen ? AltPlayer.closeFullscreen() : AltPlayer.openFullscreen());
 
         document.querySelector('#next-btn').addEventListener('click', () => {
             contentContainer.appendChild(contentContainer.firstChild);
@@ -81,6 +81,7 @@ class AltPlayer {
     }
     static openFullscreen() {
         const icon = AltPlayer.reuableElements.fullscreenIcon;
+        const elem = AltPlayer.reuableElements.elem
 
         if (icon.classList.contains('fa-expand')) {
             icon.classList.remove('fa-expand');

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="../assets/alt_player_styles/main.css" />
+        <link rel="stylesheet" href="../assets/alt_player_styles/responsive.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <script src="../../Utils.class.js"></script>
+        <script src="../../models/classes.js"></script>
+        <script src="../../app/Config.class.js"></script>
+        <script src="../../models/Database.class.js"></script>
+</head>
+
+<body class="open-menu-ctn menu-ctn-right">
+        <div class="menu-ctn">
+                <div title="Hide/open menu" id="opn-cls-menu-btn" class="btn open-and-close-btn"><span
+                                style="display: block; font-size: 24px; transform: scaleX(1.3);">☰</span></div>
+                <div title="Hide/open mp3 menu" id="opn-cls-menu-mp3-btn" class="btn open-and-close-btn"><i
+                                style="display: block; font-size: 21px; transform: scaleX(1.3);"
+                                class="fa-solid fa-list"></i></div>
+                <div title="Toggle fullscreen" id="fullscreen-btn" class="btn open-and-close-btn"><i
+                                style="display: block; font-size: 21px; transform: scaleX(1.3);"
+                                class="fas fa-expand"></i></div>
+                <div title="Align menu" id="align-btn" class="btn"><i
+                                style="display: block; font-size: 21px; transform: scaleX(1.3);"
+                                class="fa-solid fa-align-left"></i>
+                </div>
+                <div title="Next slide" id="next-btn" class="btn"><i
+                                style="display: block; font-size: 21px; transform: scaleX(1.3);"
+                                class="fa-solid fa-caret-right"></i>
+                </div>
+                <div title="Previous slide" id="prev-btn" class="btn"><i
+                                style="display: block; font-size: 21px; transform: scaleX(1.3);"
+                                class="fa-solid fa-caret-left"></i>
+                </div>
+                <div title="Reload audio/image" id="reload-btn" class="btn"><i style="display: block; font-size: 21px;"
+                                class="fa fa-refresh" aria-hidden="true"></i></div>
+                <div style="background-color: lightgray;" title="Rolate device screen" id="rolate-btn" class="btn"><img
+                                style="width: 85%; height: 85%; object-fit: cover;"
+                                src="https://cdn.glitch.global/36049008-0c55-496e-873e-a2f971037d73/rolate-button?v=1698832066475">
+                </div>
+                <!-- <div class="btn"></div>
+          <div class="btn"></div> -->
+        </div>
+        <div class="menu-mp3"></div>
+        <div class="content-container"></div>
+
+        <script src="../../app/AltPlayer.class.js"></script>
+</body>
+
+</html>

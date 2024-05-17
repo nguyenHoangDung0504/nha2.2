@@ -1,0 +1,319 @@
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.4);
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #111111;
+}
+
+.content-container {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.video-ctn {
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+    transition: 0.2s;
+}
+
+video {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.img-ctn {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    transition: 0.2s;
+}
+
+.img-ctn .get-evt {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.img {
+    display: block;
+    height: 100%;
+}
+
+.content-container :not(:first-child):not(video, .get-evt) {
+    display: none;
+}
+
+video::-webkit-media-controls-fullscreen-button {
+    display: none;
+}
+
+video::-webkit-media-controls-enclosure {
+    overflow: hidden;
+}
+
+.time-indicator {
+    z-index: 150;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #ffffff;
+    padding: 15px 20px;
+    font-size: 18px;
+    border-radius: 10px;
+}
+
+.menu-ctn {
+    transition: 0.2s;
+    z-index: 1000;
+    transform: translateX(-100%);
+    height: 100%;
+    width: 50px;
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 10px;
+    padding: 5px;
+}
+
+body.menu-ctn-right .menu-ctn {
+    transform: translateX(100%);
+    left: auto;
+    right: 0;
+}
+
+body.open-menu-ctn .menu-ctn {
+    transform: translateX(0);
+    /* overflow: hidden; */
+}
+
+.menu-ctn .btn {
+    transition: 0.2s;
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 1px solid white;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.menu-ctn .btn#rolate-btn {
+    display: none;
+}
+
+body:not(.open-menu-ctn) .menu-ctn .btn:is(.open-and-close-btn) {
+    transform: translateX(calc(100% + 10px));
+}
+
+body.menu-ctn-right:not(.open-menu-ctn) .menu-ctn .btn:is(.open-and-close-btn) {
+    transform: translateX(calc(-100% - 10px));
+}
+
+.menu-mp3 {
+    transition: 0.2s;
+    position: fixed;
+    z-index: 999;
+    width: 100%;
+    height: fit-content;
+    max-height: 30%;
+    bottom: 0;
+    left: 0;
+    transform: translateY(100%);
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 5px 60px;
+    border-radius: 10px;
+    border: 2px solid white;
+    overflow-y: auto;
+}
+
+body.open-menu-mp3 .menu-mp3 {
+    transform: translateY(0);
+}
+
+body.open-menu-mp3.open-menu-ctn .menu-mp3 {
+    /*     transform: translateX(50px);
+      width: calc(100% - 50px); */
+}
+
+body.open-menu-mp3.open-menu-ctn.menu-ctn-right .menu-mp3 {
+    transform: translateX(0);
+    /*   width: calc(100% - 50px); */
+}
+
+body .menu-mp3 audio {
+    display: block;
+    width: 100%;
+    height: 50px;
+    margin-bottom: 4px;
+    background-color: #111111;
+}
+
+.aud-ctn {
+    padding: 3px;
+    margin-bottom: 5px;
+}
+
+.aud-ctn.playing::before {
+    display: block;
+    content: attr(before);
+    color: white;
+    font-size: 18px;
+    margin: 10px;
+}
+
+.aud-ctn .seek-bar {
+    display: none;
+}
+
+.aud-ctn.playing .seek-bar {
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(90deg,
+            rgba(14, 0, 15, 1) 0%,
+            rgba(187, 0, 158, 1) 11%,
+            rgba(255, 70, 235, 1) 25%,
+            rgba(245, 195, 251, 1) 50%,
+            rgba(195, 105, 255, 1) 75%,
+            rgba(86, 39, 207, 1) 89%,
+            rgba(0, 59, 94, 1) 100%);
+    color: black;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.aud-ctn.playing .seek-bar::before {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 5px 20px;
+    display: block;
+    border-radius: 10px;
+    content: "Swipe this bar for easier seeking";
+}
+
+audio:not(.play)::-webkit-media-controls-panel {
+    background-color: #222222;
+    border-radius: 10px;
+}
+
+audio:not(.play)::-webkit-media-controls-play-button,
+audio:not(.play)::-webkit-media-controls-mute-button {
+    color: white;
+}
+
+audio:not(.play)::-webkit-media-controls-current-time-display,
+audio:not(.play)::-webkit-media-controls-time-remaining-display {
+    color: white;
+}
+
+@media screen and (max-width: 780px) and (orientation: landscape) {
+    .menu-ctn {
+        width: 40px;
+        border-radius: 5px;
+    }
+
+    .menu-mp3 {
+        padding: 5px 15px;
+        border-radius: 5px;
+        border: 1px solid white;
+    }
+
+    body.open-menu-mp3 .menu-mp3 {
+        transform: translateX(40px);
+        width: calc(100% - 40px);
+    }
+
+    body.open-menu-mp3.menu-ctn-right .menu-mp3 {
+        transform: translateX(0);
+        width: calc(100% - 40px);
+    }
+
+    .menu-ctn .btn#rolate-btn {
+        display: flex;
+    }
+
+    .aud-ctn {
+        padding: 5px 25px;
+    }
+
+    audio {
+        height: 40px;
+    }
+
+    .aud-ctn.playing .seek-bar {
+        height: 30px;
+    }
+
+    .aud-ctn.playing .seek-bar::before {
+        padding: 5px 10px;
+        border-radius: 8px;
+        font-size: 10px;
+    }
+
+    .aud-ctn.playing::before {
+        font-size: 13px;
+        margin: 4px;
+    }
+
+    audio::-webkit-media-controls-current-time-display,
+    audio::-webkit-media-controls-time-remaining-display {
+        font-size: 13px;
+    }
+
+    .btn {
+        height: 30px;
+    }
+
+    .btn i {
+        font-size: 18px !important;
+        transform: scaleX(1) !important;
+    }
+
+    body .menu-mp3 {
+        height: fit-content;
+        padding-bottom: 20px;
+        max-height: 40%;
+    }
+
+    body .menu-mp3 audio {
+        display: block;
+        width: 100%;
+        height: 40px;
+        margin-bottom: 10px;
+        background-color: #111111;
+    }
+}

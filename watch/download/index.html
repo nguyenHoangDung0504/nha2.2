@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download</title>
+    <script src="../../Utils.class.js"></script>
+    <script src="../../models/classes.js"></script>
+    <script src="../../app/Config.class.js"></script>
+    <script src="../../models/Database.class.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="download/process.js"></script>
+    <style>
+        body {
+            padding: 180px 310px;
+            background-color: #222;
+            color: white;
+            font-size: 22px;
+            line-height: 1.4
+        }
+
+        #process-bar {
+            height: 20px;
+            width: 700px;
+            border: .5px solid lightgray
+        }
+
+        #process {
+            height: 100%;
+            width: 0;
+            background-color: white;
+            transition: .75s
+        }
+
+        a {
+            color: white;
+            font-weight: bold;
+        }
+
+        @media screen and (max-width: 780px) and (orientation: landscape) {
+            body {
+                padding: 30px 40px;
+                font-size: 13px;
+            }
+
+            #process-bar {
+                height: 20px;
+                width: 590px;
+            }
+
+            p {
+                padding: 1px;
+                max-width: 87vw;
+            }
+        }
+
+        @media screen and (max-width: 780px) and (orientation: portrait) {
+            body {
+                padding: 30px 0px;
+                font-size: 13px;
+            }
+
+            #process-bar {
+                height: 20px;
+                width: 290px;
+                margin: 15px;
+            }
+
+            p {
+                padding: 1px;
+                max-width: 87vw;
+                margin: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <p id="status">Status: Error processing!</p>
+    <div id="process-bar">
+        <div id="process"></div>
+    </div>
+    <p id="percent">0%</p>
+    <script>downloadZip();</script>
+</body>
+
+</html>
